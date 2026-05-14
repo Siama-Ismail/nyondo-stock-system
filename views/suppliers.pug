@@ -1,0 +1,277 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Suppliers - NYONDO General Hardware LTD
+  link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+  style.
+    :root {
+    --primary-blue: #1e40af;
+    --accent-orange: #f97316;
+    --bg-navy: #0f172a;
+    --sidebar-width: 260px;
+    }
+    body {
+    background-color: #f1f5f9;
+    margin: 0;
+    }
+    /* --- SIDEBAR --- */
+    #sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    background-color: var(--bg-navy);
+    color: white;
+    border-right: 4px solid var(--accent-orange);
+    z-index: 1000;
+    }
+    .sidebar-header {
+    padding: 25px 20px;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-transform: uppercase;
+    }
+    .sidebar-header span { color: var(--accent-orange); }
+    .nav-link {
+    color: rgba(255,255,255,0.7);
+    padding: 15px 20px;
+    transition: 0.3s;
+    }
+    .nav-link:hover, .nav-link.active {
+    color: white;
+    background-color: var(--primary-blue);
+    border-left: 5px solid var(--accent-orange);
+    }
+    /* --- CONTENT --- */
+    #content {
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    }
+    .st-card {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    }
+    .st-card:hover { transform: translateY(-5px); }
+    .supplier-logo {
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    }
+    /* Status Badges */
+    .badge-status-active { background-color: #28a745; color: white; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; }
+    .badge-status-inactive { background-color: #dc3545; color: white; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; }
+    .badge-status-pending { background-color: var(--accent-orange); color: white; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; }
+    .btn-primary { background-color: var(--primary-blue); border: none; }
+    .btn-primary:hover { background-color: var(--accent-orange); }
+    .list-group-item i {
+    color: var(--primary-blue);
+    width: 25px;
+    }
+// Sidebar Navigation
+nav#sidebar
+  .sidebar-header
+    | NYONDO
+    span STOCK
+  ul.nav.flex-column.mt-3
+    li.nav-item
+      a.nav-link.active(href='#')
+        i.bi.bi-speedometer2.me-2
+        | Dashboard
+    li.nav-item
+      a.nav-link(href='stock.html')
+        i.bi.bi-box-seam.me-2
+        | Inventory
+    li.nav-item
+      a.nav-link(href='sales.html')
+        i.bi.bi-receipt.me-2
+        | Sales
+// Main Content Area
+#content
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h2.fw-bold(style='color: var(--bg-navy);')
+      i.bi.bi-boxes.me-2
+      |  Supplier Management
+    button.btn.btn-primary.shadow-sm.px-4(data-bs-toggle='modal' data-bs-target='#addSupplierModal')
+      i.bi.bi-plus-circle.me-2
+      |  Add Supplier
+  // Filter Buttons
+  .mb-4
+    button.btn.btn-sm.btn-dark.px-3.rounded-pill All
+    button.btn.btn-sm.btn-outline-secondary.px-3.rounded-pill.ms-2 Active
+    button.btn.btn-sm.btn-outline-secondary.px-3.rounded-pill.ms-2 Inactive
+    button.btn.btn-sm.btn-outline-secondary.px-3.rounded-pill.ms-2 Pending
+  // Supplier Cards
+  .row.row-cols-1.row-cols-md-2.row-cols-xl-3.g-4
+    // Supplier Card 1
+    .col
+      .card.st-card.h-100
+        .card-body
+          .text-center
+            img.supplier-logo(src='https://via.placeholder.com/150' alt='Supplier Logo')
+          h5.card-title.fw-bold.text-center Uganda Cement LTD
+          p.card-text.text-muted.small.text-center Specializes in Portland cement and construction materials
+          .text-center.mb-3
+            span.badge-status-active Active
+          ul.list-group.list-group-flush.small
+            li.list-group-item
+              strong
+                i.bi.bi-person
+                |  Contact:
+              |  John Mugisha
+            li.list-group-item
+              strong
+                i.bi.bi-telephone
+                |  Phone:
+              |  +256 712 345 678
+            li.list-group-item
+              strong
+                i.bi.bi-envelope
+                |  Email:
+              |  john@ugandacement.com
+            li.list-group-item
+              strong
+                i.bi.bi-geo-alt
+                |  Address:
+              |  Plot 15, Industrial Area, Kampala
+            li.list-group-item
+              strong
+                i.bi.bi-box-seam
+                |  Products:
+              |  Cement, Concrete Mix
+        .card-footer.bg-transparent.border-0.d-flex.justify-content-between.pb-3
+          button.btn.btn-sm.btn-outline-primary.px-3(data-bs-toggle='modal' data-bs-target='#editSupplierModal')
+            i.bi.bi-pencil
+            |  Edit
+          button.btn.btn-sm.btn-outline-danger.px-3
+            i.bi.bi-trash
+            |  Remove
+    // Supplier Card 2
+    .col
+      .card.st-card.h-100
+        .card-body
+          .text-center
+            img.supplier-logo(src='https://via.placeholder.com/150' alt='Supplier Logo')
+          h5.card-title.fw-bold.text-center East African Steel
+          p.card-text.text-muted.small.text-center Manufacturer of quality steel products
+          .text-center.mb-3
+            span.badge-status-pending Pending
+          ul.list-group.list-group-flush.small
+            li.list-group-item
+              strong
+                i.bi.bi-person
+                |  Contact:
+              |  Sarah Nabukeera
+            li.list-group-item
+              strong
+                i.bi.bi-telephone
+                |  Phone:
+              |  +256 701 987 654
+            li.list-group-item
+              strong
+                i.bi.bi-envelope
+                |  Email:
+              |  sarah@eastafricansteel.com
+            li.list-group-item
+              strong
+                i.bi.bi-geo-alt
+                |  Address:
+              |  Jinja Main Road, Steel Complex
+            li.list-group-item
+              strong
+                i.bi.bi-box-seam
+                |  Products:
+              |  Iron Bars, Steel Sheets
+        .card-footer.bg-transparent.border-0.d-flex.justify-content-between.pb-3
+          button.btn.btn-sm.btn-outline-primary.px-3(data-bs-toggle='modal' data-bs-target='#editSupplierModal')
+            i.bi.bi-pencil
+            |  Edit
+          button.btn.btn-sm.btn-outline-danger.px-3
+            i.bi.bi-trash
+            |  Remove
+// Add Supplier Modal (All Original Fields Restored)
+#addSupplierModal.modal.fade(tabindex='-1')
+  .modal-dialog.modal-lg.modal-dialog-centered
+    .modal-content.border-0
+      .modal-header.text-white(style='background-color: var(--bg-navy);')
+        h5.modal-title
+          i.bi.bi-plus-circle.me-2
+          |  Add New Supplier
+        button.btn-close.btn-close-white(type='button' data-bs-dismiss='modal')
+      .modal-body.p-4
+        form
+          .row.mb-3
+            .col-md-6
+              label.form-label.fw-bold.small Supplier Name
+              input.form-control(type='text' required='')
+            .col-md-6
+              label.form-label.fw-bold.small Status
+              select.form-select(required='')
+                option(value='active') Active
+                option(value='inactive') Inactive
+                option(value='pending') Pending
+          .row.mb-3
+            .col-md-6
+              label.form-label.fw-bold.small Contact Person
+              input.form-control(type='text' required='')
+            .col-md-6
+              label.form-label.fw-bold.small Phone Number
+              input.form-control(type='tel' required='')
+          .mb-3
+            label.form-label.fw-bold.small Email Address
+            input.form-control(type='email')
+          .mb-3
+            label.form-label.fw-bold.small Supplier Address
+            textarea.form-control(rows='2')
+          .mb-3
+            label.form-label.fw-bold.small Products Supplied
+            textarea.form-control(rows='2' placeholder='List products supplied')
+          .mb-4
+            label.form-label.fw-bold.small Supplier Logo
+            input.form-control(type='file' accept='image/*')
+          button.btn.btn-primary.w-100.py-2.fw-bold(type='submit') Save Supplier
+// Edit Supplier Modal (All Original Fields Restored)
+#editSupplierModal.modal.fade(tabindex='-1')
+  .modal-dialog.modal-lg.modal-dialog-centered
+    .modal-content.border-0
+      .modal-header.text-white(style='background-color: var(--primary-blue);')
+        h5.modal-title
+          i.bi.bi-pencil.me-2
+          |  Edit Supplier
+        button.btn-close.btn-close-white(type='button' data-bs-dismiss='modal')
+      .modal-body.p-4
+        form
+          .row.mb-3
+            .col-md-6
+              label.form-label.fw-bold.small Supplier Name
+              input.form-control(type='text' value='Uganda Cement LTD' required='')
+            .col-md-6
+              label.form-label.fw-bold.small Status
+              select.form-select(required='')
+                option(value='active' selected='') Active
+                option(value='inactive') Inactive
+                option(value='pending') Pending
+          .row.mb-3
+            .col-md-6
+              label.form-label.fw-bold.small Contact Person
+              input.form-control(type='text' value='John Mugisha' required='')
+            .col-md-6
+              label.form-label.fw-bold.small Phone Number
+              input.form-control(type='tel' value='+256 712 345 678' required='')
+          .mb-3
+            label.form-label.fw-bold.small Email Address
+            input.form-control(type='email' value='john@ugandacement.com')
+          .mb-3
+            label.form-label.fw-bold.small Supplier Address
+            textarea.form-control(rows='2') Plot 15, Industrial Area, Kampala
+          .mb-3
+            label.form-label.fw-bold.small Products Supplied
+            textarea.form-control(rows='2') Cement, Concrete Mix
+          .mb-4
+            label.form-label.fw-bold.small Update Logo
+            input.form-control(type='file' accept='image/*')
+          button.btn.btn-primary.w-100.py-2.fw-bold(type='submit') Update Supplier
+script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')

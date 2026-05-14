@@ -1,0 +1,140 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+    title Edit Sale - NYONDO Stock
+
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+    link(
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css'
+    )
+
+    style.
+      body {
+        background: #0f172a;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      .card-box {
+        background: #fff;
+        border-radius: 14px;
+        padding: 20px;
+        max-width: 800px;   /* smaller width */
+        margin: 40px auto;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      }
+
+      .title {
+        font-weight: 800;
+        font-size: 22px;
+        border-bottom: 2px solid #f97316;
+        display: inline-block;
+        padding-bottom: 6px;
+        margin-bottom: 18px;
+      }
+
+      .form-label {
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .form-control, .form-select {
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .btn-save {
+        background: #0f172a;
+        color: white;
+        font-weight: 700;
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        border: none;
+      }
+
+      .btn-save:hover {
+        background: #1e293b;
+      }
+
+      .btn-cancel {
+        background: #dc3545;
+        color: white;
+        font-weight: 700;
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        border: none;
+      }
+
+      .btn-cancel:hover {
+        background: #b02a37;
+      }
+
+  body
+    .card-box
+
+      h2.title
+        i.bi.bi-pencil-square.me-2
+        | Edit Sale
+
+      form(action='/update-sales/' + sale._id method='POST')
+
+        .row.g-2
+
+          .col-md-6
+            label.form-label Product
+            select.form-select(name='product' required)
+              option(selected=sale.product=='Cement iiN') Cement iiN
+              option(selected=sale.product=='Cement iiiN') Cement iiiN
+              option(selected=sale.product=='Iron Bars 10mm') Iron bars 10mm
+              option(selected=sale.product=='Iron Bars 12mm') Iron bars 12mm
+              option(selected=sale.product=='Wheelbarrows') Wheelbarrows
+              option(selected=sale.product=='Iron Sheets') Iron Sheets
+
+          .col-md-6
+            label.form-label Qty
+            input.form-control(type='number' name='quantity' value=sale.quantity required)
+
+          .col-md-6
+            label.form-label Unit Price
+            input.form-control(type='number' name='unitPrice' value=sale.unitPrice required)
+
+          .col-md-6
+            label.form-label Customer
+            input.form-control(type='text' name='customerName' value=sale.customerName required)
+
+          .col-md-6
+            label.form-label Contact
+            input.form-control(type='text' name='customerContact' value=sale.customerContact required)
+
+          .col-md-6
+            label.form-label Payment
+            select.form-select(name='paymentMethod' required)
+              option(selected=sale.paymentMethod=='Cash') Cash
+              option(selected=sale.paymentMethod=='Mobile Money') Mobile Money
+              option(selected=sale.paymentMethod=='Credit') Credit
+
+          .col-md-6
+            label.form-label Delivery KM
+            input.form-control(type='number' name='deliveryDistance' value=sale.deliveryDistance required)
+
+        .row.mt-3.g-2
+
+          .col-md-6
+            button.btn-save(type='submit')
+              i.bi.bi-check-circle.me-2
+              | Save
+
+          .col-md-6
+            a.btn.btn-cancel(href='/sales')
+              i.bi.bi-x-circle.me-2
+              | Cancel

@@ -1,0 +1,30 @@
+{
+  "name": "nyondo-hw",
+  "version": "1.0.0",
+  "description": "nyondo project",
+  "keywords": [
+    "Nyodo"
+  ],
+  "license": "ISC",
+  "author": "Siama Ismail",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.6.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^9.1.0",
+    "pug": "^3.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

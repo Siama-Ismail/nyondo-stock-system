@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - NYONDO General Hardware LTD</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      /* NYONDO Hardware Professional Palette */
+      --primary-navy: #0f172a;    /* Deep Navy */
+      --accent-orange: #f97316;   /* Bright Orange */
+      --action-blue: #1e40af;     /* Hardware Blue */
+      --light-bg: #f8fafc;
+    }
+
+    body {
+      background-color: var(--light-bg);
+    }
+
+    .sidebar {
+      background: var(--primary-navy);
+      min-height: 100vh;
+      color: white;
+      border-right: 4px solid var(--accent-orange);
+    }
+
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 5px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .sidebar .nav-link:hover {
+      background: var(--action-blue);
+      color: white;
+    }
+
+    .sidebar .nav-link.active {
+      background: var(--action-blue);
+      border-left: 4px solid var(--accent-orange);
+      color: white;
+    }
+
+    .card-counter {
+      border-radius: 12px;
+      transition: all 0.3s;
+      border: none;
+    }
+
+    .card-counter:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Keep your original background utility overrides */
+    .bg-primary { background-color: var(--action-blue) !important; }
+    .bg-success { background-color: #10b981 !important; } /* Modern Green */
+    .bg-warning { background-color: var(--accent-orange) !important; color: white !important; }
+    .bg-info { background-color: #0ea5e9 !important; }
+
+    .navbar {
+      background: var(--primary-navy);
+      border-bottom: 2px solid var(--accent-orange);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .navbar-brand span {
+      color: var(--accent-orange);
+    }
+
+    .card {
+      border: none;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .card-header.bg-dark {
+      background-color: var(--primary-navy) !important;
+      border-bottom: 2px solid var(--accent-orange);
+    }
+
+    .btn-primary { background-color: var(--action-blue); border: none; }
+    .btn-success { background-color: #10b981; border: none; }
+    .btn-warning { background-color: var(--accent-orange); border: none; color: white; }
+
+    .table-hover tbody tr:hover {
+      background-color: rgba(30, 64, 175, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-house-gear"></i> NYONDO <span>HARDWARE</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="bi bi-bell"></i></a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle"></i> Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 sidebar p-0">
+        <div class="text-center py-4">
+          <h4 class="fw-bold">NYONDO <span>STOCK</span></h4>
+        </div>
+        <ul class="nav flex-column px-3">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="stock.html">
+              <i class="bi bi-box-seam me-2"></i>Inventory
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sales.html">
+              <i class="bi bi-receipt me-2"></i>Sales
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="creditscheme.html">
+              <i class="bi bi-credit-card me-2"></i>Credit
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="transport-management.html">
+              <i class="bi bi-truck me-2"></i>Transport
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="suppliers.html">
+              <i class="bi bi-boxes me-2"></i>Suppliers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="staff-management.html">
+              <i class="bi bi-people me-2"></i>Staff
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="reports.html">
+              <i class="bi bi-bar-chart me-2"></i>Reports
+            </a>
+          </li>
+          <li class="nav-item mt-4">
+            <a class="nav-link text-danger" href="logout.html">
+              <i class="bi bi-box-arrow-right me-2"></i>Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-10 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold" style="color: var(--primary-navy);">Admin Dashboard</h2>
+          <div class="alert alert-info mb-0 py-2 border-0 shadow-sm" style="background-color: white; color: var(--primary-navy); border-left: 4px solid var(--action-blue) !important;">
+            <i class="bi bi-calendar-check me-2 text-primary"></i>Today: <span id="current-date"></span>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card card-counter bg-primary text-white shadow">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h5>Total Stock</h5>
+                    <h2>1,248</h2>
+                  </div>
+                  <i class="bi bi-box-seam display-4 opacity-50"></i>
+                </div>
+                <a href="stock.html" class="text-white small">View Details →</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card card-counter bg-success text-white shadow">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h5>Today's Sales</h5>
+                    <h2>UGX 4.2M</h2>
+                  </div>
+                  <i class="bi bi-currency-dollar display-4 opacity-50"></i>
+                </div>
+                <a href="sales.html" class="text-white small">View Details →</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card card-counter bg-warning text-white shadow">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h5>Pending Credit</h5>
+                    <h2>UGX 8.7M</h2>
+                  </div>
+                  <i class="bi bi-credit-card display-4 opacity-50"></i>
+                </div>
+                <a href="creditscheme.html" class="text-white small">View Details →</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card card-counter bg-info text-white shadow">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h5>Active Deliveries</h5>
+                    <h2>5</h2>
+                  </div>
+                  <i class="bi bi-truck display-4 opacity-50"></i>
+                </div>
+                <a href="transport.html" class="text-white small">View Details →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Sales Performance</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="salesChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Stock Distribution</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="stockChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Recent Transactions</h5>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>#10045</td>
+                      <td>Kato Construction</td>
+                      <td>UGX 1,250,000</td>
+                      <td><span class="badge bg-success">Paid</span></td>
+                      <td>10:25 AM</td>
+                    </tr>
+                    <tr>
+                      <td>#10044</td>
+                      <td>Nabukeera Hardware</td>
+                      <td>UGX 850,000</td>
+                      <td><span class="badge bg-warning">Credit</span></td>
+                      <td>9:40 AM</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Quick Actions</h5>
+              </div>
+              <div class="card-body">
+                <button class="btn btn-primary w-100 mb-3 py-2">
+                  <i class="bi bi-plus-circle me-2"></i>New Sale
+                </button>
+                <button class="btn btn-success w-100 mb-3 py-2">
+                  <i class="bi bi-box-arrow-in-down me-2"></i>Receive Stock
+                </button>
+                <button class="btn btn-warning w-100 mb-3 py-2">
+                  <i class="bi bi-truck me-2"></i>Schedule Delivery
+                </button>
+                <button class="btn btn-danger w-100 py-2">
+                  <i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alert
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Sales Chart
+    const salesChart = new Chart(document.getElementById('salesChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Monthly Sales',
+          data: [12000000, 15000000, 18000000, 13000000, 20000000, 22000000],
+          borderColor: '#1e40af',
+          backgroundColor: 'rgba(30, 64, 175, 0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) { return 'UGX ' + (value/1000000) + 'M'; }
+            }
+          }
+        }
+      }
+    });
+
+    // Stock Chart
+    const stockChart = new Chart(document.getElementById('stockChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Cement', 'Iron Bars', 'Tools', 'Plumbing'],
+        datasets: [{
+          data: [300, 150, 100, 200],
+          backgroundColor: ['#1e40af', '#10b981', '#f97316', '#ef4444']
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+
+    // Display current date
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

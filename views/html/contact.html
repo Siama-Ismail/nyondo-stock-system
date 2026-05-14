@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | NYONDO General Hardware LTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            /* The Unified Three-Color Palette */
+            --brand-navy: #0f172a;
+            --brand-orange: #f97316;
+            --brand-white: #ffffff;
+        }
+
+        body {
+            background-color: var(--brand-navy);
+            color: var(--brand-white);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Navbar updated to Brand Navy */
+        .navbar {
+            background-color: rgba(15, 23, 42, 0.95) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--brand-orange) !important;
+        }
+
+        /* Header updated to Navy with Orange accent */
+        header {
+            background: linear-gradient(180deg, #1e293b 0%, var(--brand-navy) 100%);
+            border-bottom: 3px solid var(--brand-orange);
+        }
+
+        /* Contact Cards using the Glassmorphism from the Dashboard */
+        .contact-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            height: 100%;
+            transition: 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .icon-box {
+            color: var(--brand-orange);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .text-orange {
+            color: var(--brand-orange) !important;
+        }
+
+        footer {
+            background-color: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                NYONDO <span class="text-orange">STOCK</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="credit-scheme.html">Credit Scheme</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="text-white text-center py-5">
+        <div class="container">
+            <h1 class="fw-bold display-4">Contact Us</h1>
+            <p class="lead opacity-75">We'd love to hear from you</p>
+        </div>
+    </header>
+
+    <!-- Contact Details -->
+    <section class="container my-5">
+        <div class="row g-4">
+            <!-- Location & Details -->
+            <div class="col-md-6">
+                <div class="contact-card">
+                    <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+                    <h3>Our Location</h3>
+                    <p class="opacity-75">Nansana, Uganda</p>
+                    
+                    <div class="icon-box mt-4"><i class="bi bi-telephone"></i></div>
+                    <h3>Phone</h3>
+                    <p class="opacity-75">+256 700 123 456</p>
+                    
+                    <div class="icon-box mt-4"><i class="bi bi-envelope"></i></div>
+                    <h3>Email</h3>
+                    <p class="opacity-75">info@nyondohardware.com</p>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="col-md-6">
+                <div class="contact-card">
+                    <div class="icon-box"><i class="bi bi-clock"></i></div>
+                    <h3>Business Hours</h3>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="opacity-75">Monday - Friday</span>
+                        <span>8:00 AM - 5:00 PM</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="opacity-75">Saturday</span>
+                        <span>9:00 AM - 2:00 PM</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3 pt-3 border-top border-white border-opacity-10">
+                        <span class="text-orange fw-bold">Sunday</span>
+                        <span class="text-orange fw-bold">Closed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0 opacity-75">&copy; 2026 <strong>NYONDO General Hardware LTD</strong>. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

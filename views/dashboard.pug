@@ -1,0 +1,198 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title NYONDO General Hardware LTD - Quality Building Materials
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+    style.
+      :root {
+        --navy: #0f172a;
+        --orange: #f97316;
+        --glass: rgba(255, 255, 255, 0.05);
+        --white: #ffffff;
+      }
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background-color: var(--navy);
+        color: var(--white);
+      }
+      .navbar {
+        background-color: rgba(15, 23, 42, 0.9) !important;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.8rem 0;
+      }
+      .navbar-brand span { color: var(--orange); }
+      .hero-section {
+        background-color: var(--navy);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        text-align: center;
+      }
+      .text-orange { color: var(--orange) !important; }
+      .btn-primary {
+        background-color: var(--orange);
+        border-color: var(--orange);
+        font-weight: 600;
+        padding: 0.8rem 2rem;
+        transition: 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #ea580c;
+        border-color: #ea580c;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2);
+      }
+      .feature-icon { font-size: 2.5rem; color: var(--orange); }
+      .contact-form-card {
+        border-left: 5px solid var(--orange) !important;
+        background: white;
+      }
+      footer {
+        background-color: var(--navy) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+  body
+    // Navbar
+    nav.navbar.navbar-expand-lg.navbar-dark.fixed-top
+      .container
+        a.navbar-brand.fw-bold.fs-3(href='#')
+          | NYONDO
+          span STOCK
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav')
+          span.navbar-toggler-icon
+        #navbarNav.collapse.navbar-collapse
+          ul.navbar-nav.ms-auto.align-items-center
+            li.nav-item
+              a.nav-link(href='#') Home
+            li.nav-item
+              a.nav-link(href='#products') Products
+            li.nav-item
+              a.nav-link(href='#services') Services
+            li.nav-item
+              a.nav-link(href='#about') About
+            li.nav-item.ms-lg-3
+              a.btn.btn-primary.px-4.shadow-sm(href='/login') Login
+
+    // Hero Section
+    section.hero-section
+      .container
+        .row.justify-content-center
+          .col-lg-9
+            h1.display-3.fw-bold.mb-4
+              | Quality Building Materials & 
+              span.text-orange Hardware
+            p.lead.mb-5.opacity-75 Supplying Uganda's construction industry with premium materials since 2005.
+            .d-flex.justify-content-center.gap-3
+              a.btn.btn-primary.btn-lg.shadow(href='#products')
+                i.bi.bi-box-seam.me-2
+                | View Products
+              a.btn.btn-outline-light.btn-lg(href='#contact') Contact Us
+
+    // Products Section
+    section#products.py-5
+      .container.py-5
+        .text-center.mb-5
+          h2.fw-bold Our Product Range
+          .mx-auto.mb-3(style='width: 50px; height: 4px; background-color: var(--orange);')
+        .row.g-4
+          .col-md-4
+            .card.h-100.shadow-sm.border-0
+              img.card-img-top(src='/images/materials.jpg' alt='Materials')
+              .card-body
+                h5.fw-bold Construction Materials
+                p.text-muted.small Cement, iron bars, bricks, and sand.
+          .col-md-4
+            .card.h-100.shadow-sm.border-0
+              img.card-img-top(src='/images/tools.jpg' alt='Tools')
+              .card-body
+                h5.fw-bold Tools & Equipment
+                p.text-muted.small Professional hand and power tools.
+          .col-md-4
+            .card.h-100.shadow-sm.border-0
+              img.card-img-top(src='/images/plumbing.jpg' alt='Plumbing')
+              .card-body
+                h5.fw-bold Plumbing & Electrical
+                p.text-muted.small Pipes, fittings, and heavy-duty wiring.
+
+    // Services Section
+    section#services.py-5
+      .container.py-5
+        .row.g-4.text-center
+          .col-md-4
+            .feature-icon.mb-3
+              i.bi.bi-truck
+            h4.fw-bold Fast Delivery
+            p.text-muted Direct site delivery anywhere in the region.
+          .col-md-4
+            .feature-icon.mb-3
+              i.bi.bi-credit-card
+            h4.fw-bold Credit Scheme
+            p.text-muted Flexible options for trusted contractors.
+          .col-md-4
+            .feature-icon.mb-3
+              i.bi.bi-shield-check
+            h4.fw-bold Quality Guarantee
+            p.text-muted Certified products for building safety.
+
+    // About Section
+    section#about.py-5
+      .container.py-5
+        .row.align-items-center
+          .col-lg-6
+            h2.fw-bold.mb-4
+              | Partnering to 
+              span.text-orange Build the Future
+            p.opacity-75.mb-4 Since 2005, NYONDO General Hardware has served as a cornerstone for construction in Uganda.
+            .row.g-3
+              .col-4
+                h3.fw-bold.text-orange.mb-0 18+
+                p.small.opacity-50 Years
+              .col-4
+                h3.fw-bold.text-orange.mb-0 500+
+                p.small.opacity-50 Products
+              .col-4
+                h3.fw-bold.text-orange.mb-0 1k+
+                p.small.opacity-50 Clients
+          .col-lg-6.mt-4.mt-lg-0.text-center
+            img.img-fluid.rounded-4.shadow-lg(src='/images/nyondohardware.png' alt='About Us')
+
+    // Contact Section
+    section#contact.py-5
+      .container.py-5
+        .row.g-5
+          .col-lg-5
+            h2.fw-bold.mb-4 Get In Touch
+            p.text-muted.mb-4 Visit our Kampala branch for a consultation or order materials directly.
+            .d-flex.mb-3
+              i.bi.bi-geo-alt.text-orange.fs-4.me-3
+              p.mb-0 Plot 42, Main Street, Kampala, Uganda
+            .d-flex.mb-3
+              i.bi.bi-telephone.text-orange.fs-4.me-3
+              p.mb-0 +256 712 345 678
+          .col-lg-7
+            .card.shadow-lg.p-4.contact-form-card.border-0
+              h4.fw-bold.mb-4 Send a Message
+              form
+                .row.g-3
+                  .col-md-6
+                    input.form-control.bg-light(type='text' placeholder='Name')
+                  .col-md-6
+                    input.form-control.bg-light(type='email' placeholder='Email')
+                  .col-12
+                    textarea.form-control.bg-light(rows='4' placeholder='Message')
+                  .col-12
+                    button.btn.btn-primary.w-100(type='submit') Send Message
+
+    // Footer
+    footer.text-white.py-5
+      .container.text-center
+        h4.fw-bold.mb-3
+          | NYONDO 
+          span.text-orange STOCK
+        p.opacity-50.small © 2026 NYONDO General Hardware LTD. All rights reserved.
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
