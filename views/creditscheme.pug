@@ -23,6 +23,7 @@ html
         --brand-white: #ffffff;
         --success-green: #10b981;
         --warning-amber: #f59e0b;
+        --action-blue: #1e40af;
       }
 
       body {
@@ -33,13 +34,42 @@ html
         font-family: sans-serif;
       }
 
-      .main-content {
-        flex: 1;
+      /* Sidebar Styles */
+      .sidebar {
+        background: var(--brand-navy);
+        min-height: 100vh;
+        color: white;
+        border-right: 4px solid var(--brand-orange);
+        position: fixed;
+        width: 250px;
+        z-index: 1000;
       }
 
-      .navbar {
-        background-color: rgba(15, 23, 42, 0.95) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      .sidebar .nav-link {
+        color: rgba(255,255,255,0.8);
+        margin-bottom: 5px;
+        font-weight: 500;
+        transition: 0.3s;
+        padding: 12px 20px;
+      }
+
+      .sidebar .nav-link:hover {
+        background: var(--action-blue);
+        color: white;
+      }
+
+      .sidebar .nav-link.active {
+        background: var(--action-blue);
+        border-left: 4px solid var(--brand-orange);
+        color: white;
+      }
+
+      .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       .text-orange {
@@ -141,280 +171,206 @@ html
       }
 
   body
+    .container-fluid.p-0
+      .row.g-0
+        // SIDEBAR
+        .col-md-2.sidebar.p-0
+          .text-center.py-4
+            h4.fw-bold.text-white
+              | NYONDO 
+              span.text-orange STOCK
+          
+          ul.nav.flex-column.px-3
+            li.nav-item
+              a.nav-link(href='/dashboard')
+                i.bi.bi-speedometer2.me-2
+                | Dashboard
+            li.nav-item
+              a.nav-link.active(href='/creditscheme')
+                i.bi.bi-credit-card.me-2
+                | Credit Scheme
+            li.nav-item.mt-4
+              a.nav-link.text-danger(href='/logout')
+                i.bi.bi-box-arrow-right.me-2
+                | Logout
 
-    .main-content
+        // MAIN CONTENT AREA
+        .col-md-10.main-content
+          .container-fluid
+            if error
+              .alert.alert-danger
+                = error
 
-      // NAVBAR
-      nav.navbar.navbar-expand-lg.navbar-dark.mb-4
+            // PAGE HEADER
+            .d-flex.justify-content-between.align-items-center.mb-4
+              div
+                h2.fw-bold Credit Management
+                p.text-orange.opacity-75.small
+                  | Track customer debt, limits, and payment deadlines.
 
-        .container
+              button.btn.btn-orange.px-4.py-2.shadow-sm(
+                data-bs-toggle='modal'
+                data-bs-target='#addCustomerModal'
+              )
+                i.bi.bi-person-plus-fill.me-2
+                | Register Account
 
-          a.navbar-brand.fw-bold(href='/dashboard')
-            | NYONDO 
-            span.text-orange STOCK
+            // SUMMARY CARDS
+            .row.mb-4.text-center
+              .col-md-4.mb-3
+                .p-3.table-container.border-start.border-4(
+                  style='border-color:white !important'
+                )
+                  small.text-uppercase.fw-bold.opacity-50
+                    | Total Outstanding
+                  h3.fw-bold.mt-1
+                    | UGX #{(totalOutstanding || 0).toLocaleString()}
 
-          .navbar-nav.ms-auto
+              .col-md-4.mb-3
+                .p-3.table-container.border-start.border-4(
+                  style='border-color:#f97316 !important'
+                )
+                  small.text-uppercase.fw-bold.opacity-50
+                    | Overdue Balance
+                  h3.fw-bold.mt-1.text-danger
+                    | UGX #{(overdueBalance || 0).toLocaleString()}
 
-            a.nav-link(href='/dashboard')
-              | Dashboard
+              .col-md-4.mb-3
+                .p-3.table-container.border-start.border-4(
+                  style='border-color:#10b981 !important'
+                )
+                  small.text-uppercase.fw-bold.opacity-50
+                    | Active Clients
+                  h3.fw-bold.mt-1
+                    = activeClients || 0
 
-            a.nav-link.active(href='/creditscheme')
-              | Credit Scheme
-
-      // MAIN CONTAINER
-      .container
-
-        if error
-          .alert.alert-danger
-            = error
-
-        // PAGE HEADER
-        .d-flex.justify-content-between.align-items-center.mb-4
-
-          div
-            h2.fw-bold Credit Management
-
-            p.text-orange.opacity-75.small
-              | Track customer debt, limits, and payment deadlines.
-
-          button.btn.btn-orange.px-4.py-2.shadow-sm(
-            data-bs-toggle='modal'
-            data-bs-target='#addCustomerModal'
-          )
-
-            i.bi.bi-person-plus-fill.me-2
-
-            | Register Account
-
-        // SUMMARY CARDS
-        .row.mb-4.text-center
-
-          .col-md-4.mb-3
-
-            .p-3.table-container.border-start.border-4(
-              style='border-color:white !important'
-            )
-
-              small.text-uppercase.fw-bold.opacity-50
-                | Total Outstanding
-
-              h3.fw-bold.mt-1
-                | UGX #{(totalOutstanding || 0).toLocaleString()}
-
-          .col-md-4.mb-3
-
-            .p-3.table-container.border-start.border-4(
-              style='border-color:#f97316 !important'
-            )
-
-              small.text-uppercase.fw-bold.opacity-50
-                | Overdue Balance
-
-              h3.fw-bold.mt-1.text-danger
-                | UGX #{(overdueBalance || 0).toLocaleString()}
-
-          .col-md-4.mb-3
-
-            .p-3.table-container.border-start.border-4(
-              style='border-color:#10b981 !important'
-            )
-
-              small.text-uppercase.fw-bold.opacity-50
-                | Active Clients
-
-              h3.fw-bold.mt-1
-                = activeClients || 0
-
-        // TABLE
-        .table-container
-
-          .table-responsive
-
-            table.table.table-hover.align-middle
-
-              thead.thead-custom
-
-                tr
-
-                  th.ps-4 Customer Details
-                  th Credit Limit
-                  th Current Debt
-                  th Utilization
-                  th Status
-                  th.text-end.pe-4 Actions
-
-              tbody
-
-                if credits && credits.length > 0
-
-                  each credit in credits
-
+            // TABLE
+            .table-container
+              .table-responsive
+                table.table.table-hover.align-middle
+                  thead.thead-custom
                     tr
+                      th.ps-4 Customer Details
+                      th Credit Limit
+                      th Current Debt
+                      th Utilization
+                      th Status
+                      th.text-end.pe-4 Actions
 
-                      td.ps-4
+                  tbody
+                    if credits && credits.length > 0
+                      each credit in credits
+                        tr
+                          td.ps-4
+                            .fw-bold
+                              = credit.businessName
+                            small.opacity-50
+                              | NIN: #{credit.nationalId || 'N/A'} | #{credit.phone}
+                          td
+                            | UGX #{(credit.approvedLimit || 0).toLocaleString()}
+                          td.fw-bold.text-danger
+                            | UGX #{(credit.currentDebt || 0).toLocaleString()}
+                          td(style='width:150px')
+                            - const percent = Math.min(((credit.currentDebt || 0) / (credit.approvedLimit || 1)) * 100, 100)
+                            small.d-block.mb-1.opacity-75
+                              | #{Math.round(percent)}% used
+                            .progress
+                              .progress-bar(style=`width:${percent}%`)
+                          td
+                            if credit.status === 'Overdue'
+                              span.status-overdue
+                                | Overdue
+                            else if credit.status === 'Due Soon'
+                              span.status-warning
+                                | Due Soon
+                            else
+                              span.status-good
+                                | Active
+                          td.text-end.pe-4
+                            a.btn.btn-sm.btn-danger(
+                              href='/delete-credit/' + credit._id
+                              onclick="return confirm('Delete this account?')"
+                            )
+                              | Delete
+                    else
+                      tr
+                        td.text-center.py-4(colspan='6')
+                          | No credit accounts found
 
-                        .fw-bold
-                          = credit.businessName
+          footer.text-center.py-4.mt-auto
+            p.mb-0.opacity-50.small
+              | © 2026 
+              strong
+                | NYONDO General Hardware LTD
 
-                        small.opacity-50
-                          | NIN: #{credit.nationalId || 'N/A'} | #{credit.phone}
-
-                      td
-                        | UGX #{(credit.approvedLimit || 0).toLocaleString()}
-
-                      td.fw-bold.text-danger
-                        | UGX #{(credit.currentDebt || 0).toLocaleString()}
-
-                      td(style='width:150px')
-
-                        - const percent = Math.min(((credit.currentDebt || 0) / (credit.approvedLimit || 1)) * 100, 100)
-
-                        small.d-block.mb-1.opacity-75
-                          | #{Math.round(percent)}% used
-
-                        .progress
-                          .progress-bar(style=`width:${percent}%`)
-
-                      td
-
-                        if credit.status === 'Overdue'
-
-                          span.status-overdue
-                            | Overdue
-
-                        else if credit.status === 'Due Soon'
-
-                          span.status-warning
-                            | Due Soon
-
-                        else
-
-                          span.status-good
-                            | Active
-
-                      td.text-end.pe-4
-
-                        a.btn.btn-sm.btn-danger(
-                          href='/delete-credit/' + credit._id
-                          onclick="return confirm('Delete this account?')"
-                        )
-                          | Delete
-
-                else
-
-                  tr
-
-                    td.text-center.py-4(colspan='6')
-
-                      | No credit accounts found
-
-    // MODAL
+    // MODAL (Restored exactly as provided)
     #addCustomerModal.modal.fade(
       tabindex='-1'
       aria-hidden='true'
     )
-
       .modal-dialog.modal-lg.modal-dialog-centered
-
         .modal-content
-
           .modal-header.border-bottom.border-white.border-opacity-10
-
             h5.modal-title.fw-bold
-
               i.bi.bi-person-plus-fill.me-2.text-orange
-
               | New Credit Account
-
             button.btn-close.btn-close-white(
               type='button'
               data-bs-dismiss='modal'
             )
-
           form(action='/add-credit' method='POST')
-
             .modal-body.p-4
-
               .row.g-3
-
                 .col-md-6
-
                   label.form-label.small.opacity-75
                     | Business Name
-
                   input.form-control(
                     type='text'
                     name='businessName'
                     required
                   )
-
                 .col-md-6
-
                   label.form-label.small.opacity-75
                     | National ID (NIN)
-
                   input.form-control(
                     type='text'
                     name='nationalId'
                   )
-
                 .col-md-6
-
                   label.form-label.small.opacity-75
                     | Phone Number
-
                   input.form-control(
                     type='text'
                     name='phone'
                     required
                   )
-
                 .col-md-6
-
                   label.form-label.small.opacity-75
                     | Approved Limit (UGX)
-
                   input.form-control(
                     type='number'
                     name='approvedLimit'
                     required
                   )
-
                 .col-md-6
-
                   label.form-label.small.opacity-75
                     | Payment Cycle
-
                   select.form-select(
                     name='paymentCycle'
                     required
                   )
-
                     option(value='30')
                       | Monthly (30 Days)
-
                     option(value='14')
                       | Bi-Weekly (14 Days)
-
             .modal-footer.border-top.border-white.border-opacity-10
-
               button.btn.btn-link.text-white.text-decoration-none(
                 type='button'
                 data-bs-dismiss='modal'
               )
                 | Cancel
-
               button.btn.btn-orange.px-4(type='submit')
                 | Create Account
-
-    footer.text-center.py-4.mt-4
-
-      p.mb-0.opacity-50.small
-
-        | © 2026 
-
-        strong
-          | NYONDO General Hardware LTD
 
     script(
       src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'

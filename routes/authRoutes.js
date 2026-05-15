@@ -93,7 +93,7 @@ router.post('/login', (req, res, next) => {
       // ROLE BASED REDIRECTS
       if (user.role === 'admin') {
 
-        return res.redirect('/admindashboard');
+        return res.redirect('/admin');
 
       }
 

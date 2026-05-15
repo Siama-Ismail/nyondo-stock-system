@@ -5,101 +5,44 @@ const Stock = require('../models/Stock');
 const Sales = require('../models/Sales');
 const Credit = require('../models/Credit');
 
-
-// ============================
-// ADMIN DASHBOARD
-// ============================
-router.get('/dashboard', async (req, res) => {
+router.get('/admin', async (req, res) => {
 
   try {
 
-    // =========================
-    // STOCK DETAILS
-    // =========================
     const stocks = await Stock.find();
-
-    let totalStock = 0;
-    let inventoryValue = 0;
-
-    stocks.forEach(stock => {
-
-      totalStock += Number(stock.quantity);
-
-      inventoryValue +=
-        Number(stock.quantity) *
-        Number(stock.sellingprice || 0);
-
-    });
-
-
-    // =========================
-    // SALES DETAILS
-    // =========================
-    const sales = await Sales.find();
-
-    let totalSales = 0;
-
-    sales.forEach(sale => {
-
-      totalSales += Number(sale.total);
-
-    });
-
-
-    // =========================
-    // CREDIT DETAILS
-    // =========================
+    const sales = await Sales.find().sort({ createdAt: -1 });
     const credits = await Credit.find();
 
-    let totalCredit = 0;
+    const totalStockItems = stocks.length;
 
-    credits.forEach(credit => {
+    const inventoryValue = stocks.reduce((total, item) => {
+      return total + (item.quantity * item.sellingprice);
+    }, 0);
 
-      totalCredit += Number(credit.currentDebt || 0);
+    const totalSales = sales.reduce((total, sale) => {
+      return total + sale.total;
+    }, 0);
 
-    });
+    const totalCredit = credits.reduce((total, credit) => {
+      return total + credit.balance;
+    }, 0);
 
+    const lowStock = stocks.filter(item => item.quantity < 20);
 
-    // =========================
-    // RECENT SALES
-    // =========================
-    const recentSales = await Sales
-      .find()
-      .sort({ createdAt: -1 })
-      .limit(5);
+    const recentSales = sales.slice(0, 5);
 
-
-    // =========================
-    // LOW STOCK ALERTS
-    // =========================
-    const lowStock = await Stock.find({
-      quantity: { $lt: 20 }
-    });
-
-
-    // =========================
-    // RENDER DASHBOARD
-    // =========================
-    res.render('dashboard', {
-
-      totalStock,
-
+    res.render('admin', {
+      totalStockItems,
       inventoryValue,
-
       totalSales,
-
       totalCredit,
-
-      recentSales,
-
-      lowStock
-
+      lowStock,
+      recentSales
     });
 
   } catch (error) {
 
     console.log(error);
-
     res.send(error.message);
 
   }
