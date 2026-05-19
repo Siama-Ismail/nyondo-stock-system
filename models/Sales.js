@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
 
 const salesSchema = new mongoose.Schema({
-  product: {
-    type: String,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true
-  },
-  unitPrice: {
-    type: Number,
-    required: true
-  },
   customerName: {
     type: String,
     required: true
@@ -23,24 +11,31 @@ const salesSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    // enum:['Cash At Hand','Mobile Money','Credit'],
     required: true
   },
   deliveryDistance: {
     type: Number,
     required: true
   },
-
+  items: [{
+    product: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    sellingPrice: { type: Number, required: true },
+    itemTotal: { type: Number, required: true }
+  }],
+  subTotal: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   transportFee: {
     type: Number,
     default: 0
   },
-
   total: {
     type: Number,
     default: 0
   },
-
   createdAt: {
     type: Date,
     default: Date.now

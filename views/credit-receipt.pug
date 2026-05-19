@@ -1,0 +1,142 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Receipt - NYONDO HARDWARE
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+    style.
+      :root {
+        --primary-navy: #111827;
+        --accent-orange: #FD7E14;
+        --silver-bg: #E5E7EB;
+      }
+      body {
+        background-color: var(--silver-bg);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: var(--primary-navy);
+      }
+      .receipt-card {
+        max-width: 600px;
+        margin: auto;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        background: #ffffff;
+      }
+      .title {
+        color: var(--primary-navy);
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+      .brand-highlight {
+        color: var(--accent-orange);
+        font-weight: bold;
+      }
+      .receipt-divider {
+        border-top: 2px dashed #d1d5db;
+        opacity: 1;
+        margin: 1.5rem 0;
+      }
+      .btn-print {
+        background: var(--primary-navy);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: 0.2s ease-in-out;
+      }
+      .btn-print:hover {
+        background: var(--accent-orange);
+        color: var(--primary-navy);
+      }
+      @media print {
+        body {
+          background-color: #ffffff;
+        }
+        .receipt-card {
+          box-shadow: none;
+          border: none;
+          padding: 0 !important;
+          margin: 0 auto;
+        }
+        .btn-print, .workflow-menu {
+          display: none !important;
+        }
+      }
+  body
+    .container.py-5
+      .card.receipt-card.p-5
+        h2.text-center.title
+          | NYONDO 
+          span(style='color: var(--accent-orange);') HARDWARE
+        h6.text-center.text-muted.mb-4.fw-bold(style='letter-spacing: 1px;') TRANSACTION RECEIPT
+        
+        .receipt-divider
+
+        p
+          strong Receipt Number:
+          |  #{deposit.receiptNumber}
+        p
+          strong Customer:
+          |  #{deposit.customer ? deposit.customer.fullName : 'Deleted Customer'}
+        p
+          strong Phone:
+          |  #{deposit.customer ? deposit.customer.phone : 'N/A'}
+        p
+          strong Item/Activity:
+          |  #{deposit.item}
+        p
+          strong Quantity:
+          |  #{deposit.quantity}
+        p
+          strong Unit Price:
+          |  UGX #{deposit.unitPrice.toLocaleString()}
+        p
+          strong Transport Fee:
+          |  UGX #{deposit.transportFee.toLocaleString()}
+        p
+          strong Total Amount (This Order):
+          span.brand-highlight
+            |  UGX #{deposit.totalPrice.toLocaleString()}
+        p
+          strong Amount Paid:
+          span.text-success.fw-bold
+            |  UGX #{deposit.amount.toLocaleString()}
+        p
+          strong Outstanding Balance for Order:
+          if deposit.balance <= 0
+            span.text-success.fw-bold  CLEARED
+          else
+            span.text-danger.fw-bold  UGX #{deposit.balance.toLocaleString()}
+        
+        if deposit.customer
+          p
+            strong Customer Grand Total Balance Due:
+            span.text-dark.fw-bold
+              |  UGX #{deposit.customer.balance.toLocaleString()}
+        p
+          strong Status:
+          if deposit.status === 'CLEAR' || deposit.balance <= 0
+            span.badge.bg-success-subtle.text-success.px-2.py-1.ms-1 CLEAR
+          else
+            span.badge.bg-warning-subtle.text-warning.px-2.py-1.ms-1 PENDING
+        p
+          strong Payment Method:
+          |  #{deposit.paymentMethod}
+        p
+          strong Date:
+          |  #{new Date(deposit.createdAt).toLocaleDateString()}
+
+        button.btn.btn-print.w-100.mt-4.py-2(onclick='window.print()') 🖨️ Print Receipt
+
+      //- WORKFLOW NAVIGATION ACTIONS PANEL (Hidden automatically during print)
+      .container.mt-4.workflow-menu(style="max-width: 600px; padding: 0;")
+        .card.p-3.border-0.shadow-sm(style="background-color: var(--primary-navy); border-radius: 12px;")
+          p.text-center.text-white.small.fw-bold.text-uppercase.mb-3 Next Action Workflow Menu
+          .d-flex.flex-wrap.gap-2.justify-content-center
+            a.btn.btn-sm.btn-light.fw-semibold(href='/credit') 📋 View Customer Ledger List
+            if deposit.customer
+              a.btn.btn-sm.btn-warning.fw-semibold(href='/deposit/' + deposit.customer._id) 💰 Collect Another Top-Up Payment

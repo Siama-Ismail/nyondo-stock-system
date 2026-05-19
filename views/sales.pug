@@ -18,10 +18,10 @@ html
 
     style.
       :root {
-        --brand-navy: #0f172a;
-        --brand-orange: #f97316;
-        --sidebar-hover: #1e293b;
-        --light-bg: #f8fafc;
+        --brand-navy: #111827; /* Matte Black */
+        --brand-orange: #10B981; /* Emerald Green */
+        --sidebar-hover: #1f2937; /* Menu hover background */
+        --light-bg: #E5E7EB; /* Silver Gray */
       }
 
       body {
@@ -34,11 +34,10 @@ html
         background-color: var(--brand-navy);
         min-height: 100vh;
         position: fixed;
-        padding: 0;
       }
 
       .brand-logo {
-        color: var(--brand-orange);
+        color: var(--brand-orange) !important;
         font-weight: 800;
         font-size: 1.5rem;
         padding: 25px 20px;
@@ -49,19 +48,12 @@ html
       .nav-link {
         color: #94a3b8 !important;
         padding: 15px 25px;
-        font-weight: 500;
-        transition: 0.3s;
       }
 
-      .nav-link:hover {
-        background-color: var(--sidebar-hover);
-        color: #ffffff !important;
-      }
-
+      .nav-link:hover,
       .nav-link.active {
         background-color: var(--sidebar-hover);
-        color: #ffffff !important;
-        border-left: 4px solid var(--brand-orange);
+        color: #10B981 !important;
       }
 
       .main-content {
@@ -70,79 +62,40 @@ html
       }
 
       .section-card {
-        background: #ffffff;
+        background: #fff;
         border-radius: 12px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         padding: 30px;
         margin-bottom: 30px;
+        border: 1px solid #d1d5db;
       }
 
       .section-title {
         color: var(--brand-navy);
         font-weight: 700;
         border-bottom: 3px solid var(--brand-orange);
-        padding-bottom: 8px;
-        margin-bottom: 30px;
         display: inline-block;
+        margin-bottom: 20px;
       }
 
-      .form-label {
-        color: #475569;
+      .btn-primary {
+        background-color: #10B981 !important;
+        border-color: #10B981 !important;
+        color: #111827 !important;
         font-weight: 600;
-        font-size: 0.9rem;
       }
-
-      .form-control,
-      .form-select {
-        border: 1px solid #e2e8f0;
-        padding: 10px;
-        border-radius: 6px;
-      }
-
-      .btn-add-sale {
-        background-color: var(--brand-navy);
-        color: white;
-        border: none;
-        padding: 12px;
-        font-weight: 700;
-        border-radius: 6px;
-        width: 100%;
-        margin-top: 15px;
-        transition: 0.3s;
-      }
-
-      .btn-add-sale:hover {
-        background-color: var(--brand-orange);
-      }
-
-      .table thead th {
-        background-color: #f8fafc;
-        color: #64748b;
-        font-weight: 700;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-      }
-
-      @media(max-width:768px){
-        .sidebar {
-          position: relative;
-          min-height: auto;
-        }
-
-        .main-content {
-          margin-left: 0;
-          padding: 20px;
-        }
+      .btn-primary:hover {
+        background-color: #059669 !important;
+        border-color: #059669 !important;
       }
 
   body
     .container-fluid
       .row
 
+        // ================= SIDEBAR =================
         nav.col-md-2.sidebar.d-none.d-md-block
-          a.brand-logo(href='/dashboard')
-            | NYONDO STOCK
+          a.brand-logo(href='/dashboard') NYONDO STOCK
 
           .nav.flex-column.mt-2
             a.nav-link(href='/dashboard')
@@ -158,42 +111,17 @@ html
                 i.bi.bi-box-arrow-right.me-2
                 | Logout
 
+        // ================= MAIN =================
         main.col-md-10.main-content
 
+          // ================= FORM =================
           .section-card
             h4.section-title Record Sale
 
             form(action='/add-sales' method='POST')
-              .row.g-3
-
+              h5.text-muted.mb-3.fs-6 Customer Information
+              .row.g-3.mb-4
                 .col-md-4
-                  label.form-label Product Name
-                  select.form-select(name='product' required)
-                    option(value='') Select Product
-                    option(value='Cement iiN') Cement iiN
-                    option(value='Cement iiiN') Cement iiiN
-                    option(value='Iron Bars 10mm') Iron Bars 10mm
-                    option(value='Iron Bars 12mm') Iron Bars 12mm
-                    option(value='Iron Bars 16mm') Iron Bars 16mm
-                    option(value='Nails Inch 1') Nails Inch 1
-                    option(value='Nails Inch 2') Nails Inch 2
-                    option(value='Nails Inch 3') Nails Inch 3
-                    option(value='Nails Inch 4') Nails Inch 4
-                    option(value='Nails Inch 5') Nails Inch 5
-                    option(value='Wheelbarrows') Wheelbarrows
-                    option(value='Wire Mesh') Wire Mesh
-                    option(value='Barbed Wires') Barbed Wires
-                    option(value='Iron Sheets') Iron Sheets
-
-                .col-md-2
-                  label.form-label Quantity
-                  input.form-control(type='number' name='quantity' required)
-
-                .col-md-3
-                  label.form-label Unit Price (UGX)
-                  input.form-control(type='number' name='unitPrice' required)
-
-                .col-md-3
                   label.form-label Customer Name
                   input.form-control(type='text' name='customerName' required)
 
@@ -212,10 +140,39 @@ html
                   label.form-label Delivery Distance (KM)
                   input.form-control(type='number' name='deliveryDistance' required)
 
-              button.btn.btn-add-sale(type='submit')
-                i.bi.bi-plus-circle.me-2
-                | Add Sale
+              h5.text-muted.mb-3.fs-6 Products Ordered
+              
+              // Container where dynamic multi-item rows are injected
+              #items-container
+                .row.g-3.item-row.mb-3
+                  .col-md-8
+                    label.form-label Product Name
+                    select.form-select(name='product' required)
+                      option(value='') Select Product
+                      if stocks && stocks.length
+                        each stock in stocks
+                          option(value=stock.productname) #{stock.productname} - Qty Available: #{stock.quantity} [UGX #{stock.sellingPrice.toLocaleString()}]
+                      else
+                        option(value='') No stock available
 
+                  .col-md-3
+                    label.form-label Quantity
+                    input.form-control(type='number' name='quantity' min='1' required)
+
+                  .col-md-1.d-flex.align-items-end
+                    button.btn.btn-outline-danger.w-100(type='button' onclick='removeRow(this)')
+                      i.bi.bi-trash
+
+              button.btn.btn-outline-secondary.btn-sm.mb-4(type='button' id='add-item-btn')
+                i.bi.bi-plus.me-1
+                | Add Another Item
+
+              button.btn.btn-primary.w-100(type='submit')
+                i.bi.bi-plus-circle.me-2
+                | Add Sale &amp; Print Receipt
+
+
+          // ================= TABLE =================
           .section-card
             h4.section-title Sales Records
 
@@ -223,28 +180,23 @@ html
               table.table.table-hover.align-middle
                 thead
                   tr
-                    th Product
-                    th Qty
-                    th Unit Price
                     th Customer
                     th Contact
-                    th Payment
+                    th Items Ordered
                     th Distance
                     th Transport
-                    th Total
-                    th Date 
+                    th Grand Total
+                    th Date
                     th Action
 
                 tbody
-                  if sales.length > 0
+                  if sales && sales.length > 0
                     each sale in sales
                       tr
-                        td= sale.product
-                        td= sale.quantity
-                        td UGX #{sale.unitPrice}
-                        td= sale.customerName
+                        td.fw-bold= sale.customerName
                         td= sale.customerContact
-                        td= sale.paymentMethod
+                        td
+                          span.badge.bg-dark #{sale.items ? sale.items.length : 0} Item(s)
                         td #{sale.deliveryDistance} KM
 
                         td
@@ -252,33 +204,55 @@ html
                             span.badge.bg-success Free
                           else
                             span.badge.bg-warning.text-dark
-                              | UGX #{sale.transportFee}
+                              | UGX #{sale.transportFee.toLocaleString()}
 
-                        td.fw-bold
-                          | UGX #{sale.total}
+                        td.fw-bold.text-success
+                          | UGX #{sale.total.toLocaleString()}
 
                         td
                           = new Date(sale.createdAt).toLocaleDateString()
 
                         td
-                          .d-flex.gap-2
-                            a.btn.btn-sm.btn-outline-dark(href='/edit-sales/' + sale._id)
-                              i.bi.bi-pencil
+                          a.btn.btn-sm.btn-danger(
+                            href='/delete-sales/' + sale._id
+                            onclick="return confirm('Delete this sale record?')"
+                          )
+                            i.bi.bi-trash
 
-                            a.btn.btn-sm.btn-danger(
-                              href='/delete-sales/' + sale._id
-                              onclick="return confirm('Delete this sales item?')"
-                            )
-                              i.bi.bi-trash
-                              
-                            a.btn.btn-sm.btn-outline-primary(href='/receipt/' + sale._id)
-                              i.bi.bi-receipt
+                          a.btn.btn-sm.btn-outline-primary.ms-1(href='/receipt/' + sale._id)
+                            i.bi.bi-receipt
 
                   else
                     tr
-                      td.text-center.py-4(colspan='10')
+                      td.text-center.py-4(colspan='8')
                         | No sales records found.
+
 
     script(
       src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
     )
+    
+    script.
+      // Dynamic row replication frontend script
+      document.getElementById('add-item-btn').addEventListener('click', function() {
+        const container = document.getElementById('items-container');
+        const rows = container.querySelectorAll('.item-row');
+        if (rows.length > 0) {
+          const newRow = rows[0].cloneNode(true);
+          
+          // Reset form fields within the newly cloned block
+          newRow.querySelector('select').value = '';
+          newRow.querySelector('input').value = '';
+          container.appendChild(newRow);
+        }
+      });
+
+      function removeRow(button) {
+        const container = document.getElementById('items-container');
+        const rows = container.querySelectorAll('.item-row');
+        if (rows.length > 1) {
+          button.closest('.item-row').remove();
+        } else {
+          alert("An invoice must contain at least one item line.");
+        }
+      }

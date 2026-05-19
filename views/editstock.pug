@@ -17,8 +17,8 @@ html
 
     style.
       body {
-        background-color: #0f172a;
-        color: white;
+        background-color: #E5E7EB;
+        color: #111827;
         min-height: 100vh;
         font-family: sans-serif;
         padding: 40px;
@@ -26,17 +26,17 @@ html
 
       .edit-card {
         background: white;
-        color: #0f172a;
         border-radius: 14px;
         padding: 30px;
         max-width: 1100px;
         margin: auto;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        border: 1px solid #d1d5db;
       }
 
       .page-title {
         font-weight: 800;
-        border-bottom: 3px solid #f97316;
+        border-bottom: 3px solid #10B981;
         padding-bottom: 10px;
         margin-bottom: 30px;
         display: inline-block;
@@ -45,7 +45,7 @@ html
       .form-label {
         font-size: 0.85rem;
         font-weight: 700;
-        color: #475569;
+        color: #4b5563;
       }
 
       .form-control,
@@ -54,8 +54,14 @@ html
         padding: 10px;
       }
 
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #10B981;
+        box-shadow: none;
+      }
+
       .btn-update {
-        background-color: #0f172a;
+        background-color: #10B981;
         color: white;
         border: none;
         padding: 12px;
@@ -65,8 +71,7 @@ html
       }
 
       .btn-update:hover {
-        background-color: #1e293b;
-        color: #f97316;
+        background-color: #059669;
       }
 
       .btn-cancel {
@@ -79,6 +84,12 @@ html
         text-decoration: none;
         display: inline-block;
         text-align: center;
+        transition: 0.3s;
+      }
+
+      .btn-cancel:hover {
+        background-color: #b91c1c;
+        color: white;
       }
 
   body
@@ -100,23 +111,20 @@ html
 
               select.form-select(name='productname' required)
 
-                option(value=stock.productname selected)
-                  = stock.productname
-
-                option(value='Cement iiN') Cement iiN
-                option(value='Cement iiiN') Cement iiiN
-                option(value='Iron Bars 10mm') Iron Bars 10mm
-                option(value='Iron Bars 12mm') Iron Bars 12mm
-                option(value='Iron Bars 16mm') Iron Bars 16mm
-                option(value='Nails 1 Inch') Nails 1 Inch
-                option(value='Nails 2 Inch') Nails 2 Inch
-                option(value='Nails 3 Inch') Nails 3 Inch
-                option(value='Nails 4 Inch') Nails 4 Inch
-                option(value='Nails 5 Inch') Nails 5 Inch
-                option(value='Wheelbarrows') Wheelbarrows
-                option(value='Wire Mesh') Wire Mesh
-                option(value='Barbed Wire') Barbed Wire
-                option(value='Iron Sheets') Iron Sheets
+                option(value='Cement iiN' selected=stock.productname=='Cement iiN') Cement iiN
+                option(value='Cement iiiN' selected=stock.productname=='Cement iiiN') Cement iiiN
+                option(value='Iron Bars 10mm' selected=stock.productname=='Iron Bars 10mm') Iron Bars 10mm
+                option(value='Iron Bars 12mm' selected=stock.productname=='Iron Bars 12mm') Iron Bars 12mm
+                option(value='Iron Bars 16mm' selected=stock.productname=='Iron Bars 16mm') Iron Bars 16mm
+                option(value='Nails 1 Inch' selected=stock.productname=='Nails 1 Inch') Nails 1 Inch
+                option(value='Nails 2 Inch' selected=stock.productname=='Nails 2 Inch') Nails 2 Inch
+                option(value='Nails 3 Inch' selected=stock.productname=='Nails 3 Inch') Nails 3 Inch
+                option(value='Nails 4 Inch' selected=stock.productname=='Nails 4 Inch') Nails 4 Inch
+                option(value='Nails 5 Inch' selected=stock.productname=='Nails 5 Inch') Nails 5 Inch
+                option(value='Wheelbarrows' selected=stock.productname=='Wheelbarrows') Wheelbarrows
+                option(value='Wire Mesh' selected=stock.productname=='Wire Mesh') Wire Mesh
+                option(value='Barbed Wire' selected=stock.productname=='Barbed Wire') Barbed Wire
+                option(value='Iron Sheets' selected=stock.productname=='Iron Sheets') Iron Sheets
 
             .col-md-3
               label.form-label Quantity
@@ -143,8 +151,8 @@ html
 
               input.form-control(
                 type='number'
-                name='sellingprice'
-                value=stock.sellingprice
+                name='sellingPrice'
+                value=stock.sellingPrice
                 required
               )
 
@@ -181,19 +189,14 @@ html
             .col-md-3
               label.form-label Payment Status
 
-              select.form-select(
-                name='paymentstatus'
-                required
-              )
+              select.form-select(name='paymentstatus' required)
 
-                option(value=stock.paymentstatus selected)
-                  = stock.paymentstatus
-
-                option(value='Cash At Hand') Cash At Hand
-                option(value='Mobile Money') Mobile Money
-                option(value='Credit') Credit
+                option(value='Cash At Hand' selected=stock.paymentstatus=='Cash At Hand') Cash At Hand
+                option(value='Mobile Money' selected=stock.paymentstatus=='Mobile Money') Mobile Money
+                option(value='Credit' selected=stock.paymentstatus=='Credit') Credit
 
             .col-12.mt-4
+
               .d-flex.gap-3
 
                 button.btn-update.w-100(type='submit')

@@ -1,0 +1,130 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+    title Customer Credit History
+
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+    style.
+      :root {
+        --primary-navy: #111827;
+        --accent-orange: #FD7E14;
+        --light-bg: #E5E7EB;
+      }
+
+      body {
+        background: var(--light-bg);
+        font-family: sans-serif;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      }
+
+  body
+
+    .container.py-5
+
+      .d-flex.justify-content-between.align-items-center.mb-4
+
+        h2.fw-bold CREDIT TRACKING
+
+        a.btn.btn-dark(
+          href='/credit'
+        ) Back
+
+      .card.p-4.mb-4
+
+        h4.fw-bold= customer.fullName
+
+        p.mb-2
+          strong Phone:
+          |  #{customer.phone}
+
+        p.mb-0
+          strong Total Account Balance:
+          span.text-danger.fw-bold
+            |  UGX #{customer.balance.toLocaleString()}
+
+      if groupedItems.length === 0
+
+        .alert.alert-info
+          | No credit records found.
+
+      each item in groupedItems
+
+        .card.p-4.mb-4
+
+          .d-flex.justify-content-between.align-items-center
+
+            h5.fw-bold= item.item
+
+            if item.status === 'CLEAR'
+              span.badge.bg-success CLEAR
+            else
+              span.badge.bg-warning.text-dark PENDING
+
+          hr
+
+          .row
+
+            .col-md-3.mb-3
+
+              p.mb-1.fw-bold Quantity
+
+              p= item.quantity
+
+            .col-md-3.mb-3
+
+              p.mb-1.fw-bold Total Cost
+
+              p
+                | UGX #{item.totalPrice.toLocaleString()}
+
+            .col-md-3.mb-3
+
+              p.mb-1.fw-bold Amount Paid
+
+              p.text-success.fw-bold
+                | UGX #{item.totalPaid.toLocaleString()}
+
+            .col-md-3.mb-3
+
+              p.mb-1.fw-bold Remaining Balance
+
+              p.text-danger.fw-bold
+                | UGX #{item.remainingBalance.toLocaleString()}
+
+          hr
+
+          p.mb-1
+            strong Date:
+            |  #{new Date(item.createdAt).toLocaleDateString()}
+
+          .d-flex.flex-wrap.gap-2.mt-4
+
+            a.btn.btn-warning(
+              href='/edit-credit/' + item.id
+            ) Edit
+
+            form(
+              action='/delete-credit/' + item.id
+              method='POST'
+              onsubmit="return confirm('Delete this record?')"
+            )
+
+              button.btn.btn-danger(
+                type='submit'
+              ) Delete
+
+            a.btn.btn-dark(
+              href='/credit-receipt/' + item.id
+            ) Receipt

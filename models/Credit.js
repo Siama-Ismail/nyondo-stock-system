@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 
 const creditSchema = new mongoose.Schema({
 
-  businessName: {
+  fullName: {
     type: String,
     required: true
   },
 
-  nationalId: {
-    type: String
+  nin: {
+    type: String,
+    required: true,
+    unique: true
   },
 
   phone: {
@@ -16,33 +18,41 @@ const creditSchema = new mongoose.Schema({
     required: true
   },
 
-  approvedLimit: {
+  email: {
+    type: String,
+    required: true
+  },
+
+  address: {
+    type: String,
+    required: true
+  },
+
+  distance: {
     type: Number,
     required: true
   },
 
-  currentDebt: {
+  occupation: {
+    type: String,
+    required: true
+  },
+
+  employer: {
+    type: String,
+    required: true
+  },
+
+  nextOfKin: {
+    type: String,
+    required: true
+  },
+
+  balance: {
     type: Number,
     default: 0
-  },
-
-  paymentCycle: {
-    type: String,
-    enum: ['14', '30'],
-    required: true
-  },
-
-  status: {
-    type: String,
-    enum: ['Active', 'Due Soon', 'Overdue'],
-    default: 'Active'
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Credit', creditSchema);

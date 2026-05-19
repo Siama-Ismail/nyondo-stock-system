@@ -1,0 +1,92 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+    title Edit Credit Sale
+
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+  body.bg-light
+
+    .container.py-5
+
+      .card.p-5.mx-auto(style='max-width:700px')
+
+        h3.fw-bold.mb-4 Edit Credit Sale
+
+        form(
+          action='/edit-credit/' + deposit._id
+          method='POST'
+        )
+
+          .mb-3
+
+            label.form-label Item
+
+            select.form-select(
+              name='item'
+              required
+            )
+
+              each stock in stocks
+
+                option(
+                  value=stock.productname || stock.productName
+                  selected=(deposit.item === (stock.productname || stock.productName))
+                )
+                  | #{stock.productname || stock.productName}
+
+          .mb-3
+
+            label.form-label Quantity
+
+            input.form-control(
+              type='number'
+              name='quantity'
+              value=deposit.quantity
+              required
+            )
+
+          .mb-3
+
+            label.form-label Amount Paid
+
+            input.form-control(
+              type='number'
+              name='amount'
+              value=deposit.amount
+              required
+            )
+
+          .mb-3
+
+            label.form-label Payment Method
+
+            select.form-select(
+              name='paymentMethod'
+              required
+            )
+
+              option(
+                value='Cash'
+                selected=deposit.paymentMethod === 'Cash'
+              ) Cash
+
+              option(
+                value='Mobile Money'
+                selected=deposit.paymentMethod === 'Mobile Money'
+              ) Mobile Money
+
+              option(
+                value='Bank'
+                selected=deposit.paymentMethod === 'Bank'
+              ) Bank
+
+          button.btn.btn-warning.w-100.mt-4(
+            type='submit'
+          ) Update Credit Sale

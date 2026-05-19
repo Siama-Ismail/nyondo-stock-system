@@ -8,25 +8,27 @@ html
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
     style.
       :root {
-        --navy: #0f172a;
-        --orange: #f97316;
+        --navy: #111827;        /* Changed to Matte Black */
+        --orange: #10B981;      /* Changed to Emerald Green */
         --glass: rgba(255, 255, 255, 0.05);
-        --white: #ffffff;
+        --white: #111827;       /* Body content base defaults to Matte Black */
+        --silver-bg: #E5E7EB;   /* Premium Silver Gray background canvas */
       }
       body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        background-color: var(--navy);
+        background-color: var(--silver-bg);
         color: var(--white);
       }
       .navbar {
-        background-color: rgba(15, 23, 42, 0.9) !important;
+        background-color: rgba(17, 24, 39, 0.95) !important; /* Rich matte solid header */
         backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 0.8rem 0;
       }
       .navbar-brand span { color: var(--orange); }
       .hero-section {
-        background-color: var(--navy);
+        background-color: #1f2937; /* Deep Charcoal contrast space for the hero banner */
+        color: #ffffff;
         height: 100vh;
         display: flex;
         align-items: center;
@@ -36,20 +38,27 @@ html
       .btn-primary {
         background-color: var(--orange);
         border-color: var(--orange);
-        font-weight: 600;
+        color: #111827; /* Dark charcoal text inside dynamic action button */
+        font-weight: 700;
         padding: 0.8rem 2rem;
         transition: 0.3s ease;
       }
       .btn-primary:hover {
-        background-color: #ea580c;
-        border-color: #ea580c;
+        background-color: #059669; /* Deep emerald transition focus state */
+        border-color: #059669;
+        color: #ffffff;
         transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
       }
       .feature-icon { font-size: 2.5rem; color: var(--orange); }
       .contact-form-card {
         border-left: 5px solid var(--orange) !important;
         background: white;
+        border: 1px solid #d1d5db;
+      }
+      .card {
+        border: 1px solid #d1d5db !important;
+        background-color: #ffffff;
       }
       footer {
         background-color: var(--navy) !important;
@@ -96,46 +105,46 @@ html
     section#products.py-5
       .container.py-5
         .text-center.mb-5
-          h2.fw-bold Our Product Range
+          h2.fw-bold.text-dark Our Product Range
           .mx-auto.mb-3(style='width: 50px; height: 4px; background-color: var(--orange);')
         .row.g-4
           .col-md-4
             .card.h-100.shadow-sm.border-0
               img.card-img-top(src='/images/materials.jpg' alt='Materials')
               .card-body
-                h5.fw-bold Construction Materials
+                h5.fw-bold.text-dark Construction Materials
                 p.text-muted.small Cement, iron bars, bricks, and sand.
           .col-md-4
             .card.h-100.shadow-sm.border-0
               img.card-img-top(src='/images/tools.jpg' alt='Tools')
               .card-body
-                h5.fw-bold Tools & Equipment
+                h5.fw-bold.text-dark Tools & Equipment
                 p.text-muted.small Professional hand and power tools.
           .col-md-4
             .card.h-100.shadow-sm.border-0
               img.card-img-top(src='/images/plumbing.jpg' alt='Plumbing')
               .card-body
-                h5.fw-bold Plumbing & Electrical
+                h5.fw-bold.text-dark Plumbing & Electrical
                 p.text-muted.small Pipes, fittings, and heavy-duty wiring.
 
     // Services Section
-    section#services.py-5
+    section#services.py-5(style='background-color: #f3f4f6;')
       .container.py-5
         .row.g-4.text-center
           .col-md-4
             .feature-icon.mb-3
               i.bi.bi-truck
-            h4.fw-bold Fast Delivery
+            h4.fw-bold.text-dark Fast Delivery
             p.text-muted Direct site delivery anywhere in the region.
           .col-md-4
             .feature-icon.mb-3
               i.bi.bi-credit-card
-            h4.fw-bold Credit Scheme
+            h4.fw-bold.text-dark Credit Scheme
             p.text-muted Flexible options for trusted contractors.
           .col-md-4
             .feature-icon.mb-3
               i.bi.bi-shield-check
-            h4.fw-bold Quality Guarantee
+            h4.fw-bold.text-dark Quality Guarantee
             p.text-muted Certified products for building safety.
 
     // About Section
@@ -143,39 +152,39 @@ html
       .container.py-5
         .row.align-items-center
           .col-lg-6
-            h2.fw-bold.mb-4
+            h2.fw-bold.mb-4.text-dark
               | Partnering to 
               span.text-orange Build the Future
-            p.opacity-75.mb-4 Since 2005, NYONDO General Hardware has served as a cornerstone for construction in Uganda.
+            p.text-secondary.mb-4 Since 2005, NYONDO General Hardware has served as a cornerstone for construction in Uganda.
             .row.g-3
               .col-4
                 h3.fw-bold.text-orange.mb-0 18+
-                p.small.opacity-50 Years
+                p.small.text-muted Years
               .col-4
                 h3.fw-bold.text-orange.mb-0 500+
-                p.small.opacity-50 Products
+                p.small.text-muted Products
               .col-4
                 h3.fw-bold.text-orange.mb-0 1k+
-                p.small.opacity-50 Clients
+                p.small.text-muted Clients
           .col-lg-6.mt-4.mt-lg-0.text-center
             img.img-fluid.rounded-4.shadow-lg(src='/images/nyondohardware.png' alt='About Us')
 
     // Contact Section
-    section#contact.py-5
+    section#contact.py-5(style='background-color: #f3f4f6;')
       .container.py-5
         .row.g-5
           .col-lg-5
-            h2.fw-bold.mb-4 Get In Touch
+            h2.fw-bold.mb-4.text-dark Get In Touch
             p.text-muted.mb-4 Visit our Kampala branch for a consultation or order materials directly.
             .d-flex.mb-3
               i.bi.bi-geo-alt.text-orange.fs-4.me-3
-              p.mb-0 Plot 42, Main Street, Kampala, Uganda
+              p.mb-0.text-secondary Plot 42, Main Street, Kampala, Uganda
             .d-flex.mb-3
               i.bi.bi-telephone.text-orange.fs-4.me-3
-              p.mb-0 +256 712 345 678
+              p.mb-0.text-secondary +256 712 345 678
           .col-lg-7
             .card.shadow-lg.p-4.contact-form-card.border-0
-              h4.fw-bold.mb-4 Send a Message
+              h4.fw-bold.mb-4.text-dark Send a Message
               form
                 .row.g-3
                   .col-md-6
@@ -190,7 +199,7 @@ html
     // Footer
     footer.text-white.py-5
       .container.text-center
-        h4.fw-bold.mb-3
+        h4.fw-bold.mb-3.text-white
           | NYONDO 
           span.text-orange STOCK
         p.opacity-50.small © 2026 NYONDO General Hardware LTD. All rights reserved.

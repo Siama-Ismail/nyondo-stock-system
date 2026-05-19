@@ -1,195 +1,224 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Transport Management - NYONDO
-  link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
-  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
-  style.
-    :root {
-    --primary-navy: #0f172a;    /* Navy */
-    --charcoal: #1e293b;        /* Charcoal */
-    --accent-orange: #f97316;   /* Orange */
-    --light-bg: #f8fafc;
-    }
-    body { background-color: var(--light-bg); color: var(--charcoal); }
-    /* Sidebar - Navy Base */
-    .sidebar {
-    background: var(--primary-navy);
-    min-height: 100vh;
-    border-right: 4px solid var(--accent-orange);
-    }
-    .sidebar .nav-link {
-    color: rgba(255, 255, 255, 0.7);
-    transition: 0.2s;
-    }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active {
-    color: white;
-    background: var(--charcoal);
-    border-left: 4px solid var(--accent-orange);
-    }
-    /* Restored Transport Cards */
-    .transport-card {
-    transition: all 0.3s;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    background: white;
-    }
-    .transport-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
-    }
-    .vehicle-icon {
-    font-size: 2.5rem;
-    color: var(--primary-navy);
-    }
-    /* Table & Headers */
-    .card-header {
-    background: var(--charcoal) !important;
-    color: white;
-    border-bottom: 2px solid var(--accent-orange);
-    }
-    /* Buttons - Restricted to Navy & Orange */
-    .btn-nyondo {
-    background-color: var(--accent-orange);
-    color: white;
-    font-weight: 600;
-    border: none;
-    }
-    .btn-nyondo:hover { background-color: #ea580c; color: white; }
-    .btn-outline-navy {
-    border: 2px solid var(--primary-navy);
-    color: var(--primary-navy);
-    background: transparent;
-    }
-    .btn-outline-navy:hover {
-    background: var(--primary-navy);
-    color: white;
-    }
-    /* Badges */
-    .badge-nyondo {
-    background-color: var(--primary-navy);
-    color: white;
-    border: 1px solid var(--accent-orange);
-    padding: 0.5em 1em;
-    }
-    .stat-card { border: none; color: white; }
-.container-fluid
-  .row
-    // Sidebar
-    .col-md-2.sidebar.p-0
-      .text-center.py-4.border-bottom.border-secondary
-        h5.text-white.fw-bold
-          | NYONDO 
-          span(style='color: var(--accent-orange)') STOCK
-      ul.nav.flex-column.mt-3
-        li.nav-item
-          a.nav-link.px-4.py-3(href='index.html')
-            i.bi.bi-speedometer2.me-2
-            |  Dashboard
-        li.nav-item
-          a.nav-link.px-4.py-3.active(href='transport.html')
-            i.bi.bi-truck.me-2
-            |  Transport
-        li.nav-item
-          a.nav-link.px-4.py-3(href='sales.html')
-            i.bi.bi-box-seam.me-2
-            |  Sales
-    // Main Content
-    .col-md-10.p-4
-      .d-flex.justify-content-between.align-items-center.mb-4
-        h2.fw-bold(style='color: var(--primary-navy)') Transport Management
-        button.btn.btn-nyondo.px-4(data-bs-toggle='modal' data-bs-target='#newDeliveryModal')
-          i.bi.bi-plus-lg.me-2
-          | Schedule Delivery
-      // Summary Cards
-      .row.mb-4.text-center
-        .col-md-3
-          .card.stat-card.p-3.shadow-sm(style='background: var(--primary-navy);')
-            .card-body
-              p.mb-1.opacity-75 Active Deliveries
-              h2.fw-bold 05
-        .col-md-3
-          .card.stat-card.p-3.shadow-sm(style='background: var(--charcoal);')
-            .card-body
-              p.mb-1.opacity-75 Completed Today
-              h2.fw-bold 03
-        .col-md-3
-          .card.stat-card.p-3.shadow-sm(style='background: var(--accent-orange);')
-            .card-body
-              p.mb-1.opacity-75 Pending Tasks
-              h2.fw-bold 02
-        .col-md-3
-          .card.stat-card.p-3.shadow-sm.border.border-dark(style='background: white; color: var(--primary-navy);')
-            .card-body
-              p.mb-1.text-muted Fleet Size
-              h2.fw-bold 08
-      // Table Restored
-      .card.shadow-sm.border-0.mb-4
-        .card-header.px-4.py-3
-          h5.mb-0 Current Delivery Schedule
-        .card-body.p-0
-          table.table.table-hover.align-middle.mb-0
-            thead.table-light
-              tr
-                th.px-4 Delivery #
-                th Customer
-                th Vehicle
-                th Status
-                th ETA
-                th.text-end.px-4 Actions
-            tbody
-              tr
-                td.px-4.fw-bold #DL10045
-                td Kato Construction
-                td KBP 123A (Isuzu)
-                td
-                  span.badge.badge-nyondo Active
-                td 10:30 AM
-                td.text-end.px-4
-                  button.btn.btn-sm.btn-outline-navy.me-2 Track
-                  button.btn.btn-sm.btn-nyondo Complete
-      // Fleet Grid Restored
-      h4.mb-3.fw-bold(style='color: var(--primary-navy);') Vehicle Fleet
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Transport Management - NYONDO
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+    style.
+      :root {
+        --matte-black: #111827;      /* Primary Base */
+        --dark-slate: #1f2937;       /* Accent Component Surface */
+        --emerald-green: #10B981;    /* Primary Accent Brand Token */
+        --silver-bg: #E5E7EB;        /* Background Canvas */
+      }
+      body { 
+        background-color: var(--silver-bg); 
+        color: var(--matte-black);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+      /* Sidebar - Matte Black Base */
+      .sidebar {
+        background: var(--matte-black);
+        min-height: 100vh;
+        border-right: 4px solid var(--emerald-green);
+      }
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+        transition: 0.2s;
+      }
+      .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        color: white;
+        background: var(--dark-slate);
+        border-left: 4px solid var(--emerald-green);
+      }
+      /* Premium Uniform Fleet Cards */
+      .transport-card {
+        transition: all 0.3s;
+        border: 1px solid #d1d5db;
+        border-bottom: 4px solid var(--emerald-green);
+        border-radius: 12px;
+        background: white;
+      }
+      .transport-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(17, 24, 39, 0.15);
+      }
+      .vehicle-icon {
+        font-size: 2.5rem;
+        color: var(--emerald-green);
+      }
+      /* Table & Headers */
+      .card {
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background-color: #ffffff;
+      }
+      .card-header {
+        background: var(--matte-black) !important;
+        color: white;
+        border-bottom: 2px solid var(--emerald-green);
+      }
+      /* Interactive Action Tokens */
+      .btn-nyondo {
+        background-color: var(--matte-black);
+        color: white;
+        font-weight: 600;
+        border: 1px solid var(--matte-black);
+        transition: 0.2s;
+      }
+      .btn-nyondo:hover { 
+        background-color: var(--emerald-green); 
+        border-color: var(--emerald-green);
+        color: var(--matte-black); 
+      }
+      .btn-outline-navy {
+        border: 2px solid var(--matte-black);
+        color: var(--matte-black);
+        background: transparent;
+        font-weight: 500;
+        transition: 0.2s;
+      }
+      .btn-outline-navy:hover {
+        background: var(--matte-black);
+        color: white;
+      }
+      /* Custom System Pill Badges */
+      .badge-nyondo {
+        background-color: rgba(16, 185, 129, 0.15);
+        color: #065f46;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 0.5em 1em;
+        border-radius: 50px;
+        font-weight: 600;
+      }
+      .stat-card { border: none; color: white; border-radius: 12px; }
+
+  body
+    .container-fluid
       .row
-        .col-md-3.mb-3
-          .card.transport-card.text-center.p-3
-            .card-body
-              i.bi.bi-truck-flatbed.vehicle-icon
-              h5.fw-bold.mt-2 KBP 123A
-              p.text-muted.small Isuzu NPR (5 Ton)
-              span.fw-bold(style='color: var(--accent-orange)') AVAILABLE
-        .col-md-3.mb-3
-          .card.transport-card.text-center.p-3
-            .card-body
-              i.bi.bi-truck.vehicle-icon
-              h5.fw-bold.mt-2 UBT 456B
-              p.text-muted.small Toyota Dyna (2 Ton)
-              span.fw-bold(style='color: var(--primary-navy)') ON DELIVERY
-// New Delivery Modal Restored
-#newDeliveryModal.modal.fade(tabindex='-1')
-  .modal-dialog.modal-lg
-    .modal-content.border-0
-      .modal-header.text-white(style='background: var(--primary-navy); border-bottom: 4px solid var(--accent-orange);')
-        h5.modal-title Schedule New Delivery
-        button.btn-close.btn-close-white(type='button' data-bs-dismiss='modal')
-      .modal-body.p-4
-        form.row.g-3
-          .col-md-6
-            label.form-label.fw-bold Customer
-            select.form-select.border-2
-              option Kato Construction
-          .col-md-6
-            label.form-label.fw-bold Date
-            input.form-control.border-2(type='date')
-          .col-md-6
-            label.form-label.fw-bold Vehicle
-            select.form-select.border-2
-              option Isuzu KBP 123A
-          .col-md-6
-            label.form-label.fw-bold Driver
-            select.form-select.border-2
-              option John Mugisha
-          .col-12.mt-4
-            button.btn.btn-nyondo.w-100.py-2(type='submit') Confirm Delivery Schedule
-script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+        // Sidebar
+        .col-md-2.sidebar.p-0
+          .text-center.py-4.border-bottom.border-secondary
+            h5.text-white.fw-bold
+              | NYONDO 
+              span(style='color: var(--emerald-green)') STOCK
+          ul.nav.flex-column.mt-3
+            li.nav-item
+              a.nav-link.px-4.py-3(href='index.html')
+                i.bi.bi-speedometer2.me-2
+                |  Dashboard
+            li.nav-item
+              a.nav-link.px-4.py-3.active(href='transport.html')
+                i.bi.bi-truck.me-2
+                |  Transport
+            li.nav-item
+              a.nav-link.px-4.py-3(href='sales.html')
+                i.bi.bi-box-seam.me-2
+                |  Sales
+
+        // Main Content
+        .col-md-10.p-4
+          .d-flex.justify-content-between.align-items-center.mb-4
+            h2.fw-bold(style='color: var(--matte-black)') Transport Management
+            button.btn.btn-nyondo.px-4(data-bs-toggle='modal' data-bs-target='#newDeliveryModal')
+              i.bi.bi-plus-lg.me-2
+              | Schedule Delivery
+
+          // Summary Cards
+          .row.mb-4.text-center
+            .col-md-3
+              .card.stat-card.p-3.shadow-sm(style='background: var(--matte-black); border-bottom: 4px solid var(--emerald-green);')
+                .card-body
+                  p.mb-1.opacity-75 Active Deliveries
+                  h2.fw-bold 05
+            .col-md-3
+              .card.stat-card.p-3.shadow-sm(style='background: var(--dark-slate);')
+                .card-body
+                  p.mb-1.opacity-75 Completed Today
+                  h2.fw-bold 03
+            .col-md-3
+              .card.stat-card.p-3.shadow-sm(style='background: #065f46;')
+                .card-body
+                  p.mb-1.opacity-75 Pending Tasks
+                  h2.fw-bold 02
+            .col-md-3
+              .card.stat-card.p-3.shadow-sm.border(style='background: white; color: var(--matte-black); border-color: #d1d5db !important;')
+                .card-body
+                  p.mb-1.text-muted Fleet Size
+                  h2.fw-bold 08
+
+          // Table Restored
+          .card.shadow-sm.border-0.mb-4
+            .card-header.px-4.py-3
+              h5.mb-0 Current Delivery Schedule
+            .card-body.p-0
+              table.table.table-hover.align-middle.mb-0
+                thead.table-light
+                  tr
+                    th.px-4 Delivery #
+                    th Customer
+                    th Vehicle
+                    th Status
+                    th ETA
+                    th.text-end.px-4 Actions
+                tbody
+                  tr
+                    td.px-4.fw-bold #DL10045
+                    td Kato Construction
+                    td KBP 123A (Isuzu)
+                    td
+                      span.badge.badge-nyondo Active
+                    td 10:30 AM
+                    td.text-end.px-4
+                      button.btn.btn-sm.btn-outline-navy.me-2 Track
+                      button.btn.btn-sm.btn-nyondo Complete
+
+          // Fleet Grid Restored
+          h4.mb-3.fw-bold(style='color: var(--matte-black);') Vehicle Fleet
+          .row
+            .col-md-3.mb-3
+              .card.transport-card.text-center.p-3
+                .card-body
+                  i.bi.bi-truck-flatbed.vehicle-icon
+                  h5.fw-bold.mt-2 KBP 123A
+                  p.text-muted.small Isuzu NPR (5 Ton)
+                  span.fw-bold(style='color: var(--emerald-green)') AVAILABLE
+            .col-md-3.mb-3
+              .card.transport-card.text-center.p-3
+                .card-body
+                  i.bi.bi-truck.vehicle-icon
+                  h5.fw-bold.mt-2 UBT 456B
+                  p.text-muted.small Toyota Dyna (2 Ton)
+                  span.fw-bold(style='color: var(--matte-black)') ON DELIVERY
+
+    // New Delivery Modal Restored
+    #newDeliveryModal.modal.fade(tabindex='-1')
+      .modal-dialog.modal-lg.modal-dialog-centered
+        .modal-content.border-0
+          .modal-header.text-white(style='background: var(--matte-black); border-bottom: 4px solid var(--emerald-green);')
+            h5.modal-title Schedule New Delivery
+            button.btn-close.btn-close-white(type='button' data-bs-dismiss='modal')
+          .modal-body.p-4
+            form.row.g-3
+              .col-md-6
+                label.form-label.fw-bold Customer
+                select.form-select.border-2
+                  option Kato Construction
+              .col-md-6
+                label.form-label.fw-bold Date
+                input.form-control.border-2(type='date')
+              .col-md-6
+                label.form-label.fw-bold Vehicle
+                select.form-select.border-2
+                  option Isuzu KBP 123A
+              .col-md-6
+                label.form-label.fw-bold Driver
+                select.form-select.border-2
+                  option John Mugisha
+              .col-12.mt-4
+                button.btn.btn-nyondo.w-100.py-2(type='submit') Confirm Delivery Schedule
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')

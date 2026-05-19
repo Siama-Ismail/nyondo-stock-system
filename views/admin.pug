@@ -17,22 +17,23 @@ html
 
     style.
       :root {
-        --primary-navy: #0f172a;
-        --accent-orange: #f97316;
-        --action-blue: #1e40af;
-        --light-bg: #f8fafc;
+        --matte-black: #111827;
+        --emerald-green: #10B981;
+        --silver-bg: #E5E7EB;
+        --dark-slate: #1f2937;
       }
 
       body {
-        background-color: var(--light-bg);
-        font-family: sans-serif;
+        background-color: var(--silver-bg);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: var(--matte-black);
       }
 
       .sidebar {
-        background: var(--primary-navy);
+        background: var(--matte-black);
         min-height: 100vh;
         color: white;
-        border-right: 4px solid var(--accent-orange);
+        border-right: 4px solid var(--emerald-green);
       }
 
       .sidebar .nav-link {
@@ -43,25 +44,25 @@ html
       }
 
       .sidebar .nav-link:hover {
-        background: var(--action-blue);
-        color: white;
+        background: var(--dark-slate);
+        color: var(--emerald-green);
       }
 
       .sidebar .nav-link.active {
-        background: var(--action-blue);
-        border-left: 4px solid var(--accent-orange);
+        background: var(--dark-slate);
+        border-left: 4px solid var(--emerald-green);
         color: white;
       }
 
-      /* Standardizing first line of cards */
+      /* Premium Uniform Metrics Cards */
       .brand-card {
-        background-color: var(--primary-navy) !important;
+        background-color: var(--matte-black) !important;
         color: white !important;
         border: none;
-        border-bottom: 4px solid var(--accent-orange);
+        border-bottom: 4px solid var(--emerald-green);
         border-radius: 12px;
         transition: 0.3s;
-        height: 100%; /* Ensures uniform height across the row */
+        height: 100%; 
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -69,12 +70,12 @@ html
 
       .brand-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(15,23,42,0.15);
+        box-shadow: 0 10px 20px rgba(17,24,39,0.2);
       }
 
-      /* Uniform Quick Action styling */
+      /* Premium Quick Action list elements */
       .btn-quick-action {
-        background-color: var(--primary-navy);
+        background-color: var(--matte-black);
         color: white;
         border: 1px solid rgba(255,255,255,0.1);
         text-align: left;
@@ -83,14 +84,15 @@ html
       }
 
       .btn-quick-action:hover {
-        background-color: var(--accent-orange);
-        color: white;
-        border-color: var(--accent-orange);
+        background-color: var(--emerald-green);
+        color: var(--matte-black);
+        border-color: var(--emerald-green);
+        font-weight: 600;
       }
 
       .navbar {
-        background: var(--primary-navy);
-        border-bottom: 2px solid var(--accent-orange);
+        background: var(--matte-black);
+        border-bottom: 2px solid var(--emerald-green);
       }
 
       .navbar-brand {
@@ -99,22 +101,27 @@ html
       }
 
       .navbar-brand span {
-        color: var(--accent-orange);
+        color: var(--emerald-green);
       }
 
       .card {
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 1px solid #d1d5db;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         border-radius: 10px;
+        background-color: #ffffff;
       }
 
       .card-header.bg-dark {
-        background-color: var(--primary-navy) !important;
-        border-bottom: 2px solid var(--accent-orange);
+        background-color: var(--matte-black) !important;
+        border-bottom: 2px solid var(--emerald-green);
       }
 
       .table-hover tbody tr:hover {
-        background-color: rgba(30,64,175,0.05);
+        background-color: rgba(16,185,129,0.08);
+      }
+
+      .metric-highlight {
+        font-weight: 700;
       }
 
   body
@@ -124,8 +131,8 @@ html
       .container-fluid
 
         a.navbar-brand(href='/admin')
-          i.bi.bi-house-gear
-          |  NYONDO STOCK GENERAL 
+          i.bi.bi-house-gear.me-2
+          | NYONDO STOCK GENERAL 
           span HARDWARE
 
         button.navbar-toggler(
@@ -148,8 +155,8 @@ html
                 role='button'
                 data-bs-toggle='dropdown'
               )
-                i.bi.bi-person-circle
-                |  Admin
+                i.bi.bi-person-circle.me-1
+                | Admin
 
               ul.dropdown-menu.dropdown-menu-end
 
@@ -172,14 +179,14 @@ html
           .text-center.py-4
             h4.fw-bold
               | NYONDO 
-              span STOCK
+              span(style='color: var(--emerald-green);') STOCK
 
           ul.nav.flex-column.px-3
 
             li.nav-item
               a.nav-link.active(href='/admin')
                 i.bi.bi-speedometer2.me-2
-                | Dashboard
+                | Admin Dashboard 
 
             li.nav-item
               a.nav-link(href='/stock')
@@ -192,13 +199,13 @@ html
                 | Sales
 
             li.nav-item
-              a.nav-link(href='/creditscheme')
+              a.nav-link(href='/credit')
                 i.bi.bi-credit-card.me-2
                 | Credit Scheme
 
             li.nav-item
               a.nav-link(href='/suppliers')
-                i.bi.bi-credit-card.me-2
+                i.bi.bi-people.me-2
                 | Suppliers 
 
             li.nav-item.mt-4
@@ -212,14 +219,14 @@ html
 
           .d-flex.justify-content-between.align-items-center.mb-4
 
-            h2.fw-bold(style='color: var(--primary-navy);') Admin Dashboard
+            h2.fw-bold(style='color: var(--matte-black);') Admin Dashboard
 
             .alert.alert-info.mb-0.py-2.border-0.shadow-sm(
-              style='background-color:white; color:var(--primary-navy); border-left:4px solid var(--accent-orange) !important;'
+              style='background-color: white; color: var(--matte-black); border-left: 4px solid var(--emerald-green) !important;'
             )
-              i.bi.bi-calendar-check.me-2.text-primary
-              | Today:
-              span#current-date
+              i.bi.bi-calendar-check.me-2(style='color: var(--emerald-green);')
+              | Today: 
+              span#current-date.fw-semibold
 
 
           // FIRST LINE OF CARDS (UNIFORM SIZE)
@@ -230,11 +237,11 @@ html
                 .card-body
                   .d-flex.justify-content-between
                     div
-                      h6.text-uppercase.small.opacity-75 Total Stock
+                      h6.text-uppercase.small.opacity-75 Total Stock Items
                       h2.mb-0= totalStockItems
-                    i.bi.bi-box-seam.display-4.opacity-50
+                    i.bi.bi-box-seam.display-4.opacity-50(style='color: var(--emerald-green);')
                   .mt-3
-                    a.text-white.small(href='/stock') View Details →
+                    a.text-white.small.text-decoration-none(href='/stock') View Details →
 
             .col-md-3
               .card.brand-card.shadow
@@ -243,9 +250,9 @@ html
                     div
                       h6.text-uppercase.small.opacity-75 Total Sales
                       h2.mb-0 UGX #{Number(totalSales).toLocaleString()}
-                    i.bi.bi-currency-dollar.display-4.opacity-50
+                    i.bi.bi-graph-up-arrow.display-4.opacity-50(style='color: var(--emerald-green);')
                   .mt-3
-                    a.text-white.small(href='/sales') View Details →
+                    a.text-white.small.text-decoration-none(href='/sales') View Details →
 
             .col-md-3
               .card.brand-card.shadow
@@ -254,20 +261,20 @@ html
                     div
                       h6.text-uppercase.small.opacity-75 Credit Balance
                       h2.mb-0 UGX #{Number(totalCredit).toLocaleString()}
-                    i.bi.bi-credit-card.display-4.opacity-50
+                    i.bi.bi-credit-card.display-4.opacity-50(style='color: var(--emerald-green);')
                   .mt-3
-                    a.text-white.small(href='/creditscheme') View Details →
+                    a.text-white.small.text-decoration-none(href='/credit') View Details →
 
             .col-md-3
               .card.brand-card.shadow
                 .card-body
                   .d-flex.justify-content-between
                     div
-                      h6.text-uppercase.small.opacity-75 Low Stock
+                      h6.text-uppercase.small.opacity-75 Low Stock Alerts
                       h2.mb-0= lowStock.length
-                    i.bi.bi-exclamation-triangle.display-4.opacity-50
+                    i.bi.bi-exclamation-triangle.display-4.opacity-50.text-danger
                   .mt-3
-                    a.text-white.small(href='/stock') View Details →
+                    a.text-white.small.text-decoration-none(href='/stock') View Details →
 
 
           // REPORTS SECTION 
@@ -279,21 +286,21 @@ html
                 .card-body
                   .row.g-4
                     .col-md-3
-                      .border.rounded.p-3.h-100
-                        h6.fw-bold Inventory Value
-                        h4.text-primary | UGX #{Number(inventoryValue).toLocaleString()}
+                      .border.rounded.p-3.h-100(style='border-color: #d1d5db !important;')
+                        h6.fw-bold.text-muted Inventory Value
+                        h4.metric-highlight(style='color: var(--matte-black);') UGX #{Number(inventoryValue).toLocaleString()}
                     .col-md-3
-                      .border.rounded.p-3.h-100
-                        h6.fw-bold Sales Revenue
-                        h4.text-success | UGX #{Number(totalSales).toLocaleString()}
+                      .border.rounded.p-3.h-100(style='border-color: #d1d5db !important;')
+                        h6.fw-bold.text-muted Sales Revenue
+                        h4.text-success.metric-highlight UGX #{Number(totalSales).toLocaleString()}
                     .col-md-3
-                      .border.rounded.p-3.h-100
-                        h6.fw-bold Credit Outstanding
-                        h4.text-warning | UGX #{Number(totalCredit).toLocaleString()}
+                      .border.rounded.p-3.h-100(style='border-color: #d1d5db !important;')
+                        h6.fw-bold.text-muted Credit Outstanding
+                        h4.text-warning.metric-highlight UGX #{Number(totalCredit).toLocaleString()}
                     .col-md-3
-                      .border.rounded.p-3.h-100
-                        h6.fw-bold Low Stock Items
-                        h4.text-danger = lowStock.length
+                      .border.rounded.p-3.h-100(style='border-color: #d1d5db !important;')
+                        h6.fw-bold.text-muted Low Stock Items
+                        h4.text-danger.metric-highlight = lowStock.length
 
 
           // RECENT SALES
@@ -303,30 +310,31 @@ html
                 .card-header.bg-dark.text-white
                   h5.mb-0 Recent Transactions
                 .card-body
-                  table.table.table-hover
-                    thead
-                      tr
-                        th ID
-                        th Customer
-                        th Amount
-                        th Status
-                        th Date
-                    tbody
-                      if recentSales.length > 0
-                        each sale in recentSales
-                          tr
-                            td= sale._id.toString().slice(-6)
-                            td= sale.customerName
-                            td | UGX #{Number(sale.total).toLocaleString()}
-                            td
-                              if sale.paymentMethod === 'Credit'
-                                span.badge.bg-warning Credit
-                              else
-                                span.badge.bg-success Paid
-                            td= new Date(sale.createdAt).toLocaleDateString()
-                      else
+                  .table-responsive
+                    table.table.table-hover.align-middle
+                      thead
                         tr
-                          td.text-center(colspan='5') No recent sales found
+                          th ID
+                          th Customer
+                          th Amount
+                          th Status
+                          th Date
+                      tbody
+                        if recentSales.length > 0
+                          each sale in recentSales
+                            tr
+                              td.fw-monospace= sale._id.toString().slice(-6)
+                              td.fw-semibold= sale.customerName
+                              td.fw-bold UGX #{Number(sale.total).toLocaleString()}
+                              td
+                                if sale.paymentMethod === 'Credit'
+                                  span.badge.bg-warning-subtle.text-warning.px-2.py-1 Credit
+                                else
+                                  span.badge.bg-success-subtle.text-success.px-2.py-1 Paid
+                              td= new Date(sale.createdAt).toLocaleDateString()
+                        else
+                          tr
+                            td.text-center.text-muted.py-4(colspan='5') No recent sales found
 
             // UNIFORM QUICK ACTIONS 
             .col-md-4

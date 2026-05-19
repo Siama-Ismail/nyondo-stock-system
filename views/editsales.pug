@@ -18,7 +18,7 @@ html
 
     style.
       body {
-        background: #0f172a;
+        background: #E5E7EB;
         font-family: 'Segoe UI', sans-serif;
       }
 
@@ -26,43 +26,74 @@ html
         background: #fff;
         border-radius: 14px;
         padding: 20px;
-        max-width: 800px;   /* smaller width */
+        max-width: 850px;
         margin: 40px auto;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        border: 1px solid #d1d5db;
       }
 
       .title {
         font-weight: 800;
         font-size: 22px;
-        border-bottom: 2px solid #f97316;
+        border-bottom: 2px solid #10B981;
         display: inline-block;
         padding-bottom: 6px;
         margin-bottom: 18px;
+        color: #111827;
       }
 
       .form-label {
         font-weight: 600;
         font-size: 13px;
+        color: #4b5563;
       }
 
-      .form-control, .form-select {
-        padding: 8px;
+      .form-control,
+      .form-select {
+        padding: 10px;
         border-radius: 8px;
         font-size: 14px;
       }
 
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #10B981;
+        box-shadow: none;
+      }
+
+      .summary-box {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 15px;
+        border: 1px solid #d1d5db;
+      }
+
+      .summary-title {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 5px;
+      }
+
+      .summary-value {
+        font-weight: 800;
+        font-size: 18px;
+        color: #111827;
+      }
+
       .btn-save {
-        background: #0f172a;
-        color: white;
+        background: #10B981;
+        color: #111827;
         font-weight: 700;
         padding: 10px;
         border-radius: 8px;
         width: 100%;
         border: none;
+        transition: 0.3s;
       }
 
       .btn-save:hover {
-        background: #1e293b;
+        background: #059669;
+        color: white;
       }
 
       .btn-cancel {
@@ -73,13 +104,19 @@ html
         border-radius: 8px;
         width: 100%;
         border: none;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: 0.3s;
       }
 
       .btn-cancel:hover {
         background: #b02a37;
+        color: white;
       }
 
   body
+
     .card-box
 
       h2.title
@@ -88,53 +125,181 @@ html
 
       form(action='/update-sales/' + sale._id method='POST')
 
-        .row.g-2
+        .row.g-3
 
           .col-md-6
             label.form-label Product
-            select.form-select(name='product' required)
-              option(selected=sale.product=='Cement iiN') Cement iiN
-              option(selected=sale.product=='Cement iiiN') Cement iiiN
-              option(selected=sale.product=='Iron Bars 10mm') Iron bars 10mm
-              option(selected=sale.product=='Iron Bars 12mm') Iron bars 12mm
-              option(selected=sale.product=='Wheelbarrows') Wheelbarrows
-              option(selected=sale.product=='Iron Sheets') Iron Sheets
+
+            select.form-select(
+              name='product'
+              id='productSelect'
+              required
+            )
+
+              each stock in stocks
+
+                option(
+                  value=stock.productname
+                  data-price=stock.sellingPrice
+                  selected=sale.product == stock.productname
+                )
+                  | #{stock.productname} - UGX #{stock.sellingPrice ? stock.sellingPrice.toLocaleString() : 0}
 
           .col-md-6
-            label.form-label Qty
-            input.form-control(type='number' name='quantity' value=sale.quantity required)
+            label.form-label Quantity
+
+            input.form-control(
+              type='number'
+              name='quantity'
+              id='quantity'
+              value=sale.quantity
+              required
+            )
 
           .col-md-6
             label.form-label Unit Price
-            input.form-control(type='number' name='unitPrice' value=sale.unitPrice required)
+
+            input.form-control(
+              type='number'
+              name='unitPrice'
+              id='unitPrice'
+              value=sale.unitPrice
+              readonly
+            )
 
           .col-md-6
-            label.form-label Customer
-            input.form-control(type='text' name='customerName' value=sale.customerName required)
+            label.form-label Customer Name
+
+            input.form-control(
+              type='text'
+              name='customerName'
+              value=sale.customerName
+              required
+            )
 
           .col-md-6
-            label.form-label Contact
-            input.form-control(type='text' name='customerContact' value=sale.customerContact required)
+            label.form-label Customer Contact
+
+            input.form-control(
+              type='text'
+              name='customerContact'
+              value=sale.customerContact
+              required
+            )
 
           .col-md-6
-            label.form-label Payment
-            select.form-select(name='paymentMethod' required)
-              option(selected=sale.paymentMethod=='Cash') Cash
-              option(selected=sale.paymentMethod=='Mobile Money') Mobile Money
-              option(selected=sale.paymentMethod=='Credit') Credit
+            label.form-label Payment Method
+
+            select.form-select(
+              name='paymentMethod'
+              required
+            )
+
+              option(
+                value='Cash'
+                selected=sale.paymentMethod == 'Cash'
+              ) Cash
+
+              option(
+                value='Mobile Money'
+                selected=sale.paymentMethod == 'Mobile Money'
+              ) Mobile Money
+
+              option(
+                value='Credit'
+                selected=sale.paymentMethod == 'Credit'
+              ) Credit
 
           .col-md-6
-            label.form-label Delivery KM
-            input.form-control(type='number' name='deliveryDistance' value=sale.deliveryDistance required)
+            label.form-label Delivery Distance (KM)
 
-        .row.mt-3.g-2
+            input.form-control(
+              type='number'
+              name='deliveryDistance'
+              value=sale.deliveryDistance
+              id='distance'
+              required
+            )
+
+        .row.mt-4.g-3
+
+          .col-md-4
+            .summary-box
+              .summary-title Transport Fee
+              .summary-value#transportFee UGX 0
+
+          .col-md-4
+            .summary-box
+              .summary-title Total Amount
+              .summary-value#totalAmount UGX 0
+
+          .col-md-4
+            .summary-box
+              .summary-title Grand Total
+              .summary-value#grandTotal UGX 0
+
+        .row.mt-4.g-2
 
           .col-md-6
             button.btn-save(type='submit')
               i.bi.bi-check-circle.me-2
-              | Save
+              | Save Changes
 
           .col-md-6
             a.btn.btn-cancel(href='/sales')
               i.bi.bi-x-circle.me-2
               | Cancel
+
+    script.
+
+      const productSelect = document.getElementById('productSelect');
+      const quantityInput = document.getElementById('quantity');
+      const unitPriceInput = document.getElementById('unitPrice');
+      const distanceInput = document.getElementById('distance');
+
+      const transportFeeText = document.getElementById('transportFee');
+      const totalAmountText = document.getElementById('totalAmount');
+      const grandTotalText = document.getElementById('grandTotal');
+
+      function calculateTotals() {
+
+        const selectedOption =
+          productSelect.options[productSelect.selectedIndex];
+
+        const unitPrice =
+          Number(selectedOption.getAttribute('data-price')) || 0;
+
+        const quantity =
+          Number(quantityInput.value) || 0;
+
+        const distance =
+          Number(distanceInput.value) || 0;
+
+        unitPriceInput.value = unitPrice;
+
+        const totalAmount = unitPrice * quantity;
+
+        let transportFee = 30000;
+
+        if (distance <= 10 && totalAmount >= 500000) {
+          transportFee = 0;
+        }
+
+        const grandTotal =
+          totalAmount + transportFee;
+
+        transportFeeText.innerText =
+          'UGX ' + transportFee.toLocaleString();
+
+        totalAmountText.innerText =
+          'UGX ' + totalAmount.toLocaleString();
+
+        grandTotalText.innerText =
+          'UGX ' + grandTotal.toLocaleString();
+      }
+
+      calculateTotals();
+
+      productSelect.addEventListener('change', calculateTotals);
+      quantityInput.addEventListener('input', calculateTotals);
+      distanceInput.addEventListener('input', calculateTotals);

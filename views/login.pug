@@ -8,7 +8,7 @@ html
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
     style.
       body {
-        background-color: #0f172a !important; /* NYONDO Navy */
+        background-color: #E5E7EB !important; /* Changed to Silver Gray */
         height: 100vh;
         display: flex;
         align-items: center;
@@ -17,7 +17,7 @@ html
         font-family: sans-serif;
       }
       .login-card {
-        background: #ffffff !important;
+        background: #111827 !important; /* Changed to Matte Black */
         border-radius: 12px;
         padding: 40px;
         width: 100%;
@@ -26,28 +26,28 @@ html
       }
       .brand-title {
         font-weight: 800;
-        color: #0f172a;
+        color: #E5E7EB; /* Changed to Silver Gray */
         text-align: center;
         margin-bottom: 5px;
       }
       .brand-title span {
-        color: #f97316; /* NYONDO Orange */
+        color: #10B981; /* Changed to Emerald Green */
       }
       .form-label {
-        color: #475569;
+        color: #E5E7EB; /* Changed to Silver Gray for contrast on dark background */
         font-weight: 600;
         font-size: 0.9rem;
       }
       .form-control {
-        border: 2px solid #e2e8f0;
+        border: 2px solid #E5E7EB; /* Changed to Silver Gray */
         padding: 12px;
       }
       .form-control:focus {
-        border-color: #f97316;
+        border-color: #10B981; /* Changed to Emerald Green */
         box-shadow: none;
       }
       .btn-login {
-        background-color: #f97316 !important;
+        background-color: #10B981 !important; /* Changed to Emerald Green */
         border: none !important;
         color: white !important;
         font-weight: 700;
@@ -57,12 +57,12 @@ html
         transition: 0.2s;
       }
       .btn-login:hover {
-        background-color: #ea580c !important;
+        background-color: #059669 !important; /* Darker Emerald Green for hover */
       }
       .footer-text {
         text-align: center;
         margin-top: 20px;
-        color: #64748b;
+        color: #9CA3AF; /* Adjusted gray for contrast */
         font-size: 0.8rem;
       }
   body
@@ -82,6 +82,6 @@ html
           input.form-control(type='password' name='password' placeholder='••••••••' required)
         button.btn.btn-login(type='submit') SIGN IN
         .text-center.mt-3
-          a.text-decoration-none.small(href='#' style='color: #f97316;') Forgot Password?
+          a.text-decoration-none.small(href='#' style='color: #10B981;') Forgot Password?
       .footer-text
         | © 2026 NYONDO General Hardware LTD

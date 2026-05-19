@@ -17,24 +17,27 @@ html
 
     style.
       :root {
-        --primary-blue: #1e40af;
-        --accent-orange: #f97316;
-        --bg-navy: #0f172a;
+        --matte-black: #111827;
+        --emerald-green: #10B981;
+        --silver-bg: #E5E7EB;
+        --dark-slate: #1f2937;
         --sidebar-width: 260px;
       }
 
       body {
-        background-color: #f1f5f9;
+        background-color: var(--silver-bg);
         margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: var(--matte-black);
       }
 
       #sidebar {
         width: var(--sidebar-width);
         height: 100vh;
         position: fixed;
-        background-color: var(--bg-navy);
+        background-color: var(--matte-black);
         color: white;
-        border-right: 4px solid var(--accent-orange);
+        border-right: 4px solid var(--emerald-green);
         z-index: 1000;
       }
 
@@ -43,23 +46,29 @@ html
         font-weight: 800;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         text-transform: uppercase;
+        letter-spacing: 1px;
       }
 
       .sidebar-header span {
-        color: var(--accent-orange);
+        color: var(--emerald-green);
       }
 
       .nav-link {
         color: rgba(255,255,255,0.7);
         padding: 15px 20px;
+        font-weight: 500;
         transition: 0.3s;
       }
 
-      .nav-link:hover,
+      .nav-link:hover {
+        color: var(--emerald-green);
+        background-color: var(--dark-slate);
+      }
+
       .nav-link.active {
         color: white;
-        background-color: var(--primary-blue);
-        border-left: 5px solid var(--accent-orange);
+        background-color: var(--dark-slate);
+        border-left: 5px solid var(--emerald-green);
       }
 
       #content {
@@ -67,16 +76,19 @@ html
         padding: 40px;
       }
 
+      /* Premium Supplier Cards Style */
       .st-card {
         background: white;
-        border: none;
+        border: 1px solid #d1d5db;
+        border-bottom: 4px solid var(--emerald-green);
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         transition: 0.3s;
       }
 
       .st-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(17,24,39,0.15);
       }
 
       .supplier-logo {
@@ -85,41 +97,63 @@ html
         margin-bottom: 1rem;
       }
 
+      /* Consistent pill badges matching system identity */
       .badge-status-active {
-        background-color: #28a745;
-        color: white;
-        padding: 5px 12px;
+        background-color: rgba(16, 185, 129, 0.15);
+        color: #065f46;
+        padding: 6px 16px;
         border-radius: 50px;
         font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid rgba(16, 185, 129, 0.3);
       }
 
       .badge-status-inactive {
-        background-color: #dc3545;
-        color: white;
-        padding: 5px 12px;
+        background-color: rgba(220, 53, 69, 0.15);
+        color: #842029;
+        padding: 6px 16px;
         border-radius: 50px;
         font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid rgba(220, 53, 69, 0.3);
       }
 
       .badge-status-pending {
-        background-color: var(--accent-orange);
-        color: white;
-        padding: 5px 12px;
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #664d03;
+        padding: 6px 16px;
         border-radius: 50px;
         font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid rgba(255, 193, 7, 0.3);
       }
 
+      /* Interactive buttons mapped to primary tokens */
       .btn-primary {
-        background-color: var(--primary-blue);
-        border: none;
+        background-color: var(--matte-black);
+        border: 1px solid var(--matte-black);
+        transition: 0.2s;
       }
 
       .btn-primary:hover {
-        background-color: var(--accent-orange);
+        background-color: var(--emerald-green);
+        border-color: var(--emerald-green);
+        color: var(--matte-black);
+        font-weight: 600;
+      }
+
+      .btn-outline-primary {
+        color: var(--matte-black);
+        border-color: var(--matte-black);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--matte-black);
+        color: white;
       }
 
       .list-group-item i {
-        color: var(--primary-blue);
+        color: var(--emerald-green);
         width: 25px;
       }
 
@@ -137,8 +171,6 @@ html
             i.bi.bi-speedometer2.me-2
             | Dashboard
 
-      
-
         li.nav-item
           a.nav-link.active(href='/suppliers')
             i.bi.bi-boxes.me-2
@@ -148,7 +180,7 @@ html
     #content
 
       .d-flex.justify-content-between.align-items-center.mb-4
-        h2.fw-bold(style='color: var(--bg-navy);')
+        h2.fw-bold(style='color: var(--matte-black);')
           i.bi.bi-boxes.me-2
           | Supplier Management
 
@@ -196,45 +228,48 @@ html
                       strong
                         i.bi.bi-person
                         | Contact:
-                      | #{supplier.contactPerson}
+                      |  #{supplier.contactPerson}
 
                     li.list-group-item
                       strong
                         i.bi.bi-telephone
                         | Phone:
-                      | #{supplier.phoneNumber}
+                      |  #{supplier.phoneNumber}
 
                     li.list-group-item
                       strong
                         i.bi.bi-envelope
                         | Email:
-                      | #{supplier.emailAddress}
+                      |  #{supplier.emailAddress}
 
                     li.list-group-item
                       strong
                         i.bi.bi-geo-alt
                         | Address:
-                      | #{supplier.address}
+                      |  #{supplier.address}
 
                 .card-footer.bg-transparent.border-0.d-flex.justify-content-between.pb-3
 
                   a.btn.btn-sm.btn-outline-primary.px-3(
                     href='/edit-supplier/' + supplier._id
                   )
-                    i.bi.bi-pencil
+                    i.bi.bi-pencil.me-1
                     | Edit
 
                   a.btn.btn-sm.btn-outline-danger.px-3(
                     href='/delete-supplier/' + supplier._id
                     onclick="return confirm('Delete supplier?')"
                   )
-                    i.bi.bi-trash
+                    i.bi.bi-trash.me-1
                     | Remove
 
         else
 
           .col-12
-            .alert.alert-info
+            .alert.alert-info.border-0.shadow-sm(
+              style='background-color: white; color: var(--matte-black); border-left: 4px solid var(--emerald-green) !important;'
+            )
+              i.bi.bi-info-circle.me-2(style='color: var(--emerald-green);')
               | No suppliers added yet.
 
     // ADD SUPPLIER MODAL
@@ -244,7 +279,7 @@ html
 
         .modal-content.border-0
 
-          .modal-header.text-white(style='background-color: var(--bg-navy);')
+          .modal-header.text-white(style='background-color: var(--matte-black); border-bottom: 2px solid var(--emerald-green);')
 
             h5.modal-title
               i.bi.bi-plus-circle.me-2
