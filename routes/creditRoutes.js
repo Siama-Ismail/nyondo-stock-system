@@ -420,4 +420,22 @@ router.post('/delete-credit/:id', async (req, res) => {
   }
 });
 
+// =====================
+// EDIT SUPPLIER CREDIT PAGE
+// =====================
+router.get('/edit-supplier-credit/:id', async (req, res) => {
+  try {
+
+    const credit = await SupplierCredit.findById(req.params.id);
+
+    res.render('editSupplierCredit', {
+      credit
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error.message);
+  }
+});
+
 module.exports = router;

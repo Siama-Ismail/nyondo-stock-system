@@ -106,8 +106,10 @@ html
           a(href='/admin') Dashboard
           a(href='/sales') Sales
           a(href='/stock') Inventory
-          a(href='/credit') Credit
-          a(href='/staffs') Staffs
+          a(href='/credit') Customer Credit
+          a(href='/suppliers') Suppliers 
+          a(href='/supplier-credit') Supplier Credit 
+          a(href='/signup') Register staffs
 
           hr.text-secondary
 
@@ -131,9 +133,9 @@ html
           h3.fw-bold.mb-3 Admin Dashboard
           p.text-muted NYONDO STOCK GENERAL HARDWARE LTD
 
-          // ======================
+          
           // METRICS ROW 1
-          // ======================
+         
           .row.g-3.mb-3
 
             .col-md-3
@@ -157,9 +159,9 @@ html
                 h2= totalStockItems
 
 
-          // ======================
+         
           // METRICS ROW 2
-          // ======================
+         
           .row.g-3.mb-4
 
             .col-md-3
@@ -183,9 +185,9 @@ html
                 h2= lowStock.length
 
 
-          // ======================
+      
           // MAIN SECTION
-          // ======================
+      
           .row.g-4
 
             // RECENT SALES
@@ -220,9 +222,9 @@ html
                   a.btn.btn-dark.w-100.mb-2(href='/staffs') Staffs
 
 
-          // ======================
+          
           // LOWER SECTION
-          // ======================
+        
           .row.mt-4.g-4
 
             .col-md-6

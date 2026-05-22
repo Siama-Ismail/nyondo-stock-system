@@ -4,9 +4,9 @@ const router = express.Router();
 const Supplier = require('../models/Supplier');
 const SupplierCredit = require('../models/SupplierCredit'); // ✅ MISSING IMPORT FIXED
 
-// =========================
+
 // SHOW SUPPLIERS PAGE
-// =========================
+
 router.get('/suppliers', async (req, res) => {
   try {
     const suppliers = await Supplier.find().sort({ createdAt: -1 });
@@ -25,9 +25,8 @@ router.get('/suppliers', async (req, res) => {
 });
 
 
-// =========================
 // ADD SUPPLIER
-// =========================
+
 router.post('/add-supplier', async (req, res) => {
   try {
 
@@ -51,9 +50,9 @@ router.post('/add-supplier', async (req, res) => {
 });
 
 
-// =========================
+
 // DELETE SUPPLIER
-// =========================
+
 router.get('/delete-supplier/:id', async (req, res) => {
   try {
     await Supplier.findByIdAndDelete(req.params.id);
@@ -66,9 +65,8 @@ router.get('/delete-supplier/:id', async (req, res) => {
 });
 
 
-// =========================
 // EDIT SUPPLIER PAGE
-// =========================
+
 router.get('/edit-supplier/:id', async (req, res) => {
   try {
     const supplier = await Supplier.findById(req.params.id);
@@ -84,9 +82,9 @@ router.get('/edit-supplier/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // UPDATE SUPPLIER
-// =========================
+
 router.post('/update-supplier/:id', async (req, res) => {
   try {
 
@@ -109,9 +107,9 @@ router.post('/update-supplier/:id', async (req, res) => {
 });
 
 
-// =====================
+
 // GET SUPPLIER CREDIT PAGE
-// =====================
+
 router.get('/supplier-credit', async (req, res) => {
   try {
 
@@ -132,9 +130,8 @@ router.get('/supplier-credit', async (req, res) => {
 });
 
 
-// =====================
+
 // ADD SUPPLIER CREDIT
-// =====================
 router.post('/add-supplier-credit', async (req, res) => {
   try {
 
@@ -166,9 +163,8 @@ router.post('/add-supplier-credit', async (req, res) => {
 });
 
 
-// =====================
 // UPDATE PAYMENT
-// =====================
+
 router.post('/pay-supplier/:id', async (req, res) => {
   try {
 
@@ -195,9 +191,9 @@ router.post('/pay-supplier/:id', async (req, res) => {
 });
 
 
-// =====================
+
 // DELETE CREDIT
-// =====================
+        
 router.get('/delete-supplier-credit/:id', async (req, res) => {
   try {
     await SupplierCredit.findByIdAndDelete(req.params.id);
@@ -210,9 +206,9 @@ router.get('/delete-supplier-credit/:id', async (req, res) => {
 });
 
 
-// =====================
+
 // RECEIPT
-// =====================
+
 router.get('/supplier-credit-receipt/:id', async (req, res) => {
   try {
 
