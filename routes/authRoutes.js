@@ -12,51 +12,90 @@ router.get('/dashboard',(req,res)=>{
 
 
 
-
 // GET signup form
 router.get('/signup', (req, res) => {
-  res.render('signup');
+
+  res.render('signup', {
+    error: null
+  });
+
 });
 
 
 // POST signup form
 router.post('/signup', async (req, res) => {
-  console.log(req.body);
 
   try {
-    const { fullname, email, phonenumber, nin, role,password } = req.body;
 
-    let existingUser = await Registration.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return res.render('signup', { error: 'Email is already registered' });
-    };
-  
+    const {
+      fullname,
+      email,
+      phonenumber,
+      nin,
+      role,
+      password
+    } = req.body;
 
-    const newUser = new Registration({
-        fullname,
-        email: email.toLowerCase(),
-        phonenumber,
-        nin: nin.toUpperCase(),
-        role,
-        password
+    // VALIDATE UGANDA PHONE NUMBER
+    const phoneRegex = /^(07|03)\d{8}$/;
+
+    if (!phoneRegex.test(phonenumber)) {
+
+      return res.render('signup', {
+        error: 'Enter a valid Ugandan phone number'
       });
-      // (err, user) => {
-      //   if (err) {
-      //     console.error("Registration failed:", err);
-      //     return res.render('signup', { error: err.message });
-      //   }
-        // console.log("✅ User registered:", user);
-        await Registration.register(newUser,password);
-        console.log('User registered successfully')
-        res.redirect('/login');  // <-- this will now work
 
-  }catch (error) {
-    console.error(error);
-    res.render('signup')
+    }
+
+    // CHECK IF USER EXISTS
+    const existingUser = await Registration.findOne({
+      email: email.toLowerCase()
+    });
+
+    if (existingUser) {
+
+      return res.render('signup', {
+        error: 'Email is already registered'
+      });
+
+    }
+
+    // CREATE USER
+    const newUser = new Registration({
+
+      fullname,
+
+      email: email.toLowerCase(),
+
+      phonenumber,
+
+      nin: nin.toUpperCase(),
+
+      role: role || 'Staff'
+
+    });
+
+    // REGISTER USER + HASH PASSWORD
+    await Registration.register(newUser, password);
+
+    console.log('✅ User registered successfully');
+
+    // REDIRECT TO ADMIN DASHBOARD
+    res.redirect('/admin');
+
   }
+
+  catch (error) {
+
+    console.error(error);
+
+    res.render('signup', {
+      error: error.message
+    });
+
+  }
+
 });
-
-
 // GET LOGIN PAGE
 router.get('/login', (req, res) => {
   res.render('login');
@@ -82,40 +121,33 @@ router.post('/login', (req, res, next) => {
 
     }
 
-    // LOGIN USER
-    req.logIn(user, (err) => {
+    // ROLE BASED REDIRECTS
 
-      if (err) {
-        console.log(err);
-        return next(err);
-      }
+const role = user.role.toLowerCase();
 
-      // ROLE BASED REDIRECTS
-      if (user.role === 'admin') {
+if (role === 'admin') {
 
-        return res.redirect('/admin');
+  return res.redirect('/admin');
 
-      }
+}
 
-      else if (user.role === 'store_manager') {
+else if (role === 'store_manager') {
 
-        return res.redirect('/stock');
+  return res.redirect('/stock');
 
-      }
+}
 
-      else if (user.role === 'sales_attendant') {
+else if (role === 'sales_attendant') {
 
-        return res.redirect('/sales');
+  return res.redirect('/sales');
 
-      }
+}
 
-      else {
+else {
 
-        return res.redirect('/dashboard');
+  return res.redirect('/dashboard');
 
-      }
-
-    });
+}
 
   })(req, res, next);
 

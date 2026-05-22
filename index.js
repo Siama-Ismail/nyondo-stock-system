@@ -8,6 +8,8 @@ const flash = require('connect-flash');
 const Registration = require('./models/Registration');
 const Stock = require('./models/Stock');
 const Supplier = require('./models/Supplier');
+const SupplierCredit = require('./models/SupplierCredit');
+
 
 
 
@@ -62,6 +64,7 @@ app.use('/', require('./routes/salesRoutes'))
 app.use('/', require('./routes/adminRoutes'));
 app.use('/', require('./routes/supplierRoutes'));
 app.use('/', require('./routes/creditRoutes'));
+
 
 app.use((req,res)=>{
   res.status(404).send('Oops! Route not found.')

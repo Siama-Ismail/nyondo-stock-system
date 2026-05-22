@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    title Supplier Receipt
+    style.
+      body {
+        font-family: monospace;
+        padding: 30px;
+      }
+
+      .receipt {
+        border: 1px dashed #000;
+        padding: 20px;
+        width: 350px;
+      }
+
+  body
+
+    .receipt
+
+      h3 NYONDO STOCK LTD
+      hr
+
+      p Supplier: #{credit.supplierName}
+      p Phone: #{credit.supplierPhone}
+      p Item: #{credit.item}
+
+      hr
+
+      p Total: UGX #{Number(credit.amount).toLocaleString()}
+      p Paid: UGX #{Number(credit.paid).toLocaleString()}
+      p Balance: UGX #{Number(credit.balance).toLocaleString()}
+
+      hr
+
+      p Status: #{credit.status}
+
+      br
+      small Thank you for your business

@@ -3,100 +3,207 @@ html
   head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
     title Staff Registration - NYONDO STOCK
-    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
-    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+
+    // Bootstrap
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+    // Bootstrap Icons
+    link(
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css'
+    )
+
     style.
       :root {
-        --primary-navy: #111827; /* Changed to Matte Black */
-        --charcoal: #1f2937; /* Slightly lighter dark tone for body text contrast */
-        --accent-orange: #10B981; /* Changed to Emerald Green */
-        --light-bg: #E5E7EB; /* Changed to Silver Gray */
+        --primary-navy: #111827;
+        --charcoal: #1f2937;
+        --accent-orange: #10B981;
+        --light-bg: #E5E7EB;
       }
+
       body {
         background-color: var(--light-bg);
         color: var(--charcoal);
         font-family: 'Segoe UI', sans-serif;
       }
+
       .registration-card {
-        max-width: 500px;
+        max-width: 550px;
         margin: 4rem auto;
         border: none;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(17, 24, 39, 0.05);
-        border: 1px solid #d1d5db; /* Premium silver border */
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+        border: 1px solid #d1d5db;
+        overflow: hidden;
       }
+
       .card-header {
         background: var(--primary-navy) !important;
         border-bottom: 4px solid var(--accent-orange) !important;
         color: white;
         padding: 1.5rem;
       }
+
       .form-label {
         font-weight: 600;
         font-size: 0.85rem;
         color: var(--primary-navy);
         text-transform: uppercase;
+        margin-bottom: 6px;
       }
+
       .btn-nyondo {
         background: var(--accent-orange);
-        color: #111827; /* Dark text inside premium button */
+        color: #111827;
         font-weight: 700;
         border: none;
-        padding: 0.8rem;
+        padding: 0.9rem;
         letter-spacing: 1px;
+        transition: 0.3s;
       }
+
       .btn-nyondo:hover {
-        background: #059669; /* Darker emerald green on hover */
+        background: #059669;
         color: white;
       }
-      .form-control:focus, .form-select:focus {
+
+      .form-control:focus,
+      .form-select:focus {
         border-color: var(--accent-orange);
-        box-shadow: none;
+        box-shadow: 0 0 0 0.15rem rgba(16,185,129,0.15);
       }
+
       .staff-icon {
         font-size: 3rem;
         color: var(--accent-orange);
         margin-bottom: 1rem;
       }
+
   body
+
     .container
+
       .card.registration-card
+
         .card-header.text-center
           h4.mb-0.fw-bold STAFF ONBOARDING
+
         .card-body.p-4.p-md-5
+
+          // ERROR MESSAGE
           if error
-            p.text-danger.text-center #{error}
-          .text-center
+            .alert.alert-danger.text-center
+              = error
+
+          .text-center.mb-4
             i.bi.bi-person-badge.staff-icon
-            p.text-muted.small.mb-4 Register a new employee account for the hardware management system.
-          form(action='/signup' method='post')
-            .col-12
-              label.form-label Full Name
-              input.form-control(type='text' name='fullname' placeholder='Employee Name' required)
-            .col-12
-              label.form-label Staff Email
-              input.form-control(type='email' name='email' placeholder='name@nyondo.com' required)
-            .col-12
-              label.form-label Phone Number
-              input.form-control(type='tel' name='phonenumber' placeholder='07** *** ***' required)
-            .col-12
-              label.form-label NIN
-              input.form-control(type='text' name='nin' placeholder='e.g. NY-2026-001' required)
-            .col-md-4
-              label(for="user_role") ROLE
-              select.form-select(name="role" required)
-                option(value="" disabled selected) Select user role
-                option(value="admin") Admin
-                option(value="store_manager") Store Manager
-                option(value="sales_attendant") Sales Attendant
-            .col-md-6
-              label.form-label Password
-              input.form-control(type='password' name='password' required minlength='8')
-            .col-12.mt-4
-              button.btn.btn-nyondo.w-100(type='submit') REGISTER STAFF
-            .col-12.text-center.mt-3
-              a.text-decoration-none.small(href='/dashboard' style='color: var(--primary-navy)')
-                i.bi.bi-arrow-left
-                | Back to Dashboard
-    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+
+            p.text-muted.small.mb-0
+              | Register a new employee account for the hardware management system.
+
+          // FORM
+          form(action='/signup' method='POST')
+
+            .row.g-3
+
+              // FULL NAME
+              .col-12
+                label.form-label Full Name
+
+                input.form-control(
+                  type='text'
+                  name='fullname'
+                  placeholder='Employee Name'
+                  required
+                )
+
+              // EMAIL
+              .col-12
+                label.form-label Staff Email
+
+                input.form-control(
+                  type='email'
+                  name='email'
+                  placeholder='name@nyondo.com'
+                  required
+                )
+
+              // PHONE
+              .col-md-6
+                label.form-label Phone Number
+
+                input.form-control(
+                  type='tel'
+                  name='phonenumber'
+                  placeholder='07XXXXXXXX'
+                  required
+                )
+
+              // NIN
+              .col-md-6
+                label.form-label NIN
+
+                input.form-control(
+                  type='text'
+                  name='nin'
+                  placeholder='CM1234567890ABC'
+                  required
+                )
+
+              // ROLE
+              .col-md-6
+                label.form-label Role
+
+                select.form-select(name='role' required)
+
+                  option(value='' disabled selected)
+                    | Select user role
+
+                  option(value='admin')
+                    | Admin
+
+                  option(value='store_anager')
+                    | Store Manager
+
+                  option(value='sales_attendant')
+                    | Sales Attendant
+
+              // PASSWORD
+              .col-md-6
+                label.form-label Password
+
+                input.form-control(
+                  type='password'
+                  name='password'
+                  minlength='8'
+                  placeholder='Minimum 8 characters'
+                  required
+                )
+
+              // SUBMIT BUTTON
+              .col-12.mt-3
+
+                button.btn.btn-nyondo.w-100(type='submit')
+                  i.bi.bi-person-plus.me-2
+                  | REGISTER STAFF
+
+              // BACK BUTTON
+              .col-12.text-center.mt-2
+
+                a.text-decoration-none.small(
+                  href='/admin'
+                  style='color: var(--primary-navy)'
+                )
+
+                  i.bi.bi-arrow-left.me-1
+
+                  | Back to Dashboard
+
+    script(
+      src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
+    )

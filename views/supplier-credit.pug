@@ -1,0 +1,97 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Supplier Credit
+
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
+
+  body.bg-light
+
+    .container.mt-4
+
+      h2 Supplier Credit Management
+
+      // =====================
+      // SUMMARY CARD
+      // =====================
+      .card.mb-3
+        .card-body
+          h5 Total Debt: UGX #{Number(totalDebt).toLocaleString()}
+
+      // =====================
+      // FORM
+      // =====================
+      .card.mb-4
+        .card-header Add Supplier Credit
+        .card-body
+
+          form(action='/add-supplier-credit' method='post')
+
+            .row.g-2
+
+              .col-md-3
+                input.form-control(name='supplierName' placeholder='Supplier Name' required)
+
+              .col-md-3
+                input.form-control(name='supplierPhone' placeholder='Phone' required)
+
+              .col-md-2
+                input.form-control(name='item' placeholder='Item' required)
+
+              .col-md-2
+                input.form-control(name='amount' type='number' placeholder='Amount' required)
+
+              .col-md-2
+                input.form-control(name='paid' type='number' placeholder='Paid')
+
+            button.btn.btn-dark.mt-3 Add Credit
+
+
+      // =====================
+      // TABLE
+      // =====================
+      .card
+        .card-header Supplier Credits
+
+        .card-body
+
+          table.table.table-bordered
+
+            thead
+              tr
+                th Supplier
+                th Item
+                th Amount
+                th Paid
+                th Balance
+                th Status
+                th Action
+
+            tbody
+
+              each c in credits
+
+                tr
+
+                  td= c.supplierName
+                  td= c.item
+                  td UGX #{Number(c.amount).toLocaleString()}
+                  td UGX #{Number(c.paid).toLocaleString()}
+                  td.text-danger UGX #{Number(c.balance).toLocaleString()}
+
+                  td
+                    if c.status == 'PAID'
+                      span.badge.bg-success PAID
+                    else
+                      span.badge.bg-warning UNPAID
+
+                  td
+
+                    form(action='/pay-supplier/' + c._id method='post' class='d-inline')
+                      input.form-control.form-control-sm(type='number' name='paid' placeholder='Pay')
+                      button.btn.btn-sm.btn-success.mt-1 Pay
+
+                    a.btn.btn-sm.btn-danger.mt-1(href='/delete-supplier-credit/' + c._id)
+                      | Delete
