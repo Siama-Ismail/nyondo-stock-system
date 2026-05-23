@@ -23,17 +23,14 @@ const supplierSchema = new mongoose.Schema({
     required: true
   },
 
-  emailAddress: {
-    type: String
-  },
+  emailAddress: String,
 
-  supplierAddress: {
-    type: String
-  },
+  supplierAddress: String,
 
-  productsSupplied: {
-    type: String
-  },
+  // 🔥 IMPORTANT: items this supplier supplies
+  productsSupplied: [{
+    type: String   // MUST match Stock.productname
+  }],
 
   logo: {
     type: String,

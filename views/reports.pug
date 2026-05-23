@@ -3,170 +3,140 @@ html
   head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Reports Dashboard - NYONDO HARDWARE
 
-    title Reports Dashboard - NYONDO STOCK
-
-    link(
-      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
-      rel='stylesheet'
-    )
-
-    link(
-      rel='stylesheet'
-      href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css'
-    )
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
 
     style.
+      :root {
+        --primary: #111827;
+        --accent: #FD7E14;
+        --bg: #f3f4f6;
+      }
+
       body {
-        background: #E5E7EB;
-        font-family: 'Segoe UI', sans-serif;
+        background: var(--bg);
+        font-family: sans-serif;
+        color: var(--primary);
       }
 
-      .sidebar {
-        background: #111827;
-        min-height: 100vh;
-        position: fixed;
-        width: 250px;
-        color: white;
-      }
-
-      .sidebar a {
-        display: block;
-        padding: 12px 20px;
-        color: #9ca3af;
-        text-decoration: none;
-      }
-
-      .sidebar a:hover {
-        background: #1f2937;
-        color: #10B981;
-      }
-
-      .main {
-        margin-left: 250px;
-        padding: 30px;
-      }
-
-      .card-box {
+      .card {
+        border: none;
         border-radius: 12px;
-        padding: 20px;
-        color: white;
-        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
       }
 
-      .bg1 { background: #10B981; }
-      .bg2 { background: #111827; }
-      .bg3 { background: #F59E0B; }
-      .bg4 { background: #EF4444; }
+      .big {
+        font-size: 22px;
+        font-weight: 800;
+      }
 
-      .section {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        margin-top: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      .title {
+        font-weight: 800;
       }
 
   body
+    .container.py-5
 
-    // SIDEBAR
-    .sidebar
-      h4.p-3 NYONDO REPORTS
+      // =========================
+      // HEADER
+      // =========================
+      h2.title.mb-4 📊 Business Reports Dashboard
 
-      a(href='/dashboard') Dashboard
-      a(href='/sales') Sales
-      a(href='/stock') Stock
-      a(href='/credit') Credits
-      a(href='/reports') Reports
-
-    // MAIN
-    .main
-
-      h2.mb-4 Reports Dashboard
-
-      // ================= KPI CARDS =================
+      // =========================
+      // TOP KPI CARDS
+      // =========================
       .row.g-3
 
         .col-md-3
-          .card-box.bg1
+          .card.p-3
+            h6 Today Sales
+            p.big.text-success UGX #{todayTotal.toLocaleString()}
+
+        .col-md-3
+          .card.p-3
             h6 Total Sales
-            h3 UGX #{totalSales.toLocaleString()}
+            p.big UGX #{totalSales.toLocaleString()}
 
         .col-md-3
-          .card-box.bg2
-            h6 Inventory Value
-            h3 UGX #{inventoryValue.toLocaleString()}
+          .card.p-3
+            h6 Profit
+            p.big.text-primary UGX #{profit.toLocaleString()}
 
         .col-md-3
-          .card-box.bg3
+          .card.p-3
             h6 Expected Profit
-            h3 UGX #{expectedProfit.toLocaleString()}
+            p.big.text-info UGX #{expectedProfit.toLocaleString()}
 
-        .col-md-3
-          .card-box.bg4
-            h6 Total Credit Debt
-            h3 UGX #{totalDebt.toLocaleString()}
+      .row.g-3.mt-2
 
-      // ================= SALES TABLE =================
-      .section
-        h5.mb-3 Recent Sales
+        .col-md-4
+          .card.p-3
+            h6 Customer Debt
+            p.big.text-danger UGX #{totalCustomerDebt.toLocaleString()}
 
-        table.table.table-striped
-          thead
-            tr
-              th Customer
-              th Items
-              th Total
-              th Date
+        .col-md-4
+          .card.p-3
+            h6 Supplier Debt
+            p.big.text-warning UGX #{totalSupplierDebt.toLocaleString()}
 
-          tbody
-            each s in sales
+        .col-md-4
+          .card.p-3
+            h6 Stock Value
+            p.big UGX #{stockValue.toLocaleString()}
+
+      // =========================
+      // STOCK INSIGHTS
+      // =========================
+      .card.p-3.mt-4
+        h5.title 📦 Stock Insights
+
+        p
+          strong Potential Revenue:
+          |  UGX #{potentialRevenue.toLocaleString()}
+
+      // =========================
+      // TOP DEBTORS
+      // =========================
+      .card.p-3.mt-4
+        h5.title 🏦 Top Debtors
+
+        if topDebtors.length === 0
+          p.text-muted No customers owing money
+
+        else
+          table.table.table-sm.mt-2
+            thead
               tr
-                td= s.customerName
-                td= s.items.length
-                td UGX #{s.total.toLocaleString()}
-                td= new Date(s.createdAt).toLocaleDateString()
+                th Name
+                th Phone
+                th Balance
 
-      // ================= STOCK TABLE =================
-      .section
-        h5.mb-3 Low Stock Items
+            tbody
+              each c in topDebtors
+                tr
+                  td= c.fullName
+                  td= c.phone
+                  td.text-danger UGX #{c.balance.toLocaleString()}
 
-        table.table.table-hover
-          thead
-            tr
-              th Product
-              th Qty
-              th Status
+      // =========================
+      // LOW STOCK ALERT
+      // =========================
+      .card.p-3.mt-4
+        h5.title ⚠️ Low Stock Alert
 
-          tbody
-            each st in lowStock
+        if lowStock.length === 0
+          p.text-muted No low stock items
+
+        else
+          table.table.table-sm.mt-2
+            thead
               tr
-                td= st.productname
-                td= st.quantity
-                td.text-danger Low Stock
+                th Product
+                th Quantity
 
-      // ================= CREDIT SUMMARY =================
-      .section
-        h5.mb-3 Supplier Credit Overview
-
-        table.table.table-bordered
-          thead
-            tr
-              th Supplier
-              th Amount
-              th Paid
-              th Balance
-              th Status
-
-          tbody
-            each c in credits
-              tr
-                td= c.supplierName
-                td UGX #{c.amount.toLocaleString()}
-                td UGX #{c.paid.toLocaleString()}
-                td.text-danger UGX #{c.balance.toLocaleString()}
-                td
-                  if c.status == 'PAID'
-                    span.badge.bg-success PAID
-                  else
-                    span.badge.bg-warning.text-dark UNPAID
+            tbody
+              each item in lowStock
+                tr
+                  td= item.productname
+                  td.text-danger= item.quantity

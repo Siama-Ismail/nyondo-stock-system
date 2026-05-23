@@ -6,6 +6,7 @@ const Deposit = require('../models/Deposit');
 const Stock = require('../models/Stock');
 const SupplierCredit = require('../models/SupplierCredit');
 
+
 // =========================
 // CREDIT DASHBOARD
 // =========================
@@ -15,7 +16,7 @@ router.get('/credit', async (req, res) => {
   const deposits = await Deposit.find().populate('customer');
   const credits = await SupplierCredit.find();
 
-  const totalDebt = credits.reduce((a, b) => a + b.balance, 0);
+  const totalDebt = credits.reduce((a, b) => a + (b.balance || 0), 0);
 
   res.render('credit', {
     customers,
@@ -25,51 +26,267 @@ router.get('/credit', async (req, res) => {
   });
 });
 
+
 // =========================
 // ADD CUSTOMER
 // =========================
 router.post('/add-credit-customer', async (req, res) => {
 
-  await Credit.create({
-    ...req.body,
-    balance: 0
-  });
+  try {
+    await Credit.create({
+      ...req.body,
+      balance: 0
+    });
 
-  res.redirect('/credit');
+    res.redirect('/credit');
+
+  } catch (err) {
+    console.log(err);
+    res.send('Error creating customer');
+  }
 });
 
+
 // =========================
-// DEPOSIT / SALE ON CREDIT
+// OPEN DEPOSIT PAGE
+// =========================
+router.get('/deposit/:id', async (req, res) => {
+
+  const customer = await Credit.findById(req.params.id);
+  const stocks = await Stock.find();
+
+  const pendingDeposits = await Deposit.find({
+    customer: customer._id,
+    balance: { $gt: 0 }
+  });
+
+  res.render('deposit', {
+    customer,
+    stocks,
+    pendingDeposits
+  });
+
+});
+
+
+// =========================
+// ADD CREDIT SALE / PAYMENT
 // =========================
 router.post('/add-deposit/:id', async (req, res) => {
 
   const customer = await Credit.findById(req.params.id);
 
-  const stock = await Stock.findOne({ productname: req.body.item });
+  // -------------------------
+  // PAY EXISTING DEBT
+  // -------------------------
+  if (req.body.depositId) {
 
-  const qty = Number(req.body.quantity);
-  const price = stock.sellingPrice;
+    const oldDeposit = await Deposit.findById(req.body.depositId);
 
-  const total = qty * price;
+    const payAmount = Number(req.body.amount);
 
-  let balance = total - Number(req.body.amount || 0);
+    oldDeposit.amount += payAmount;
+    oldDeposit.balance -= payAmount;
 
-  const deposit = new Deposit({
-    customer: customer._id,
-    item: stock.productname,
-    quantity: qty,
-    amount: req.body.amount,
-    balance,
-    status: balance <= 0 ? 'CLEAR' : 'PENDING'
+    if (oldDeposit.balance <= 0) {
+      oldDeposit.balance = 0;
+      oldDeposit.status = 'CLEAR';
+    }
+
+    await oldDeposit.save();
+
+    customer.balance -= payAmount;
+
+    if (customer.balance < 0) customer.balance = 0;
+
+    await customer.save();
+
+    return res.redirect('/credit-receipt/' + oldDeposit._id);
+  }
+
+  // -------------------------
+  // NEW CREDIT SALE
+  // -------------------------
+  const stock = await Stock.findOne({
+    productname: req.body.item
   });
 
-  await deposit.save();
+  if (!stock) {
+    return res.send('Stock item not found');
+  }
+
+  const quantity = Number(req.body.quantity);
+  const unitPrice = Number(stock.sellingPrice);
+
+  if (stock.quantity < quantity) {
+    return res.send('Not enough stock');
+  }
+
+  const transportFee = Number(req.body.transportFee || 0);
+
+  const totalPrice = (quantity * unitPrice) + transportFee;
+
+  const amount = Number(req.body.amount || 0);
+
+  const balance = totalPrice - amount;
+
+  // reduce stock
+  stock.quantity -= quantity;
+  await stock.save();
+
+  const receiptNumber = 'RCPT-' + Date.now();
+
+  const deposit = await Deposit.create({
+    customer: customer._id,
+    item: stock.productname,
+    quantity,
+    unitPrice,
+    totalPrice,
+    transportFee,
+    amount,
+    balance,
+    paymentMethod: req.body.paymentMethod,
+    receiptNumber,
+    status: balance <= 0 ? 'CLEAR' : 'PENDING'
+  });
 
   customer.balance += balance;
   await customer.save();
 
   res.redirect('/credit-receipt/' + deposit._id);
 });
+
+
+// =========================
+// CREDIT RECEIPT
+// =========================
+router.get('/credit-receipt/:id', async (req, res) => {
+
+  const deposit = await Deposit.findById(req.params.id)
+    .populate('customer');
+
+  if (!deposit) {
+    return res.send('Receipt not found');
+  }
+
+  res.render('credit-receipt', {
+    deposit
+  });
+});
+
+
+// =========================
+// CUSTOMER HISTORY
+// =========================
+router.get('/customer-history/:id', async (req, res) => {
+
+  const customer = await Credit.findById(req.params.id);
+
+  const deposits = await Deposit.find({
+    customer: customer._id
+  }).sort({ createdAt: -1 });
+
+  const groupedItems = deposits.map(dep => ({
+    id: dep._id,
+    item: dep.item,
+    quantity: dep.quantity,
+    totalPrice: dep.totalPrice,
+    totalPaid: dep.amount,
+    remainingBalance: dep.balance,
+    status: dep.status,
+    createdAt: dep.createdAt
+  }));
+
+  res.render('customer-history', {
+    customer,
+    groupedItems
+  });
+});
+
+
+// =========================
+// EDIT CREDIT PAGE
+// =========================
+router.get('/edit-credit/:id', async (req, res) => {
+
+  const deposit = await Deposit.findById(req.params.id);
+  const stocks = await Stock.find();
+
+  if (!deposit) return res.send('Not found');
+
+  res.render('edit-credit', {
+    deposit,
+    stocks
+  });
+});
+
+
+// =========================
+// UPDATE CREDIT
+// =========================
+router.post('/edit-credit/:id', async (req, res) => {
+
+  const deposit = await Deposit.findById(req.params.id);
+
+  const customer = await Credit.findById(deposit.customer);
+
+  const stock = await Stock.findOne({
+    productname: req.body.item
+  });
+
+  const quantity = Number(req.body.quantity);
+  const unitPrice = stock.sellingPrice;
+
+  const totalPrice = quantity * unitPrice;
+  const amount = Number(req.body.amount);
+
+  const newBalance = totalPrice - amount;
+
+  // adjust customer balance (remove old, add new)
+  customer.balance -= deposit.balance;
+  customer.balance += newBalance;
+
+  if (customer.balance < 0) customer.balance = 0;
+
+  await customer.save();
+
+  deposit.item = req.body.item;
+  deposit.quantity = quantity;
+  deposit.unitPrice = unitPrice;
+  deposit.totalPrice = totalPrice;
+  deposit.amount = amount;
+  deposit.balance = newBalance;
+  deposit.paymentMethod = req.body.paymentMethod;
+  deposit.status = newBalance <= 0 ? 'CLEAR' : 'PENDING';
+
+  await deposit.save();
+
+  res.redirect('/credit-receipt/' + deposit._id);
+});
+
+
+// =========================
+// DELETE CREDIT
+// =========================
+router.post('/delete-credit/:id', async (req, res) => {
+
+  const deposit = await Deposit.findById(req.params.id);
+
+  if (!deposit) return res.redirect('/credit');
+
+  const customer = await Credit.findById(deposit.customer);
+
+  if (customer) {
+    customer.balance -= deposit.balance;
+    if (customer.balance < 0) customer.balance = 0;
+    await customer.save();
+  }
+
+  await Deposit.findByIdAndDelete(req.params.id);
+
+  res.redirect('/credit');
+});
+
 
 // =========================
 // SUPPLIER CREDIT
@@ -95,6 +312,7 @@ router.post('/add-supplier-credit', async (req, res) => {
   res.redirect('/credit');
 });
 
+
 // =========================
 // PAY SUPPLIER
 // =========================
@@ -117,12 +335,16 @@ router.post('/pay-supplier/:id', async (req, res) => {
   res.redirect('/credit');
 });
 
+
 // =========================
 // DELETE SUPPLIER CREDIT
 // =========================
 router.get('/delete-supplier-credit/:id', async (req, res) => {
+
   await SupplierCredit.findByIdAndDelete(req.params.id);
+
   res.redirect('/credit');
 });
+
 
 module.exports = router;

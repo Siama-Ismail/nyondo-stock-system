@@ -3,6 +3,7 @@ html
   head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
     title Suppliers - NYONDO General Hardware LTD
 
     link(
@@ -38,7 +39,6 @@ html
         background-color: var(--matte-black);
         color: white;
         border-right: 4px solid var(--emerald-green);
-        z-index: 1000;
       }
 
       .sidebar-header {
@@ -46,7 +46,6 @@ html
         font-weight: 800;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         text-transform: uppercase;
-        letter-spacing: 1px;
       }
 
       .sidebar-header span {
@@ -56,19 +55,17 @@ html
       .nav-link {
         color: rgba(255,255,255,0.7);
         padding: 15px 20px;
-        font-weight: 500;
-        transition: 0.3s;
       }
 
       .nav-link:hover {
         color: var(--emerald-green);
-        background-color: var(--dark-slate);
+        background: var(--dark-slate);
       }
 
       .nav-link.active {
         color: white;
-        background-color: var(--dark-slate);
-        border-left: 5px solid var(--emerald-green);
+        background: var(--dark-slate);
+        border-left: 4px solid var(--emerald-green);
       }
 
       #content {
@@ -76,85 +73,42 @@ html
         padding: 40px;
       }
 
-      /* Premium Supplier Cards Style */
       .st-card {
         background: white;
-        border: 1px solid #d1d5db;
-        border-bottom: 4px solid var(--emerald-green);
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #ddd;
+        border-left: 5px solid var(--emerald-green);
+        padding: 18px;
         transition: 0.3s;
       }
 
       .st-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(17,24,39,0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       }
 
-      .supplier-logo {
-        height: 100px;
-        object-fit: contain;
-        margin-bottom: 1rem;
-      }
-
-      /* Consistent pill badges matching system identity */
       .badge-status-active {
-        background-color: rgba(16, 185, 129, 0.15);
+        background: rgba(16,185,129,0.15);
         color: #065f46;
-        padding: 6px 16px;
+        padding: 4px 10px;
         border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        font-size: 12px;
       }
 
       .badge-status-inactive {
-        background-color: rgba(220, 53, 69, 0.15);
+        background: rgba(220,53,69,0.15);
         color: #842029;
-        padding: 6px 16px;
+        padding: 4px 10px;
         border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border: 1px solid rgba(220, 53, 69, 0.3);
+        font-size: 12px;
       }
 
       .badge-status-pending {
-        background-color: rgba(255, 193, 7, 0.15);
+        background: rgba(255,193,7,0.15);
         color: #664d03;
-        padding: 6px 16px;
+        padding: 4px 10px;
         border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border: 1px solid rgba(255, 193, 7, 0.3);
-      }
-
-      /* Interactive buttons mapped to primary tokens */
-      .btn-primary {
-        background-color: var(--matte-black);
-        border: 1px solid var(--matte-black);
-        transition: 0.2s;
-      }
-
-      .btn-primary:hover {
-        background-color: var(--emerald-green);
-        border-color: var(--emerald-green);
-        color: var(--matte-black);
-        font-weight: 600;
-      }
-
-      .btn-outline-primary {
-        color: var(--matte-black);
-        border-color: var(--matte-black);
-      }
-
-      .btn-outline-primary:hover {
-        background-color: var(--matte-black);
-        color: white;
-      }
-
-      .list-group-item i {
-        color: var(--emerald-green);
-        width: 25px;
+        font-size: 12px;
       }
 
   body
@@ -176,190 +130,143 @@ html
             i.bi.bi-boxes.me-2
             | Suppliers
 
-    // MAIN CONTENT
+
+    // CONTENT
     #content
 
       .d-flex.justify-content-between.align-items-center.mb-4
-        h2.fw-bold(style='color: var(--matte-black);')
+        h2.fw-bold
           i.bi.bi-boxes.me-2
           | Supplier Management
 
-        button.btn.btn-primary.shadow-sm.px-4(
+        button.btn.btn-dark(
           data-bs-toggle='modal'
           data-bs-target='#addSupplierModal'
         )
           i.bi.bi-plus-circle.me-2
           | Add Supplier
 
-      // SUPPLIER CARDS
-      .row.row-cols-1.row-cols-md-2.row-cols-xl-3.g-4
 
-        if suppliers.length > 0
+      // =========================
+      // SUPPLIERS GRID
+      // =========================
+      if suppliers.length === 0
+
+        .alert.alert-info.text-center
+          | No suppliers found
+
+      else
+
+        .row.g-4
 
           each supplier in suppliers
-            .col
-              .card.st-card.h-100
 
-                .card-body
+            .col-md-4
 
-                  .text-center
-                    img.supplier-logo(
-                      src='https://via.placeholder.com/150'
-                      alt='Supplier Logo'
-                    )
+              .st-card
 
-                  h5.card-title.fw-bold.text-center
-                    = supplier.supplierName
+                .d-flex.justify-content-between.align-items-center
+                  h5.fw-bold.mb-1= supplier.supplierName
 
-                  p.card-text.text-muted.small.text-center
-                    = supplier.productsSupplied
+                  if supplier.status === 'active'
+                    span.badge-status-active Active
+                  else if supplier.status === 'inactive'
+                    span.badge-status-inactive Inactive
+                  else
+                    span.badge-status-pending Pending
 
-                  .text-center.mb-3
-                    if supplier.status === 'active'
-                      span.badge-status-active Active
-                    else if supplier.status === 'inactive'
-                      span.badge-status-inactive Inactive
-                    else
-                      span.badge-status-pending Pending
+                small.text-muted
+                  | #{supplier.contactPerson} • #{supplier.phoneNumber}
 
-                  ul.list-group.list-group-flush.small
+                hr
 
-                    li.list-group-item
-                      strong
-                        i.bi.bi-person
-                        | Contact:
-                      |  #{supplier.contactPerson}
+                h6 Products Supplied
 
-                    li.list-group-item
-                      strong
-                        i.bi.bi-telephone
-                        | Phone:
-                      |  #{supplier.phoneNumber}
+                if supplier.productsSupplied.length > 0
+                  .d-flex.flex-wrap.gap-1.mb-2
+                    each item in supplier.productsSupplied
+                      span.badge.bg-light.text-dark.border
+                        | #{item}
+                else
+                  small.text-muted No products listed
 
-                    li.list-group-item
-                      strong
-                        i.bi.bi-envelope
-                        | Email:
-                      |  #{supplier.emailAddress}
+                // LOW STOCK ALERT
+                if supplier.lowStockItems && supplier.lowStockItems.length > 0
 
-                    li.list-group-item
-                      strong
-                        i.bi.bi-geo-alt
-                        | Address:
-                      |  #{supplier.address}
+                  .alert.alert-danger.p-2.mt-2
+                    strong ⚠ Low Stock Items
 
-                .card-footer.bg-transparent.border-0.d-flex.justify-content-between.pb-3
+                    ul.mb-0.mt-2
+                      each item in supplier.lowStockItems
+                        li
+                          | #{item.productname}
+                          span.text-danger.fw-bold
+                            |  (#{item.quantity})
 
-                  a.btn.btn-sm.btn-outline-primary.px-3(
+                else
+                  .alert.alert-success.p-2.mt-2
+                    | All items in good stock
+
+
+                .d-flex.justify-content-between.mt-3
+
+                  a.btn.btn-sm.btn-outline-primary(
                     href='/edit-supplier/' + supplier._id
                   )
                     i.bi.bi-pencil.me-1
                     | Edit
 
-                  a.btn.btn-sm.btn-outline-danger.px-3(
+                  a.btn.btn-sm.btn-outline-danger(
                     href='/delete-supplier/' + supplier._id
                     onclick="return confirm('Delete supplier?')"
                   )
                     i.bi.bi-trash.me-1
-                    | Remove
+                    | Delete
 
-        else
 
-          .col-12
-            .alert.alert-info.border-0.shadow-sm(
-              style='background-color: white; color: var(--matte-black); border-left: 4px solid var(--emerald-green) !important;'
-            )
-              i.bi.bi-info-circle.me-2(style='color: var(--emerald-green);')
-              | No suppliers added yet.
-
+    // =========================
     // ADD SUPPLIER MODAL
-    #addSupplierModal.modal.fade(tabindex='-1')
+    // =========================
+    #addSupplierModal.modal.fade
 
       .modal-dialog.modal-lg.modal-dialog-centered
 
-        .modal-content.border-0
+        .modal-content
 
-          .modal-header.text-white(style='background-color: var(--matte-black); border-bottom: 2px solid var(--emerald-green);')
-
-            h5.modal-title
-              i.bi.bi-plus-circle.me-2
-              | Add New Supplier
+          .modal-header.bg-dark.text-white
+            h5.modal-title Add Supplier
 
             button.btn-close.btn-close-white(
-              type='button'
               data-bs-dismiss='modal'
             )
 
-          .modal-body.p-4
+          .modal-body
 
             form(action='/add-supplier' method='POST')
 
-              .row.mb-3
+              .mb-2
+                input.form-control(name='supplierName' placeholder='Supplier Name' required)
 
-                .col-md-6
-                  label.form-label.fw-bold.small Supplier Name
-                  input.form-control(
-                    type='text'
-                    name='supplierName'
-                    required
-                  )
+              .mb-2
+                input.form-control(name='contactPerson' placeholder='Contact Person' required)
 
-                .col-md-6
-                  label.form-label.fw-bold.small Status
-                  select.form-select(
-                    name='status'
-                    required
-                  )
-                    option(value='active') Active
-                    option(value='inactive') Inactive
-                    option(value='pending') Pending
+              .mb-2
+                input.form-control(name='phoneNumber' placeholder='Phone Number' required)
 
-              .row.mb-3
+              .mb-2
+                input.form-control(name='emailAddress' placeholder='Email')
 
-                .col-md-6
-                  label.form-label.fw-bold.small Contact Person
-                  input.form-control(
-                    type='text'
-                    name='contactPerson'
-                    required
-                  )
+              .mb-2
+                input.form-control(name='supplierAddress' placeholder='Address')
 
-                .col-md-6
-                  label.form-label.fw-bold.small Phone Number
-                  input.form-control(
-                    type='text'
-                    name='phoneNumber'
-                    required
-                  )
+              .mb-2
+                input.form-control(name='productsSupplied' placeholder='Products (comma separated)')
 
-              .mb-3
-                label.form-label.fw-bold.small Email Address
-                input.form-control(
-                  type='email'
-                  name='emailAddress'
-                )
+              .mb-2
+                select.form-control(name='status')
+                  option(value='active') Active
+                  option(value='inactive') Inactive
+                  option(value='pending') Pending
 
-              .mb-3
-                label.form-label.fw-bold.small Supplier Address
-                textarea.form-control(
-                  rows='2'
-                  name='address'
-                )
-
-              .mb-3
-                label.form-label.fw-bold.small Products Supplied
-                textarea.form-control(
-                  rows='2'
-                  name='productsSupplied'
-                  placeholder='List products supplied'
-                )
-
-              button.btn.btn-primary.w-100.py-2.fw-bold(
-                type='submit'
-              )
-              
+              button.btn.btn-dark.w-100.mt-2(type='submit')
                 | Save Supplier
-
-    script(
-      src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
-    )
