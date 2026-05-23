@@ -34,8 +34,10 @@ router.get('/admin', async (req, res) => {
       ), 0);
 
     const costValue = stocks.reduce((sum, item) =>
-      sum + (Number(item.totalpaid) || 0), 0);
-
+  sum + (
+    (Number(item.quantity) || 0) *
+    (Number(item.unitcost) || 0)
+  ), 0);
     const expectedProfit = inventoryValue - costValue;
 
     // =====================

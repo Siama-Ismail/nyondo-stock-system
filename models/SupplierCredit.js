@@ -2,18 +2,45 @@ const mongoose = require('mongoose');
 
 const supplierCreditSchema = new mongoose.Schema({
 
-  supplierName: String,
-  supplierPhone: String,
+  supplierName: {
+    type: String,
+    required: true
+  },
 
-  item: String,
-  amount: Number,
+  supplierPhone: {
+    type: String,
+    required: true
+  },
+
+  item: {
+    type: String,
+    required: true
+  },
+
+  quantity: {
+    type: Number,
+    required: true
+  },
+
+  unitPrice: {
+    type: Number,
+    required: true
+  },
+
+  amount: {
+    type: Number,
+    required: true
+  },
 
   paid: {
     type: Number,
     default: 0
   },
 
-  balance: Number,
+  balance: {
+    type: Number,
+    required: true
+  },
 
   status: {
     type: String,
@@ -27,4 +54,8 @@ const supplierCreditSchema = new mongoose.Schema({
 
 });
 
+module.exports = mongoose.model(
+  'SupplierCredit',
+  supplierCreditSchema
+);
 module.exports = mongoose.model('SupplierCredit', supplierCreditSchema);

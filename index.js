@@ -64,6 +64,7 @@ app.use('/', require('./routes/salesRoutes'))
 app.use('/', require('./routes/adminRoutes'));
 app.use('/', require('./routes/supplierRoutes'));
 app.use('/', require('./routes/creditRoutes'));
+app.use('/', require('./routes/reportsRoutes'));
 
 
 app.use((req,res)=>{
