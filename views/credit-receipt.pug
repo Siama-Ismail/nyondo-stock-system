@@ -10,47 +10,64 @@ html
     )
     style.
       :root {
-        --primary-navy: #111827;
-        --accent-orange: #FD7E14;
-        --silver-bg: #E5E7EB;
+        --color-charcoal: #212529;    /* Deep Charcoal (Rich, Premium Base) */
+        --color-teal: #0d9488;        /* Vibrant Teal (Action / Accent Token) */
+        --color-silver: #f1f3f5;      /* Polished Silver (Workspace Background) */
       }
       body {
-        background-color: var(--silver-bg);
+        background-color: var(--color-silver);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        color: var(--primary-navy);
+        color: var(--color-charcoal);
       }
       .receipt-card {
         max-width: 600px;
         margin: auto;
-        border: 1px solid #d1d5db;
+        border: 1px solid #dee2e6;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         background: #ffffff;
       }
       .title {
-        color: var(--primary-navy);
+        color: var(--color-charcoal);
         font-weight: 800;
         letter-spacing: 0.5px;
       }
       .brand-highlight {
-        color: var(--accent-orange);
+        color: var(--color-teal);
         font-weight: bold;
       }
       .receipt-divider {
-        border-top: 2px dashed #d1d5db;
+        border-top: 2px dashed #dee2e6;
         opacity: 1;
         margin: 1.5rem 0;
       }
       .btn-print {
-        background: var(--primary-navy);
+        background: var(--color-charcoal);
         color: white;
-        border: none;
+        border: 1px solid var(--color-charcoal);
         font-weight: 600;
         transition: 0.2s ease-in-out;
       }
       .btn-print:hover {
-        background: var(--accent-orange);
-        color: var(--primary-navy);
+        background: var(--color-teal);
+        color: white;
+        border-color: var(--color-teal);
+      }
+      .text-gain {
+        color: var(--color-teal); /* Unified Brand Teal for Financial Clear States */
+      }
+      .text-loss {
+        color: var(--color-charcoal); /* Crisp Structural Charcoal for Remaining Balances */
+      }
+      /* Clean, Consistent Neutral and Primary Token Badges */
+      .badge-clear {
+        background-color: var(--color-teal);
+        color: white;
+      }
+      .badge-pending {
+        background-color: transparent;
+        color: var(--color-charcoal);
+        border: 1px solid var(--color-charcoal);
       }
       @media print {
         body {
@@ -71,7 +88,7 @@ html
       .card.receipt-card.p-5
         h2.text-center.title
           | NYONDO 
-          span(style='color: var(--accent-orange);') HARDWARE
+          span(style='color: var(--color-teal);') HARDWARE
         h6.text-center.text-muted.mb-4.fw-bold(style='letter-spacing: 1px;') TRANSACTION RECEIPT
         
         .receipt-divider
@@ -103,26 +120,26 @@ html
             |  UGX #{deposit.totalPrice.toLocaleString()}
         p
           strong Amount Paid:
-          span.text-success.fw-bold
+          span.text-gain.fw-bold
             |  UGX #{deposit.amount.toLocaleString()}
         p
           strong Outstanding Balance for Order:
           if deposit.balance <= 0
-            span.text-success.fw-bold  CLEARED
+            span.text-gain.fw-bold  CLEARED
           else
-            span.text-danger.fw-bold  UGX #{deposit.balance.toLocaleString()}
+            span.text-loss.fw-bold  UGX #{deposit.balance.toLocaleString()}
         
         if deposit.customer
           p
             strong Customer Grand Total Balance Due:
-            span.text-dark.fw-bold
+            span.fw-bold(style='color: var(--color-charcoal);')
               |  UGX #{deposit.customer.balance.toLocaleString()}
         p
           strong Status:
           if deposit.status === 'CLEAR' || deposit.balance <= 0
-            span.badge.bg-success-subtle.text-success.px-2.py-1.ms-1 CLEAR
+            span.badge.badge-clear.px-2.py-1.ms-1 CLEAR
           else
-            span.badge.bg-warning-subtle.text-warning.px-2.py-1.ms-1 PENDING
+            span.badge.badge-pending.px-2.py-1.ms-1 PENDING
         p
           strong Payment Method:
           |  #{deposit.paymentMethod}
@@ -134,9 +151,9 @@ html
 
       //- WORKFLOW NAVIGATION ACTIONS PANEL (Hidden automatically during print)
       .container.mt-4.workflow-menu(style="max-width: 600px; padding: 0;")
-        .card.p-3.border-0.shadow-sm(style="background-color: var(--primary-navy); border-radius: 12px;")
+        .card.p-3.border-0.shadow-sm(style="background-color: var(--color-charcoal); border-radius: 12px; border-bottom: 3px solid var(--color-teal) !important;")
           p.text-center.text-white.small.fw-bold.text-uppercase.mb-3 Next Action Workflow Menu
           .d-flex.flex-wrap.gap-2.justify-content-center
             a.btn.btn-sm.btn-light.fw-semibold(href='/credit') 📋 View Customer Ledger List
             if deposit.customer
-              a.btn.btn-sm.btn-warning.fw-semibold(href='/deposit/' + deposit.customer._id) 💰 Collect Another Top-Up Payment
+              a.btn.btn-sm.fw-semibold(href='/deposit/' + deposit.customer._id, style="background-color: var(--color-teal); color: #ffffff;") 💰 Collect Another Top-Up Payment

@@ -13,20 +13,64 @@ html
 
     style.
       :root {
-        --primary-navy: #111827;
-        --accent-orange: #FD7E14;
-        --light-bg: #E5E7EB;
+        --color-charcoal: #212529;
+        --color-teal: #0d9488;
+        --color-silver: #f1f3f5;
       }
 
       body {
-        background: var(--light-bg);
+        background: var(--color-silver);
         font-family: sans-serif;
+        color: var(--color-charcoal);
       }
 
       .card {
         border: none;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
+      }
+
+      /* Unified Action Components */
+      .btn-nyondo {
+        background: var(--color-teal);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+
+      .btn-nyondo:hover {
+        background: #0f766e;
+        color: white;
+      }
+
+      .btn-nyondo-secondary {
+        background: var(--color-charcoal);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+
+      .btn-nyondo-secondary:hover {
+        background: #343a40;
+        color: white;
+      }
+      
+      .badge-teal-clear {
+        background-color: var(--color-teal) !important;
+        color: white !important;
+      }
+      
+      .badge-charcoal-pending {
+        background-color: transparent !important;
+        color: var(--color-charcoal) !important;
+        border: 1px solid var(--color-charcoal);
+      }
+
+      .text-teal-gain {
+        color: var(--color-teal);
       }
 
   body
@@ -37,7 +81,7 @@ html
 
         h2.fw-bold CREDIT TRACKING
 
-        a.btn.btn-dark(
+        a.btn.btn-nyondo-secondary(
           href='/credit'
         ) Back
 
@@ -51,12 +95,12 @@ html
 
         p.mb-0
           strong Total Account Balance:
-          span.text-danger.fw-bold
+          span.text-dark.fw-bold
             |  UGX #{customer.balance.toLocaleString()}
 
       if groupedItems.length === 0
 
-        .alert.alert-info
+        .alert.alert-secondary
           | No credit records found.
 
       each item in groupedItems
@@ -68,9 +112,9 @@ html
             h5.fw-bold= item.item
 
             if item.status === 'CLEAR'
-              span.badge.bg-success CLEAR
+              span.badge.badge-teal-clear CLEAR
             else
-              span.badge.bg-warning.text-dark PENDING
+              span.badge.badge-charcoal-pending PENDING
 
           hr
 
@@ -93,14 +137,14 @@ html
 
               p.mb-1.fw-bold Amount Paid
 
-              p.text-success.fw-bold
+              p.text-teal-gain.fw-bold
                 | UGX #{item.totalPaid.toLocaleString()}
 
             .col-md-3.mb-3
 
               p.mb-1.fw-bold Remaining Balance
 
-              p.text-danger.fw-bold
+              p.text-dark.fw-bold
                 | UGX #{item.remainingBalance.toLocaleString()}
 
           hr
@@ -111,7 +155,7 @@ html
 
           .d-flex.flex-wrap.gap-2.mt-4
 
-            a.btn.btn-warning(
+            a.btn.btn-nyondo-secondary(
               href='/edit-credit/' + item.id
             ) Edit
 
@@ -121,10 +165,10 @@ html
               onsubmit="return confirm('Delete this record?')"
             )
 
-              button.btn.btn-danger(
+              button.btn.btn-nyondo-secondary(
                 type='submit'
               ) Delete
 
-            a.btn.btn-dark(
+            a.btn.btn-nyondo-secondary(
               href='/credit-receipt/' + item.id
             ) Receipt

@@ -4,32 +4,38 @@ const supplierSchema = new mongoose.Schema({
 
   supplierName: {
     type: String,
-    required: true
-  },
-
-  status: {
-    type: String,
-    enum: ['active', 'inactive', 'pending'],
-    default: 'active'
+    required: true,
+    trim: true
   },
 
   contactPerson: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   phoneNumber: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
-  emailAddress: String,
+  emailAddress: {
+    type: String,
+    default: '',
+    trim: true
+  },
 
-  supplierAddress: String,
+  supplierAddress: {
+    type: String,
+    default: '',
+    trim: true
+  },
 
-  // 🔥 IMPORTANT: items this supplier supplies
+  // 🔥 IMPORTANT FIX
   productsSupplied: [{
-    type: String   // MUST match Stock.productname
+    type: String,
+    trim: true
   }],
 
   logo: {

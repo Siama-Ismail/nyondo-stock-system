@@ -20,16 +20,16 @@ html
 
     style.
       :root {
-        --primary-navy: #111827;
-        --charcoal: #1f2937;
-        --accent-orange: #10B981;
-        --light-bg: #E5E7EB;
+        --primary-navy: #212529;      /* Deep Charcoal Base */
+        --charcoal: #343a40;          /* Subdued Neutral Body Text */
+        --accent-orange: #0d9488;     /* Vibrant Teal Accent */
+        --light-bg: #f1f3f5;          /* Polished Silver Background */
       }
 
       body {
         background-color: var(--light-bg);
         color: var(--charcoal);
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
       }
 
       .registration-card {
@@ -37,8 +37,8 @@ html
         margin: 4rem auto;
         border: none;
         border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
-        border: 1px solid #d1d5db;
+        box-shadow: 0 10px 25px rgba(33, 37, 41, 0.08);
+        border: 1px solid #dee2e6;
         overflow: hidden;
       }
 
@@ -58,8 +58,8 @@ html
       }
 
       .btn-nyondo {
-        background: var(--accent-orange);
-        color: #111827;
+        background: var(--accent-orange) !important;
+        color: #ffffff !important;
         font-weight: 700;
         border: none;
         padding: 0.9rem;
@@ -68,14 +68,14 @@ html
       }
 
       .btn-nyondo:hover {
-        background: #059669;
-        color: white;
+        background: #0b7a70 !important;
+        color: white !important;
       }
 
       .form-control:focus,
       .form-select:focus {
         border-color: var(--accent-orange);
-        box-shadow: 0 0 0 0.15rem rgba(16,185,129,0.15);
+        box-shadow: 0 0 0 0.15rem rgba(13,148,136,0.15);
       }
 
       .staff-icon {
@@ -167,7 +167,7 @@ html
                   option(value='admin')
                     | Admin
 
-                  option(value='store_anager')
+                  option(value='store_manager')
                     | Store Manager
 
                   option(value='sales_attendant')

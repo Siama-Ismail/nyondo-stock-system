@@ -1,39 +1,113 @@
 doctype html
 html
   head
-    title Supplier Receipt
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Supplier Receipt - NYONDO STOCK
     style.
       body {
-        font-family: monospace;
-        padding: 30px;
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #ffffff;
+        color: #000000;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: flex-start;
       }
 
       .receipt {
-        border: 1px dashed #000;
-        padding: 20px;
-        width: 350px;
+        width: 320px;
+        padding: 10px;
+        border: 1px dashed #000000;
+      }
+
+      .header-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 0 0 5px 0;
+      }
+
+      .header-sub {
+        font-size: 0.75rem;
+        text-align: center;
+        margin: 0 0 15px 0;
+        text-uppercase: true;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px dashed #000000;
+        margin: 12px 0;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 6px 0;
+        font-size: 0.85rem;
+      }
+
+      .info-label {
+        font-weight: bold;
+      }
+
+      .total-section {
+        margin: 15px 0;
+      }
+
+      .footer-text {
+        text-align: center;
+        font-size: 0.75rem;
+        margin-top: 25px;
+        display: block;
+      }
+
+      /* Print Optimization Override */
+      @media print {
+        body { padding: 0; }
+        .receipt { border: none; width: 100%; }
       }
 
   body
 
     .receipt
 
-      h3 NYONDO STOCK LTD
+      h1.header-title NYONDO STOCK LTD
+      p.header-sub General Hardware & Supplies
       hr
 
-      p Supplier: #{credit.supplierName}
-      p Phone: #{credit.supplierPhone}
-      p Item: #{credit.item}
+      .info-row
+        span.info-label Supplier:
+        span #{credit.supplierName}
+      
+      .info-row
+        span.info-label Phone:
+        span #{credit.supplierPhone}
+      
+      .info-row
+        span.info-label Item:
+        span #{credit.item}
 
       hr
 
-      p Total: UGX #{Number(credit.amount).toLocaleString()}
-      p Paid: UGX #{Number(credit.paid).toLocaleString()}
-      p Balance: UGX #{Number(credit.balance).toLocaleString()}
+      .total-section
+        .info-row
+          span.info-label Total Amount:
+          span UGX #{Number(credit.amount).toLocaleString()}
+        
+        .info-row
+          span.info-label Total Paid:
+          span UGX #{Number(credit.paid).toLocaleString()}
+        
+        .info-row(style="font-weight: bold;")
+          span.info-label Remaining Bal:
+          span UGX #{Number(credit.balance).toLocaleString()}
 
       hr
 
-      p Status: #{credit.status}
+      .info-row(style="font-weight: bold;")
+        span.info-label Credit Status:
+        span #{credit.status}
 
-      br
-      small Thank you for your business
+      small.footer-text Thank you for your business.

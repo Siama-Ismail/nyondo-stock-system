@@ -1,0 +1,171 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+    title Edit Supplier - NYONDO HARDWARE
+
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+    style.
+      :root {
+        --color-charcoal: #212529;
+        --color-teal: #0d9488;
+        --color-silver: #f1f3f5;
+      }
+
+      body {
+        background: var(--color-silver);
+        font-family: sans-serif;
+        color: var(--color-charcoal);
+      }
+
+      .card {
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--color-teal);
+        box-shadow: none;
+      }
+
+      /* Unified Action Components */
+      .btn-nyondo {
+        background: var(--color-teal);
+        color: white;
+        border: none;
+        font-weight: bold;
+        transition: background 0.2s ease;
+      }
+
+      .btn-nyondo:hover {
+        background: #0f766e;
+        color: white;
+      }
+
+      .btn-nyondo-secondary {
+        background: var(--color-charcoal);
+        color: white;
+        border: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+
+      .btn-nyondo-secondary:hover {
+        background: #343a40;
+        color: white;
+      }
+
+  body
+
+    .container.py-5
+
+      .card.p-5.mx-auto(style='max-width:700px')
+
+        .d-flex.justify-content-between.align-items-center.mb-4
+
+          h2.fw-bold Edit Supplier
+
+          a.btn.btn-nyondo-secondary(
+            href='/suppliers'
+          ) Back
+
+        form(
+          action='/update-supplier/' + supplier._id
+          method='POST'
+        )
+
+          .mb-3
+            label.form-label Supplier Name
+
+            input.form-control(
+              type='text'
+              name='supplierName'
+              value=supplier.supplierName
+              required
+            )
+
+          .mb-3
+            label.form-label Status
+
+            select.form-select(
+              name='status'
+              required
+            )
+
+              option(
+                value='active'
+                selected=supplier.status === 'active'
+              ) Active
+
+              option(
+                value='inactive'
+                selected=supplier.status === 'inactive'
+              ) Inactive
+
+              option(
+                value='pending'
+                selected=supplier.status === 'pending'
+              ) Pending
+
+          .mb-3
+            label.form-label Contact Person
+
+            input.form-control(
+              type='text'
+              name='contactPerson'
+              value=supplier.contactPerson
+              required
+            )
+
+          .mb-3
+            label.form-label Phone Number
+
+            input.form-control(
+              type='text'
+              name='phoneNumber'
+              value=supplier.phoneNumber
+              required
+            )
+
+          .mb-3
+            label.form-label Email Address
+
+            input.form-control(
+              type='email'
+              name='emailAddress'
+              value=supplier.emailAddress
+            )
+
+          .mb-3
+            label.form-label Supplier Address
+
+            textarea.form-control(
+              name='supplierAddress'
+              rows='2'
+            )= supplier.supplierAddress
+
+          .mb-3
+            label.form-label Products Supplied
+
+            input.form-control(
+              type='text'
+              name='productsSupplied'
+              value=supplier.productsSupplied.join(', ')
+            )
+
+          button.btn.btn-nyondo.w-100.py-2.mt-3(
+            type='submit'
+          ) Update Supplier
+
+    script(
+      src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
+    )

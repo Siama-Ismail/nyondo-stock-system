@@ -7,13 +7,15 @@ const SupplierCredit = require('../models/SupplierCredit');
 
 
 // ===================================================
-// SUPPLIERS DASHBOARD (WITH LOW STOCK PER SUPPLIER)
+// SUPPLIERS DASHBOARD
 // ===================================================
 router.get('/suppliers', async (req, res) => {
 
   try {
 
-    const suppliers = await Supplier.find().sort({ createdAt: -1 });
+    const suppliers = await Supplier.find()
+      .sort({ createdAt: -1 });
+
     const stock = await Stock.find();
 
     const data = suppliers.map(supplier => {
@@ -26,8 +28,28 @@ router.get('/suppliers', async (req, res) => {
         item.quantity <= 5
       );
 
+      // =====================
+      // AUTO STATUS
+      // =====================
+
+      let autoStatus = 'inactive';
+
+      if (items.length > 0) {
+
+        const availableItems = items.filter(i =>
+          i.quantity > 5
+        );
+
+        if (availableItems.length > 0) {
+          autoStatus = 'active';
+        } else {
+          autoStatus = 'low-stock';
+        }
+      }
+
       return {
         ...supplier._doc,
+        status: autoStatus,
         items,
         lowStockItems
       };
@@ -54,28 +76,38 @@ router.post('/add-supplier', async (req, res) => {
     let products = req.body.productsSupplied || '';
 
     if (typeof products === 'string') {
+
       products = products
         .split(',')
         .map(p => p.trim())
         .filter(Boolean);
+
     } else {
+
       products = [];
     }
 
     await Supplier.create({
+
       supplierName: req.body.supplierName,
-      status: req.body.status,
+
       contactPerson: req.body.contactPerson,
+
       phoneNumber: req.body.phoneNumber,
+
       emailAddress: req.body.emailAddress,
+
       supplierAddress: req.body.supplierAddress,
+
       productsSupplied: products
     });
 
     res.redirect('/suppliers');
 
   } catch (error) {
-    console.log("ADD SUPPLIER ERROR:", error);
+
+    console.log('ADD SUPPLIER ERROR:', error);
+
     res.status(500).send(error.message);
   }
 });
@@ -99,7 +131,9 @@ router.get('/edit-supplier/:id', async (req, res) => {
     });
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -115,28 +149,39 @@ router.post('/update-supplier/:id', async (req, res) => {
     let products = req.body.productsSupplied || '';
 
     if (typeof products === 'string') {
+
       products = products
         .split(',')
         .map(p => p.trim())
         .filter(Boolean);
+
     } else {
+
       products = [];
     }
 
     await Supplier.findByIdAndUpdate(req.params.id, {
+
       supplierName: req.body.supplierName,
-      status: req.body.status,
+
       contactPerson: req.body.contactPerson,
+
       phoneNumber: req.body.phoneNumber,
+
       emailAddress: req.body.emailAddress,
+
       supplierAddress: req.body.supplierAddress,
+
       productsSupplied: products
+
     });
 
     res.redirect('/suppliers');
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -154,7 +199,9 @@ router.get('/delete-supplier/:id', async (req, res) => {
     res.redirect('/suppliers');
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -180,7 +227,9 @@ router.get('/supplier-credit', async (req, res) => {
     });
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -189,34 +238,54 @@ router.get('/supplier-credit', async (req, res) => {
 // ===================================================
 // ADD SUPPLIER CREDIT
 // ===================================================
-router.post('/add-supplier', async (req, res) => {
+router.post('/add-supplier-credit', async (req, res) => {
 
   try {
-    console.log("BODY:", req.body); // 🔥 DEBUG
 
-    let products = req.body.productsSupplied || '';
+    const {
+      supplierName,
+      supplierPhone,
+      item,
+      quantity,
+      unitPrice,
+      paid
+    } = req.body;
 
-    products = products
-      .split(',')
-      .map(p => p.trim())
-      .filter(Boolean);
+    const qty = Number(quantity);
+    const price = Number(unitPrice);
+    const pd = Number(paid || 0);
 
-    const newSupplier = await Supplier.create({
-      supplierName: req.body.supplierName,
-      status: req.body.status,
-      contactPerson: req.body.contactPerson,
-      phoneNumber: req.body.phoneNumber,
-      emailAddress: req.body.emailAddress,
-      supplierAddress: req.body.supplierAddress,
-      productsSupplied: products
+    const amount = qty * price;
+
+    const balance = Math.max(0, amount - pd);
+
+    await SupplierCredit.create({
+
+      supplierName,
+      supplierPhone,
+      item,
+
+      quantity: qty,
+
+      unitPrice: price,
+
+      amount,
+
+      paid: pd,
+
+      balance,
+
+      status: balance <= 0
+        ? 'PAID'
+        : 'UNPAID'
     });
 
-    console.log("CREATED:", newSupplier);
-
-    res.redirect('/suppliers');
+    res.redirect('/supplier-credit');
 
   } catch (error) {
-    console.log("ADD SUPPLIER ERROR:", error);
+
+    console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -233,7 +302,9 @@ router.post('/pay-supplier/:id', async (req, res) => {
 
     const credit = await SupplierCredit.findById(req.params.id);
 
-    if (!credit) return res.status(404).send('Credit not found');
+    if (!credit) {
+      return res.status(404).send('Credit not found');
+    }
 
     credit.paid += payAmount;
 
@@ -241,7 +312,10 @@ router.post('/pay-supplier/:id', async (req, res) => {
       credit.paid = credit.amount;
     }
 
-    credit.balance = Math.max(0, credit.amount - credit.paid);
+    credit.balance = Math.max(
+      0,
+      credit.amount - credit.paid
+    );
 
     if (credit.balance <= 0) {
       credit.status = 'PAID';
@@ -252,7 +326,9 @@ router.post('/pay-supplier/:id', async (req, res) => {
     res.redirect('/supplier-credit');
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -267,14 +343,18 @@ router.get('/edit-supplier-credit/:id', async (req, res) => {
 
     const credit = await SupplierCredit.findById(req.params.id);
 
-    if (!credit) return res.status(404).send('Credit not found');
+    if (!credit) {
+      return res.status(404).send('Credit not found');
+    }
 
     res.render('editSupplierCredit', {
       credit
     });
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -301,24 +381,38 @@ router.post('/update-supplier-credit/:id', async (req, res) => {
     const pd = Number(paid || 0);
 
     const amount = qty * price;
+
     const balance = Math.max(0, amount - pd);
 
     await SupplierCredit.findByIdAndUpdate(req.params.id, {
+
       supplierName,
+
       supplierPhone,
+
       item,
+
       quantity: qty,
+
       unitPrice: price,
+
       amount,
+
       paid: pd,
+
       balance,
-      status: balance <= 0 ? 'PAID' : 'UNPAID'
+
+      status: balance <= 0
+        ? 'PAID'
+        : 'UNPAID'
     });
 
     res.redirect('/supplier-credit');
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -336,7 +430,9 @@ router.get('/delete-supplier-credit/:id', async (req, res) => {
     res.redirect('/supplier-credit');
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
@@ -351,16 +447,21 @@ router.get('/supplier-credit-receipt/:id', async (req, res) => {
 
     const credit = await SupplierCredit.findById(req.params.id);
 
-    if (!credit) return res.status(404).send('Credit not found');
+    if (!credit) {
+      return res.status(404).send('Credit not found');
+    }
 
     res.render('supplier_receipt', {
       credit
     });
 
   } catch (error) {
+
     console.log(error);
+
     res.status(500).send(error.message);
   }
 });
+
 
 module.exports = router;

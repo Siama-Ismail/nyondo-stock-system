@@ -8,60 +8,58 @@ html
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
     style.
       :root {
-        --navy: #111827;        /* Changed to Matte Black */
-        --orange: #10B981;      /* Changed to Emerald Green */
-        --glass: rgba(255, 255, 255, 0.05);
-        --white: #111827;       /* Body content base defaults to Matte Black */
-        --silver-bg: #E5E7EB;   /* Premium Silver Gray background canvas */
+        --charcoal: #212529;      /* Deep Charcoal */
+        --teal: #0d9488;          /* Vibrant Teal */
+        --silver-bg: #f1f3f5;      /* Polished Silver background canvas */
       }
       body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
         background-color: var(--silver-bg);
-        color: var(--white);
+        color: var(--charcoal);
       }
       .navbar {
-        background-color: rgba(17, 24, 39, 0.95) !important; /* Rich matte solid header */
+        background-color: rgba(33, 37, 41, 0.95) !important; /* Rich charcoal solid header */
         backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 0.8rem 0;
       }
-      .navbar-brand span { color: var(--orange); }
+      .navbar-brand span { color: var(--teal); }
       .hero-section {
-        background-color: #1f2937; /* Deep Charcoal contrast space for the hero banner */
+        background-color: #212529; /* Deep Charcoal space for the hero banner */
         color: #ffffff;
         height: 100vh;
         display: flex;
         align-items: center;
         text-align: center;
       }
-      .text-orange { color: var(--orange) !important; }
+      .text-teal { color: var(--teal) !important; }
       .btn-primary {
-        background-color: var(--orange);
-        border-color: var(--orange);
-        color: #111827; /* Dark charcoal text inside dynamic action button */
+        background-color: var(--teal);
+        border-color: var(--teal);
+        color: #ffffff; /* White text for crisp contrast on teal background */
         font-weight: 700;
         padding: 0.8rem 2rem;
         transition: 0.3s ease;
       }
       .btn-primary:hover {
-        background-color: #059669; /* Deep emerald transition focus state */
-        border-color: #059669;
+        background-color: #0f766e; /* Deep teal variant transition focus state */
+        border-color: #0f766e;
         color: #ffffff;
         transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        box-shadow: 0 10px 20px rgba(13, 148, 136, 0.2);
       }
-      .feature-icon { font-size: 2.5rem; color: var(--orange); }
+      .feature-icon { font-size: 2.5rem; color: var(--teal); }
       .contact-form-card {
-        border-left: 5px solid var(--orange) !important;
+        border-left: 5px solid var(--teal) !important;
         background: white;
-        border: 1px solid #d1d5db;
+        border: 1px solid #dee2e6;
       }
       .card {
-        border: 1px solid #d1d5db !important;
+        border: 1px solid #dee2e6 !important;
         background-color: #ffffff;
       }
       footer {
-        background-color: var(--navy) !important;
+        background-color: var(--charcoal) !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
   body
@@ -93,7 +91,7 @@ html
           .col-lg-9
             h1.display-3.fw-bold.mb-4
               | Quality Building Materials & 
-              span.text-orange Hardware
+              span.text-teal Hardware
             p.lead.mb-5.opacity-75 Supplying Uganda's construction industry with premium materials since 2005.
             .d-flex.justify-content-center.gap-3
               a.btn.btn-primary.btn-lg.shadow(href='#products')
@@ -106,7 +104,7 @@ html
       .container.py-5
         .text-center.mb-5
           h2.fw-bold.text-dark Our Product Range
-          .mx-auto.mb-3(style='width: 50px; height: 4px; background-color: var(--orange);')
+          .mx-auto.mb-3(style='width: 50px; height: 4px; background-color: var(--teal);')
         .row.g-4
           .col-md-4
             .card.h-100.shadow-sm.border-0
@@ -128,7 +126,7 @@ html
                 p.text-muted.small Pipes, fittings, and heavy-duty wiring.
 
     // Services Section
-    section#services.py-5(style='background-color: #f3f4f6;')
+    section#services.py-5(style='background-color: #e9ecef;')
       .container.py-5
         .row.g-4.text-center
           .col-md-4
@@ -154,33 +152,33 @@ html
           .col-lg-6
             h2.fw-bold.mb-4.text-dark
               | Partnering to 
-              span.text-orange Build the Future
+              span.text-teal Build the Future
             p.text-secondary.mb-4 Since 2005, NYONDO General Hardware has served as a cornerstone for construction in Uganda.
             .row.g-3
               .col-4
-                h3.fw-bold.text-orange.mb-0 18+
+                h3.fw-bold.text-teal.mb-0 18+
                 p.small.text-muted Years
               .col-4
-                h3.fw-bold.text-orange.mb-0 500+
+                h3.fw-bold.text-teal.mb-0 500+
                 p.small.text-muted Products
               .col-4
-                h3.fw-bold.text-orange.mb-0 1k+
+                h3.fw-bold.text-teal.mb-0 1k+
                 p.small.text-muted Clients
           .col-lg-6.mt-4.mt-lg-0.text-center
             img.img-fluid.rounded-4.shadow-lg(src='/images/nyondohardware.png' alt='About Us')
 
     // Contact Section
-    section#contact.py-5(style='background-color: #f3f4f6;')
+    section#contact.py-5(style='background-color: #e9ecef;')
       .container.py-5
         .row.g-5
           .col-lg-5
             h2.fw-bold.mb-4.text-dark Get In Touch
             p.text-muted.mb-4 Visit our Kampala branch for a consultation or order materials directly.
             .d-flex.mb-3
-              i.bi.bi-geo-alt.text-orange.fs-4.me-3
+              i.bi.bi-geo-alt.text-teal.fs-4.me-3
               p.mb-0.text-secondary Plot 42, Main Street, Kampala, Uganda
             .d-flex.mb-3
-              i.bi.bi-telephone.text-orange.fs-4.me-3
+              i.bi.bi-telephone.text-teal.fs-4.me-3
               p.mb-0.text-secondary +256 712 345 678
           .col-lg-7
             .card.shadow-lg.p-4.contact-form-card.border-0
@@ -201,7 +199,7 @@ html
       .container.text-center
         h4.fw-bold.mb-3.text-white
           | NYONDO 
-          span.text-orange STOCK
+          span.text-teal STOCK
         p.opacity-50.small © 2026 NYONDO General Hardware LTD. All rights reserved.
 
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')

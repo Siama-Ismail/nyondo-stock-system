@@ -16,9 +16,15 @@ html
     )
 
     style.
+      :root {
+        --color-charcoal: #212529;    /* Deep Charcoal Base */
+        --color-teal: #0d9488;        /* Vibrant Teal Accent */
+        --color-silver: #f1f3f5;      /* Polished Silver Background */
+      }
+
       body {
-        background-color: #E5E7EB; /* Changed to Silver Gray */
-        color: #111827; /* Changed to Matte Black text */
+        background-color: var(--color-silver);
+        color: var(--color-charcoal);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -27,8 +33,8 @@ html
       }
 
       .navbar {
-        background-color: #111827; /* Matte Black header band */
-        border-bottom: 3px solid #10B981; /* Premium Emerald Accent border */
+        background-color: var(--color-charcoal);
+        border-bottom: 3px solid var(--color-teal);
       }
 
       .main-content {
@@ -41,7 +47,7 @@ html
 
       .logout-card {
         background: #ffffff;
-        border: 1px solid #d1d5db;
+        border: 1px solid #e9ecef;
         border-radius: 20px;
         padding: 50px;
         width: 100%;
@@ -52,11 +58,11 @@ html
 
       .nyondo-text {
         font-weight: 800;
-        color: #ffffff;
+        color: var(--color-silver);
       }
 
       .stock-text {
-        color: #10B981; /* Changed to Emerald Green */
+        color: var(--color-teal);
         font-weight: 800;
       }
 
@@ -64,8 +70,8 @@ html
         width: 90px;
         height: 90px;
         border-radius: 50%;
-        background-color: rgba(16, 185, 129, 0.1);
-        border: 2px solid #10B981; /* Changed to Emerald Green */
+        background-color: rgba(13, 148, 136, 0.1);
+        border: 2px solid var(--color-teal);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -73,18 +79,21 @@ html
         margin-bottom: 25px;
       }
 
-      .btn-orange {
-        background-color: #10B981; /* Changed to Emerald Green */
+      /* Unified Action Components */
+      .btn-nyondo {
+        background-color: var(--color-teal);
         border: none;
-        color: #111827; /* Dark high-contrast label */
+        color: white;
         padding: 14px 30px;
         font-weight: 700;
         border-radius: 10px;
-        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s ease-in-out;
       }
 
-      .btn-orange:hover {
-        background-color: #059669; /* Richer hover state green */
+      .btn-nyondo:hover {
+        background-color: #0f766e;
         color: white;
         transform: translateY(-2px);
       }
@@ -101,16 +110,14 @@ html
     nav.navbar.navbar-dark
       .container.justify-content-center
         a.navbar-brand(href='/dashboard')
-          span.nyondo-text NYONDO
-          span.stock-text  STOCK
+          span.nyondo-text NYONDO 
+          span.stock-text STOCK
 
     // MAIN CONTENT
     .main-content
-
       .logout-card
-
         .logout-icon
-          i.bi.bi-box-arrow-right.fs-1(style='color:#10B981')
+          i.bi.bi-box-arrow-right.fs-1(style='color: var(--color-teal)')
 
         h2.fw-bold.mb-3 Logged Out Successfully
 
@@ -119,7 +126,7 @@ html
           br
           | Thank you for using NYONDO STOCK Management System.
 
-        a.btn.btn-orange(href='/login')
+        a.btn-nyondo(href='/login')
           i.bi.bi-lock-fill.me-2
           | LOGIN AGAIN
 

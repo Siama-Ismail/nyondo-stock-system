@@ -9,23 +9,179 @@ html
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
 
     style.
-      body { background-color: #E5E7EB; color: #111827; min-height: 100vh; margin: 0; font-family: sans-serif; overflow-x: hidden; }
-      .st-sidebar { width: 260px; height: 100vh; background-color: #111827; border-right: 3px solid #10B981; position: fixed; top: 0; left: 0; padding: 20px; display: flex; flex-direction: column; z-index: 1000; }
-      .st-sidebar .navbar-brand { font-size: 1.5rem; text-decoration: none; color: white; font-weight: 800; margin-bottom: 30px; }
-      .st-sidebar .navbar-brand span { color: #10B981; }
-      .st-sidebar .nav-link { color: rgba(255,255,255,0.7); padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; transition: 0.3s; display: flex; align-items: center; text-decoration: none; }
-      .st-sidebar .nav-link:hover, .st-sidebar .nav-link.active { background-color: rgba(16,185,129,0.1); color: #10B981; }
-      .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; }
-      .st-main-h { font-weight: 800; margin-bottom: 30px; color: #111827; }
-      .st-card-style { background: #ffffff; color: #111827; border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #d1d5db; }
-      .st-accent-text { color: #111827; font-weight: 700; border-bottom: 2px solid #10B981; padding-bottom: 10px; margin-bottom: 20px; display: inline-block; }
-      .st-btn-dark { background-color: #10B981; color: #111827; border: none; font-weight: 700; transition: 0.3s; padding: 12px; border-radius: 8px; }
-      .st-btn-dark:hover { background-color: #059669; color: #ffffff; }
-      .stat-card-dark { background-color: #111827; border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; }
-      .st-low-alert { color: #dc3545; background-color: #fee2e2; padding: 5px 10px; border-radius: 6px; font-weight: 700; }
-      .table-responsive { width: 100%; overflow-x: auto; }
-      .table { width: 100%; min-width: 1100px; font-size: 0.85rem; vertical-align: middle; }
-      .form-label { font-size: 0.85rem; font-weight: 600; color: #64748b; }
+      :root {
+        --brand-navy: #212529;       /* Deep Charcoal Base */
+        --brand-orange: #0d9488;     /* Vibrant Teal Accent */
+        --sidebar-hover: rgba(13, 148, 136, 0.15); /* Clean Translucent Teal Hover */
+        --light-bg: #f1f3f5;         /* Polished Silver Background */
+        --charcoal: #343a40;          /* Subdued Body Text */
+      }
+
+      body { 
+        background-color: var(--light-bg); 
+        color: var(--charcoal); 
+        min-height: 100vh; 
+        margin: 0; 
+        font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+        overflow-x: hidden; 
+      }
+
+      .st-sidebar { 
+        width: 260px; 
+        height: 100vh; 
+        background-color: var(--brand-navy); 
+        border-right: 3px solid var(--brand-orange); 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        padding: 20px; 
+        display: flex; 
+        flex-direction: column; 
+        z-index: 1000; 
+      }
+
+      .st-sidebar .navbar-brand { 
+        font-size: 1.5rem; 
+        text-decoration: none; 
+        color: white; 
+        font-weight: 800; 
+        margin-bottom: 30px; 
+      }
+
+      .st-sidebar .navbar-brand span { 
+        color: var(--brand-orange); 
+      }
+
+      .st-sidebar .nav-link { 
+        color: #caecf5; 
+        opacity: 0.85;
+        padding: 12px 15px; 
+        border-radius: 8px; 
+        margin-bottom: 8px; 
+        transition: 0.3s; 
+        display: flex; 
+        align-items: center; 
+        text-decoration: none; 
+      }
+
+      .st-sidebar .nav-link:hover, .st-sidebar .nav-link.active { 
+        background-color: var(--sidebar-hover); 
+        color: #ffffff !important; 
+        opacity: 1;
+      }
+
+      .st-sidebar .nav-link.active {
+        border-left: 4px solid var(--brand-orange);
+        border-radius: 0 8px 8px 0;
+      }
+
+      .main-content { 
+        margin-left: 260px; 
+        width: calc(100% - 260px); 
+        padding: 40px; 
+      }
+
+      .st-main-h { 
+        font-weight: 800; 
+        margin-bottom: 30px; 
+        color: var(--brand-navy); 
+      }
+
+      .st-card-style { 
+        background: #ffffff; 
+        color: var(--brand-navy); 
+        border-radius: 12px; 
+        border: none; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.03); 
+        overflow: hidden; 
+        border: 1px solid #dee2e6; 
+      }
+
+      .st-accent-text { 
+        color: var(--brand-navy); 
+        font-weight: 700; 
+        border-bottom: 3px solid var(--brand-orange); 
+        padding-bottom: 10px; 
+        margin-bottom: 20px; 
+        display: inline-block; 
+      }
+
+      .st-btn-dark { 
+        background-color: var(--brand-orange); 
+        color: #ffffff; 
+        border: none; 
+        font-weight: 700; 
+        transition: 0.3s; 
+        padding: 12px; 
+        border-radius: 8px; 
+      }
+
+      .st-btn-dark:hover { 
+        background-color: #0b7a70; 
+        color: #ffffff; 
+      }
+
+      .stat-card-dark { 
+        background-color: var(--brand-navy); 
+        border: 1px solid rgba(255,255,255,0.1); 
+        color: white; 
+        border-radius: 12px; 
+      }
+
+      .st-low-alert { 
+        color: #dc2626; 
+        background-color: #fee2e2; 
+        padding: 4px 10px; 
+        border-radius: 6px; 
+        font-weight: 700; 
+        font-size: 0.75rem;
+        display: inline-block;
+      }
+
+      .table-responsive { 
+        width: 100%; 
+        overflow-x: auto; 
+      }
+
+      .table { 
+        width: 100%; 
+        min-width: 1100px; 
+        font-size: 0.85rem; 
+        vertical-align: middle; 
+      }
+
+      .form-label { 
+        font-size: 0.85rem; 
+        font-weight: 600; 
+        color: #64748b; 
+      }
+
+      /* Unified Inline Edit Button Override */
+      .btn-outline-dark {
+        color: var(--brand-orange) !important;
+        border-color: var(--brand-orange) !important;
+        background: transparent !important;
+        font-weight: 600;
+      }
+
+      .btn-outline-dark:hover {
+        background-color: var(--brand-orange) !important;
+        color: #ffffff !important;
+      }
+
+      /* Safe Premium Red Exception styling for Delete Actions */
+      .btn-danger {
+        background-color: #dc2626 !important;
+        border-color: #dc2626 !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+      }
+
+      .btn-danger:hover {
+        background-color: #b91c1c !important;
+        border-color: #b91c1c !important;
+      }
 
   body
     // SIDEBAR
@@ -54,7 +210,7 @@ html
       if error
         .alert.alert-danger= error
 
-      // STATS
+      // STATS (Borders removed from the second and third cards)
       .row.mb-4
         .col-md-4.mb-3
           .card.stat-card-dark.p-3
@@ -62,16 +218,16 @@ html
             h4.fw-bold.mb-0 #{totalItems || 0}
 
         .col-md-4.mb-3
-          .card.stat-card-dark.p-3.border-start.border-4.border-success
+          .card.stat-card-dark.p-3
             h6.text-success.small.text-uppercase Inventory Value
             h4.fw-bold.mb-0 UGX #{(inventoryValue || 0).toLocaleString()}
 
         .col-md-4.mb-3
-          .card.stat-card-dark.p-3.border-start.border-4.border-danger
+          .card.stat-card-dark.p-3
             h6.text-danger.small.text-uppercase Low Stock Alerts
             h4.fw-bold.mb-0 #{(lowStock || []).length} Items
 
-      // FORM (UNCHANGED)
+      // FORM
       .row.mb-4
         .col-12
           .card.st-card-style.p-4
@@ -164,11 +320,8 @@ html
                         td.fw-bold= stock.productname
                         td= stock.quantity
                         td UGX #{(Number(stock.unitcost) || 0).toLocaleString()}
-
-                        // FIXED HERE ↓↓↓
                         td UGX #{(Number(stock.sellingPrice) || 0).toLocaleString()}
-
-                        td Flex UGX #{(Number(stock.totalpaid) || 0).toLocaleString()}
+                        td UGX #{(Number(stock.totalpaid) || 0).toLocaleString()}
                         td= stock.suppliername
                         td= stock.supplierphone
                         td= stock.factoryname

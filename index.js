@@ -9,7 +9,7 @@ const Registration = require('./models/Registration');
 const Stock = require('./models/Stock');
 const Supplier = require('./models/Supplier');
 const SupplierCredit = require('./models/SupplierCredit');
-
+const Transport = require('./models/Transport');
 
 
 
@@ -65,7 +65,7 @@ app.use('/', require('./routes/adminRoutes'));
 app.use('/', require('./routes/supplierRoutes'));
 app.use('/', require('./routes/creditRoutes'));
 app.use('/', require('./routes/reportsRoutes'));
-
+app.use('/', require('./routes/transportRoutes'));
 
 app.use((req,res)=>{
   res.status(404).send('Oops! Route not found.')

@@ -13,47 +13,86 @@ html
 
     style.
       :root {
-        --primary-navy: #111827;
-        --accent-orange: #FD7E14;
-        --light-bg: #E5E7EB;
+        --color-charcoal: #212529;
+        --color-teal: #0d9488;
+        --color-silver: #f1f3f5;
       }
 
       body {
-        background: var(--light-bg);
+        background: var(--color-silver);
         font-family: sans-serif;
-        color: var(--primary-navy);
+        color: var(--color-charcoal);
       }
 
       .card {
         border: none;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
       }
 
+      /* Unified Action Components */
       .btn-nyondo {
-        background: var(--accent-orange);
-        color: white;
+        background: var(--color-teal) !important;
+        color: white !important;
         border: none;
         font-weight: 600;
+        transition: background 0.2s ease;
       }
 
       .btn-nyondo:hover {
-        background: #e46f0b;
-        color: white;
+        background: #0f766e !important;
+        color: white !important;
+      }
+
+      /* Primary Theme Matching Accent Color */
+      .btn-nyondo-secondary {
+        background: var(--color-teal) !important;
+        color: white !important;
+        border: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+
+      .btn-nyondo-secondary:hover {
+        background: #0f766e !important;
+        color: white !important;
+      }
+
+      /* Safe Premium Red Exception styling for Delete Actions */
+      .btn-danger-custom {
+        background-color: #dc2626 !important;
+        border-color: #dc2626 !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+        transition: background 0.2s ease;
+      }
+
+      .btn-danger-custom:hover {
+        background-color: #b91c1c !important;
+        border-color: #b91c1c !important;
+        color: #ffffff !important;
       }
 
       .table thead {
-        background: var(--primary-navy);
+        background: var(--color-charcoal);
         color: white;
       }
 
       .badge-clear {
-        background: #198754;
+        background: var(--color-teal);
+        color: white;
       }
 
       .badge-pending {
-        background: #ffc107;
-        color: #111827;
+        background: transparent;
+        color: var(--color-charcoal);
+        border: 1px solid var(--color-charcoal);
+      }
+      
+      .text-teal-gain {
+        color: var(--color-teal);
       }
 
   body
@@ -199,10 +238,10 @@ html
                   td
 
                     if customer.balance > 0
-                      span.text-danger.fw-bold
+                      span.text-dark.fw-bold
                         | UGX #{customer.balance.toLocaleString()}
                     else
-                      span.text-success.fw-bold
+                      span.text-teal-gain.fw-bold
                         | UGX 0
 
                   td
@@ -220,7 +259,7 @@ html
                         href='/deposit/' + customer._id
                       ) Deposit
 
-                      a.btn.btn-sm.btn-dark(
+                      a.btn.btn-sm.btn-nyondo-secondary(
                         href='/customer-history/' + customer._id
                       ) History
 
@@ -268,16 +307,16 @@ html
                   td
                     = deposit.item
 
-                  td.text-success.fw-bold
+                  td.text-teal-gain.fw-bold
                     | UGX #{deposit.amount.toLocaleString()}
 
                   td
 
                     if deposit.balance > 0
-                      span.text-danger.fw-bold
+                      span.text-dark.fw-bold
                         | UGX #{deposit.balance.toLocaleString()}
                     else
-                      span.text-success.fw-bold
+                      span.text-teal-gain.fw-bold
                         | UGX 0
 
                   td
@@ -294,11 +333,11 @@ html
 
                     .d-flex.flex-wrap.gap-2
 
-                      a.btn.btn-sm.btn-outline-dark(
+                      a.btn.btn-sm.btn-nyondo-secondary(
                         href='/credit-receipt/' + deposit._id
                       ) Receipt
 
-                      a.btn.btn-sm.btn-warning(
+                      a.btn.btn-sm.btn-nyondo-secondary(
                         href='/edit-credit/' + deposit._id
                       ) Edit
 
@@ -308,6 +347,6 @@ html
                         onsubmit="return confirm('Are you sure you want to delete this transaction?')"
                       )
 
-                        button.btn.btn-sm.btn-danger(
+                        button.btn.btn-sm.btn-danger-custom(
                           type='submit'
                         ) Delete

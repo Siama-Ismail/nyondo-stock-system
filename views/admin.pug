@@ -18,14 +18,14 @@ html
 
     style.
       body {
-        background: #E5E7EB;
+        background: #f1f3f5; /* Polished Silver Background */
         font-family: 'Segoe UI', sans-serif;
       }
 
       .sidebar {
-        background: #111827;
+        background: #212529; /* Deep Charcoal Sidebar */
         min-height: 100vh;
-        border-right: 3px solid #10B981;
+        border-right: 3px solid #0d9488; /* Vibrant Teal Accent Border */
         padding: 20px;
       }
 
@@ -44,12 +44,12 @@ html
       }
 
       .sidebar a:hover {
-        background: #1F2937;
-        color: #10B981;
+        background: #2c3034; /* Slightly lighter Charcoal for hover */
+        color: #0d9488; /* Vibrant Teal on hover */
       }
 
       .metric {
-        background: #111827;
+        background: #212529; /* Deep Charcoal Metric Cards */
         color: white;
         padding: 18px;
         border-radius: 14px;
@@ -86,9 +86,19 @@ html
       }
 
       .card-header {
-        background: #111827 !important;
+        background: #212529 !important; /* Deep Charcoal Card Header */
         color: white !important;
         font-weight: 600;
+      }
+      
+      /* Vibrant Teal Quick Action Buttons Styling */
+      .btn-teal {
+        background-color: #0d9488 !important;
+        color: #ffffff !important;
+        border: none;
+      }
+      .btn-teal:hover {
+        background-color: #0f766e !important;
       }
 
   body
@@ -109,7 +119,7 @@ html
           a(href='/credit') Customer Credit
           a(href='/suppliers') Suppliers 
           a(href='/supplier-credit') Supplier Credit 
-            a(href='/staffs') Staffs Details
+          a(href='/staffs') Staffs Details
           a(href='/signup') Register staffs
 
           hr.text-secondary
@@ -117,7 +127,7 @@ html
         
 
           a(href='/reports') General Reports
-         
+          
 
           hr.text-secondary
 
@@ -135,7 +145,7 @@ html
 
           
           // METRICS ROW 1
-         
+          
           .row.g-3.mb-3
 
             .col-md-3
@@ -159,9 +169,9 @@ html
                 h2= totalStockItems
 
 
-         
+          
           // METRICS ROW 2
-         
+          
           .row.g-3.mb-4
 
             .col-md-3
@@ -204,7 +214,7 @@ html
                         strong= sale.customerName
                         br
                         small.text-muted= sale.product
-                        span.float-end.fw-bold UGX #{Number(sale.total).toLocaleString()}
+                        span.float-end.fw-bold.text-teal(style="color: #0d9488;") UGX #{Number(sale.total).toLocaleString()}
                   else
                     p.text-muted No sales yet
 
@@ -217,9 +227,9 @@ html
 
                 .card-body
 
-                  a.btn.btn-dark.w-100.mb-2(href='/sales') Add Sale
-                  a.btn.btn-dark.w-100.mb-2(href='/stock') Add Stock
-                  a.btn.btn-dark.w-100.mb-2(href='/staffs') Staffs
+                  a.btn.btn-teal.w-100.mb-2(href='/sales') Add Sale
+                  a.btn.btn-teal.w-100.mb-2(href='/stock') Add Stock
+                  a.btn.btn-teal.w-100.mb-2(href='/staffs') Staffs
 
 
           

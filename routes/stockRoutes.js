@@ -3,6 +3,31 @@ const router = express.Router();
 
 const Stock = require('../models/Stock');
 
+
+// =========================
+// UGANDAN PHONE VALIDATION
+// =========================
+function isValidUgandanNumber(number) {
+  if (!number) return false;
+
+  number = number.toString().replace(/[\s-]/g, '');
+
+  const regex = /^(?:\+256|0)7[0-9]{8}$/;
+  return regex.test(number);
+}
+
+function normalizeUgandanNumber(number) {
+  number = number.toString().replace(/[\s-]/g, '');
+
+  if (number.startsWith('0')) {
+    return '+256' + number.substring(1);
+  }
+
+  return number;
+}
+
+
+
 // =========================
 // STOCK PAGE
 // =========================
@@ -36,48 +61,72 @@ router.get('/stock', async (req, res) => {
   }
 });
 
+
 // =========================
-// ADD STOCK
+// ADD STOCK (WITH VALIDATION)
 // =========================
 router.post('/add-stock', async (req, res) => {
 
-  const {
-    productname,
-    quantity,
-    unitcost,
-    sellingPrice,
-    suppliername,
-    supplierphone,
-    factoryname,
-    paymentstatus
-  } = req.body;
+  try {
 
-  const qty = Number(quantity);
-  const cost = Number(unitcost);
+    const {
+      productname,
+      quantity,
+      unitcost,
+      sellingPrice,
+      suppliername,
+      supplierphone,
+      factoryname,
+      paymentstatus
+    } = req.body;
 
-  const stock = new Stock({
-    productname,
-    quantity: qty,
-    unitcost: cost,
-    sellingPrice: Number(sellingPrice),
-    totalpaid: qty * cost,
-    suppliername,
-    supplierphone,
-    factoryname,
-    paymentstatus
-  });
+    // =========================
+    // PHONE VALIDATION (SUPPLIER)
+    // =========================
+    if (!isValidUgandanNumber(supplierphone)) {
+      return res.status(400).send(
+        "Invalid supplier phone number. Use +2567XXXXXXXX or 07XXXXXXXX"
+      );
+    }
 
-  await stock.save();
+    const cleanPhone = normalizeUgandanNumber(supplierphone);
 
-  res.redirect('/stock');
+    const qty = Number(quantity);
+    const cost = Number(unitcost);
+
+    const stock = new Stock({
+      productname,
+      quantity: qty,
+      unitcost: cost,
+      sellingPrice: Number(sellingPrice),
+      totalpaid: qty * cost,
+      suppliername,
+      supplierphone: cleanPhone,
+      factoryname,
+      paymentstatus
+    });
+
+    await stock.save();
+
+    res.redirect('/stock');
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
+
 
 // =========================
 // DELETE STOCK
 // =========================
 router.get('/delete-stock/:id', async (req, res) => {
-  await Stock.findByIdAndDelete(req.params.id);
-  res.redirect('/stock');
+  try {
+    await Stock.findByIdAndDelete(req.params.id);
+    res.redirect('/stock');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
+
 
 module.exports = router;
