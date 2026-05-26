@@ -136,15 +136,15 @@ html
               // PHONE
               .col-md-6
                 label.form-label Phone Number
-
                 input.form-control(
-                  type='tel'
-                  name='phonenumber'
-                  placeholder='07XXXXXXXX'
-                  required
-                )
-
-              // NIN
+                  type="tel" 
+                  name="phonenumber" 
+                  id="customerPhoneInput" 
+                  value=(oldData && oldData.phonenumber ? oldData.phonenumber : "+256") 
+                  maxlength="13" 
+                  pattern="^\\+256\\d{9}$" 
+                  title="Phone number must start with +256 followed by exactly 9 digits" 
+                  class=(errors && errors.customerContact ? 'is-invalid' : '') required)
               .col-md-6
                 label.form-label NIN
 

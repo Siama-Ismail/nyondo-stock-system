@@ -100,9 +100,7 @@ html
   body
     .container-fluid.p-0.d-flex
 
-      // =========================
       // SIDEBAR
-      // =========================
       .sidebar.p-3
         .sidebar-header.py-3.mb-4
           h5.text-white.fw-bold.mb-0 NYONDO 
@@ -122,9 +120,8 @@ html
               i.bi.bi-receipt.me-2
               span Sales
 
-      // =========================
+     
       // MAIN CONTENT
-      // =========================
       .main-content-area
 
         .d-flex.justify-content-between.align-items-center.mb-4
@@ -133,9 +130,8 @@ html
             i.bi.bi-plus-lg.me-2
             | Schedule Delivery
 
-        // =========================
+        
         // STATS (Standard Minimal Blocks)
-        // =========================
         .row.g-3.mb-4
           .col-md-3
             .card.p-3.border-0.text-white(style='background: var(--matte-black); border-radius: 12px;')
@@ -157,9 +153,7 @@ html
               p.small.text-uppercase.text-muted.mb-1 Fleet Size
               h2.fw-bold.mb-0= stats.fleet
 
-        // =========================
         // DELIVERY SCHEDULE DATA TABLE
-        // =========================
         .card.transport-card.mb-4.overflow-hidden
           .card-header.bg-white.py-3
             h5.mb-0.fw-bold Current Delivery Schedule
@@ -208,9 +202,8 @@ html
                   tr
                     td.text-center.text-muted.py-4(colspan='6') No deliveries scheduled yet
 
-        // =========================
+       
         // FLEET WORKSPACE
-        // =========================
         h4.fw-bold.mb-3 Vehicle Fleet
 
         .row.g-3
@@ -228,9 +221,8 @@ html
               p.small.text-muted.mb-2 Toyota Dyna (2 Ton)
               span.badge.bg-danger ON DELIVERY
 
-    // =========================
+  
     // NEW DELIVERY ENTRY MODAL
-    // =========================
     #newDeliveryModal.modal.fade(tabindex='-1')
       .modal-dialog.modal-md.modal-dialog-centered
         .modal-content(style='border-radius: 12px; overflow: hidden;')

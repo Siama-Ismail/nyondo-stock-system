@@ -65,27 +65,15 @@ html
       }
 
   body
-
     .container.py-5
-
       .card.p-5.mx-auto(style='max-width:700px')
-
         .d-flex.justify-content-between.align-items-center.mb-4
-
           h2.fw-bold Edit Supplier
+          a.btn.btn-nyondo-secondary(href='/suppliers') Back
 
-          a.btn.btn-nyondo-secondary(
-            href='/suppliers'
-          ) Back
-
-        form(
-          action='/update-supplier/' + supplier._id
-          method='POST'
-        )
-
+        form(action='/update-supplier/' + supplier._id method='POST')
           .mb-3
             label.form-label Supplier Name
-
             input.form-control(
               type='text'
               name='supplierName'
@@ -93,32 +81,16 @@ html
               required
             )
 
+          //- DYNAMIC STATUS DROPDOWN BLOCK
           .mb-3
             label.form-label Status
-
-            select.form-select(
-              name='status'
-              required
-            )
-
-              option(
-                value='active'
-                selected=supplier.status === 'active'
-              ) Active
-
-              option(
-                value='inactive'
-                selected=supplier.status === 'inactive'
-              ) Inactive
-
-              option(
-                value='pending'
-                selected=supplier.status === 'pending'
-              ) Pending
+            select.form-select(name='status' required)
+              option(value='active' selected=(supplier.status === 'active')) Active
+              option(value='inactive' selected=(supplier.status === 'inactive')) Inactive
+              option(value='pending' selected=(supplier.status === 'pending')) Pending
 
           .mb-3
             label.form-label Contact Person
-
             input.form-control(
               type='text'
               name='contactPerson'
@@ -128,26 +100,28 @@ html
 
           .mb-3
             label.form-label Phone Number
-
             input.form-control(
-              type='text'
-              name='phoneNumber'
-              value=supplier.phoneNumber
+              type="tel" 
+              name="phoneNumber" 
+              id="supplierPhoneInput" 
+              value=(oldData && oldData.phoneNumber ? oldData.phoneNumber : "+256") 
+              maxlength="13" 
+              pattern="^\\+256[0-9]{9}$" 
+              title="Phone number must start with +256 followed by exactly 9 digits"
+              class=(errors && errors.supplierContact ? 'is-invalid' : '')
               required
-            )
+              )
 
           .mb-3
             label.form-label Email Address
-
             input.form-control(
-              type='email'
+              type='type'
               name='emailAddress'
               value=supplier.emailAddress
             )
 
           .mb-3
             label.form-label Supplier Address
-
             textarea.form-control(
               name='supplierAddress'
               rows='2'
@@ -155,17 +129,12 @@ html
 
           .mb-3
             label.form-label Products Supplied
-
             input.form-control(
               type='text'
               name='productsSupplied'
-              value=supplier.productsSupplied.join(', ')
+              value=(supplier.productsSupplied && supplier.productsSupplied.length ? supplier.productsSupplied.join(', ') : '')
             )
 
-          button.btn.btn-nyondo.w-100.py-2.mt-3(
-            type='submit'
-          ) Update Supplier
+          button.btn.btn-nyondo.w-100.py-2.mt-3(type='submit') Update Supplier
 
-    script(
-      src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
-    )
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')

@@ -69,7 +69,6 @@ html
         padding: 20px;
       }
 
-      /* Single consistent button rule matching your brand teal */
       .btn-teal {
         background-color: var(--brand-teal);
         color: #ffffff;
@@ -105,10 +104,6 @@ html
             i.bi.bi-speedometer2.me-2
             span Dashboard
         li.nav-item
-          a.nav-link(href='/stock')
-            i.bi.bi-box-seam.me-2
-            span Inventory
-        li.nav-item
           a.nav-link.active(href='/suppliers')
             i.bi.bi-boxes.me-2
             span Suppliers
@@ -140,7 +135,12 @@ html
               .st-card
                 .d-flex.justify-content-between.align-items-center.mb-2
                   h5.fw-bold.mb-0= supplier.supplierName
-                  span.badge.bg-dark.text-capitalize= supplier.status
+                  
+                  //- AUTOMATED PERFORMANCE STATUS BADGE
+                  if supplier.lowStockItems && supplier.lowStockItems.length > 0
+                    span.badge.bg-danger.text-capitalize Critical Performance
+                  else
+                    span.badge.bg-success.text-capitalize Excellent Performance
 
                 div.mb-3
                   small.text-muted #{supplier.contactPerson} • #{supplier.phoneNumber}
@@ -174,7 +174,7 @@ html
                     onclick="return confirm('Delete supplier?')"
                   ) Delete
 
-    // ADD SUPPLIER MODAL
+    // ADD SUPPLIER MODAL (Cleaned Up - Status Input Removed)
     #addSupplierModal.modal.fade
       .modal-dialog.modal-md.modal-dialog-centered
         .modal-content(style="border-radius: 12px; overflow: hidden;")
@@ -183,7 +183,7 @@ html
             button.btn-close.btn-close-white(data-bs-dismiss='modal')
 
           .modal-body.p-4
-            form(action='/add-supplier' method='POST')
+            form(action='/add-supplier' method='POST' novalidate)
               .mb-3
                 label.form-label Supplier Name
                 input.form-control(name='supplierName' required)
@@ -192,23 +192,39 @@ html
                 input.form-control(name='contactPerson' required)
               .mb-3
                 label.form-label Phone Number
-                input.form-control(name='phoneNumber' required)
+                input.form-control(
+                  type="tel" 
+                  name="phoneNumber" 
+                  id="supplierPhoneInput" 
+                  value=(oldData && oldData.phoneNumber ? oldData.phoneNumber : "+256") 
+                  maxlength="13" 
+                  pattern="^\\+256[0-9]{9}$" 
+                  title="Phone number must start with +256 followed by exactly 9 digits"
+                  class=(errors && errors.supplierContact ? 'is-invalid' : '')
+                  required
+                )
               .mb-3
                 label.form-label Email Address
                 input.form-control(type='email' name='emailAddress')
               .mb-3
                 label.form-label Address
                 input.form-control(name='supplierAddress')
-              .mb-3
+              .mb-4
                 label.form-label Products (comma separated)
                 input.form-control(name='productsSupplied')
-              .mb-4
-                label.form-label Status
-                select.form-select(name='status')
-                  option(value='active') Active
-                  option(value='inactive') Inactive
-                  option(value='pending') Pending
 
               button.btn.btn-teal.w-100.py-2.fw-bold(type='submit') Save Supplier
 
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+    script.
+      // Fetch the form and apply custom Bootstrap validation styles on submit
+      const form = document.querySelector('form[action="/add-supplier"]');
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      }

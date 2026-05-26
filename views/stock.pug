@@ -187,13 +187,13 @@ html
     // SIDEBAR
     .st-sidebar
       a.navbar-brand(href='/dashboard')
-        span NYONDO
-        span  STOCK
+        span NYONDO 
+        span STOCK
 
       nav.nav.flex-column
         a.nav-link(href='/dashboard')
           i.bi.bi-speedometer2.me-2
-          span Dashboard
+          span Home 
 
         a.nav-link.active(href='/stock')
           i.bi.bi-box-seam.me-2
@@ -283,7 +283,8 @@ html
                   select.form-select(name='paymentstatus' required)
                     option(value='') Select Status
                     option(value='Cash At Hand') Cash At Hand
-                    option(value='Credit') Credit
+                    option(value='Mobile Money') Mobile Money
+                    option(value='Bank') Bank
 
                 .col-12.mt-4
                   button.st-btn-dark.w-100(type='submit')
@@ -325,34 +326,32 @@ html
                         td= stock.suppliername
                         td= stock.supplierphone
                         td= stock.factoryname
-
                         td
-                          if stock.paymentstatus === 'Credit'
-                            span.badge.bg-danger Credit
-                          else
+                          if stock.paymentstatus === 'Cash'
                             span.badge.bg-success Cash
-
+                          else if stock.paymentstatus === 'Mobile Money'
+                            span.badge.bg-primary Mobile Money
+                          else if stock.paymentstatus === 'Bank'
+                            span.badge.bg-dark Bank
+                          else
+                            span.badge.bg-secondary= stock.paymentstatus
                         td
                           - const date = stock.dateReceived ? new Date(stock.dateReceived) : null
                           = date ? date.toLocaleDateString() : 'No Date'
-
                         td
                           if Number(stock.quantity) < 20
                             span.st-low-alert Low Stock
                           else
                             span.badge.bg-success Healthy
-
                         td
                           .d-flex.gap-2
                             a.btn.btn-sm.btn-outline-dark(href='/edit-stock/' + stock._id)
                               i.bi.bi-pencil
-
                             a.btn.btn-sm.btn-danger(
                               href='/delete-stock/' + stock._id
                               onclick="return confirm('Delete this stock item?')"
                             )
                               i.bi.bi-trash
-
                   else
                     tr
                       td.text-center(colspan='12') No stock records found

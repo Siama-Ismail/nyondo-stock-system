@@ -102,9 +102,7 @@ html
         border-color: #0b7a70 !important;
       }
 
-      /* ======================================================== */
       /* UNIFIED TABLE ACTION BUTTON OVERRIDES                  */
-      /* ======================================================== */
       .btn-warning {
         background-color: var(--brand-orange) !important;
         border-color: var(--brand-orange) !important;
@@ -151,7 +149,7 @@ html
 
             a.nav-link(href='/dashboard')
               i.bi.bi-speedometer2.me-2
-              | Dashboard
+              | Home 
 
             a.nav-link.active(href='/sales')
               i.bi.bi-cart-check.me-2
@@ -191,10 +189,15 @@ html
 
                 .col-md-4
                   label.form-label Customer Contact
-
                   input.form-control(
-                    type='text'
-                    name='customerContact'
+                    type="tel" 
+                    name="customerContact" 
+                    id="customerPhoneInput" 
+                    value=(oldData && oldData.customerContact ? oldData.customerContact : "+256") 
+                    maxlength="13" 
+                    pattern="^\\+256[0-9]{9}$" 
+                    title="Phone number must start with +256 followed by exactly 9 digits"
+                    class=(errors && errors.customerContact? 'is-invalid' : '')
                     required
                   )
 
@@ -212,8 +215,8 @@ html
                     option(value='Mobile Money')
                       | Mobile Money
 
-                    option(value='Credit')
-                      | Credit
+                    option(value='Bank')
+                      | Bank
 
                 .col-md-4
                   label.form-label Delivery Distance (KM)

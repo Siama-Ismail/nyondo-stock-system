@@ -86,11 +86,16 @@ html
           .mb-3
             label.form-label Phone
             input.form-control(
-              type='text'
-              name='supplierPhone'
-              value=credit.supplierPhone
+              type="tel" 
+              name="supplierPhone" 
+              id="customerPhoneInput" 
+              value=(oldData && oldData.supplierPhone ? oldData.supplierPhone : "+256") 
+              maxlength="13" 
+              pattern="^\\+256[0-9]{9}$" 
+              title="Phone number must start with +256 followed by exactly 9 digits"
+              lass=(errors && errors.supplierPhone? 'is-invalid' : '')
               required
-            )
+              )
 
           .mb-3
             label.form-label Item

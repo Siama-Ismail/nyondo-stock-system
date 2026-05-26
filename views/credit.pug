@@ -10,6 +10,10 @@ html
       href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
       rel='stylesheet'
     )
+    link(
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css'
+    )
 
     style.
       :root {
@@ -59,6 +63,18 @@ html
         color: white !important;
       }
 
+      .btn-outline-charcoal {
+        color: var(--color-charcoal) !important;
+        border: 2px solid var(--color-charcoal) !important;
+        background: transparent !important;
+        font-weight: 600;
+      }
+
+      .btn-outline-charcoal:hover {
+        background: var(--color-charcoal) !important;
+        color: white !important;
+      }
+
       /* Safe Premium Red Exception styling for Delete Actions */
       .btn-danger-custom {
         background-color: #dc2626 !important;
@@ -99,13 +115,16 @@ html
 
     .container.py-5
 
+      // TITLE AND BACK NAVIGATION ACTIONS
       .d-flex.justify-content-between.align-items-center.mb-4
+        h2.fw-bold.mb-0 CREDIT CUSTOMERS
+        a.btn.btn-outline-charcoal.px-3(href='/admin')
+          i.bi.bi-arrow-left.me-2
+          | Back to Dashboard
 
-        h2.fw-bold CREDIT CUSTOMERS
-
-      // ======================================
+   
       // REGISTER CUSTOMER
-      // ======================================
+   
       .card.p-4.mb-5
 
         h5.fw-bold.mb-4 Register Credit Customer
@@ -136,8 +155,14 @@ html
             .col-md-6.mb-3
               label.form-label Phone
               input.form-control(
-                type='text'
-                name='phone'
+                type="tel" 
+                name="phone" 
+                id="customerPhoneInput" 
+                value=(oldData && oldData.customerContact ? oldData.phone : "+256") 
+                maxlength="13" 
+                pattern="^\\+256[0-9]{9}$" 
+                title="Phone number must start with +256 followed by exactly 9 digits"
+                class=(errors && errors.phone? 'is-invalid' : '')
                 required
               )
 
@@ -193,9 +218,7 @@ html
             type='submit'
           ) Save Customer
 
-      // ======================================
       // CUSTOMER LIST
-      // ======================================
       .card.p-4.mb-5
 
         h5.fw-bold.mb-4 Customer Accounts
@@ -205,7 +228,6 @@ html
           table.table.table-bordered.table-hover.align-middle
 
             thead
-
               tr
                 th Customer
                 th Phone
@@ -215,57 +237,41 @@ html
                 th Actions
 
             tbody
-
-              if customers.length === 0
-
+              if !customers || customers.length === 0
                 tr
                   td.text-center(colspan='6')
                     | No customers found
+              else
+                each customer in customers
+                  tr
+                    td.fw-semibold
+                      = customer.fullName
+                    td
+                      = customer.phone
+                    td
+                      = customer.address
+                    td
+                      if customer.balance > 0
+                        span.text-dark.fw-bold
+                          | UGX #{customer.balance.toLocaleString()}
+                      else
+                        span.text-teal-gain.fw-bold
+                          | UGX 0
+                    td
+                      if customer.balance > 0
+                        span.badge.badge-pending PENDING
+                      else
+                        span.badge.badge-clear CLEAR
+                    td
+                      .d-flex.flex-wrap.gap-2
+                        a.btn.btn-sm.btn-nyondo(
+                          href='/deposit/' + customer._id
+                        ) Deposit
+                        a.btn.btn-sm.btn-nyondo-secondary(
+                          href='/customer-history/' + customer._id
+                        ) History
 
-              each customer in customers
-
-                tr
-
-                  td.fw-semibold
-                    = customer.fullName
-
-                  td
-                    = customer.phone
-
-                  td
-                    = customer.address
-
-                  td
-
-                    if customer.balance > 0
-                      span.text-dark.fw-bold
-                        | UGX #{customer.balance.toLocaleString()}
-                    else
-                      span.text-teal-gain.fw-bold
-                        | UGX 0
-
-                  td
-
-                    if customer.balance > 0
-                      span.badge.badge-pending PENDING
-                    else
-                      span.badge.badge-clear CLEAR
-
-                  td
-
-                    .d-flex.flex-wrap.gap-2
-
-                      a.btn.btn-sm.btn-nyondo(
-                        href='/deposit/' + customer._id
-                      ) Deposit
-
-                      a.btn.btn-sm.btn-nyondo-secondary(
-                        href='/customer-history/' + customer._id
-                      ) History
-
-      // ======================================
       // RECENT TRANSACTIONS
-      // ======================================
       .card.p-4
 
         h5.fw-bold.mb-4 Recent Deposit Transactions
@@ -275,7 +281,6 @@ html
           table.table.table-bordered.table-hover.align-middle
 
             thead
-
               tr
                 th Receipt
                 th Customer
@@ -287,66 +292,48 @@ html
                 th Actions
 
             tbody
-
-              if deposits.length === 0
-
+              if !deposits || deposits.length === 0
                 tr
                   td.text-center(colspan='8')
                     | No transactions found
-
-              each deposit in deposits
-
-                tr
-
-                  td
-                    = deposit.receiptNumber
-
-                  td
-                    = deposit.customer ? deposit.customer.fullName : 'Deleted Customer'
-
-                  td
-                    = deposit.item
-
-                  td.text-teal-gain.fw-bold
-                    | UGX #{deposit.amount.toLocaleString()}
-
-                  td
-
-                    if deposit.balance > 0
-                      span.text-dark.fw-bold
-                        | UGX #{deposit.balance.toLocaleString()}
-                    else
-                      span.text-teal-gain.fw-bold
-                        | UGX 0
-
-                  td
-
-                    if deposit.status === 'CLEAR'
-                      span.badge.badge-clear CLEAR
-                    else
-                      span.badge.badge-pending PENDING
-
-                  td
-                    = new Date(deposit.createdAt).toLocaleDateString()
-
-                  td
-
-                    .d-flex.flex-wrap.gap-2
-
-                      a.btn.btn-sm.btn-nyondo-secondary(
-                        href='/credit-receipt/' + deposit._id
-                      ) Receipt
-
-                      a.btn.btn-sm.btn-nyondo-secondary(
-                        href='/edit-credit/' + deposit._id
-                      ) Edit
-
-                      form(
-                        action='/delete-credit/' + deposit._id
-                        method='POST'
-                        onsubmit="return confirm('Are you sure you want to delete this transaction?')"
-                      )
-
-                        button.btn.btn-sm.btn-danger-custom(
-                          type='submit'
-                        ) Delete
+              else
+                each deposit in deposits
+                  tr
+                    td
+                      = deposit.receiptNumber
+                    td
+                      = deposit.customer ? deposit.customer.fullName : 'Deleted Customer'
+                    td
+                      = deposit.item
+                    td.text-teal-gain.fw-bold
+                      | UGX #{deposit.amount.toLocaleString()}
+                    td
+                      if deposit.balance > 0
+                        span.text-dark.fw-bold
+                          | UGX #{deposit.balance.toLocaleString()}
+                      else
+                        span.text-teal-gain.fw-bold
+                          | UGX 0
+                    td
+                      if deposit.status === 'CLEAR'
+                        span.badge.badge-clear CLEAR
+                      else
+                        span.badge.badge-pending PENDING
+                    td
+                      = new Date(deposit.createdAt).toLocaleDateString()
+                    td
+                      .d-flex.flex-wrap.gap-2
+                        a.btn.btn-sm.btn-nyondo-secondary(
+                          href='/credit-receipt/' + deposit._id
+                        ) Receipt
+                        a.btn.btn-sm.btn-nyondo-secondary(
+                          href='/edit-credit/' + deposit._id
+                        ) Edit
+                        form(
+                          action='/delete-credit/' + deposit._id
+                          method='POST'
+                          onsubmit="return confirm('Are you sure you want to delete this transaction?')"
+                        )
+                          button.btn.btn-sm.btn-danger-custom(
+                            type='submit'
+                          ) Delete

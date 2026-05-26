@@ -190,13 +190,17 @@ html
 
           .col-md-6
             label.form-label Customer Contact
-
             input.form-control(
-              type='text'
-              name='customerContact'
-              value=sale.customerContact
+              type="tel" 
+              name="customerContact" 
+              id="customerPhoneInput" 
+              value=(oldData && oldData.customerContact ? oldData.customerContact : "+256") 
+              maxlength="13" 
+              pattern="^\\+256[0-9]{9}$" 
+              title="Phone number must start with +256 followed by exactly 9 digits"
+              class=(errors && errors.customerContact? 'is-invalid' : '')
               required
-            )
+              )
 
           .col-md-6
             label.form-label Payment Method

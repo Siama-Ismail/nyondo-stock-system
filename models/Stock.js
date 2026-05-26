@@ -48,7 +48,7 @@ const stockSchema = new mongoose.Schema({
 
   paymentstatus: {
     type: String,
-    enum: ['Cash At Hand', 'Credit'],
+    enum: ['Cash At Hand', 'Mobile Money', 'Bank'],
     required: true
   },
 

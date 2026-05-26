@@ -128,5 +128,47 @@ router.get('/delete-stock/:id', async (req, res) => {
   }
 });
 
+// Change "app.get" to "router.get"
+router.get('/edit-stock/:id', async (req, res) => {
+  try {
+    const stockItem = await Stock.findById(req.params.id); 
+    
+    if (!stockItem) {
+      return res.status(404).send('Stock item not found');
+    }
+    
+    res.render('edit-stock', { stock: stockItem }); 
+  } catch (error) {
+    res.status(500).send('Error retrieving stock item');
+  }
+});
+
+// Change "app.post" to "router.post"
+router.post('/edit-stock/:id', async (req, res) => {
+  try {
+    const { 
+      productname, quantity, unitcost, sellingPrice, 
+      suppliername, supplierphone, factoryname, paymentstatus 
+    } = req.body;
+
+    const totalpaid = Number(quantity) * Number(unitcost);
+
+    await Stock.findByIdAndUpdate(req.params.id, {
+      productname,
+      quantity,
+      unitcost,
+      sellingPrice,
+      totalpaid,
+      suppliername,
+      supplierphone,
+      factoryname,
+      paymentstatus
+    });
+
+    res.redirect('/stock'); 
+  } catch (error) {
+    res.status(500).send('Error updating stock item');
+  }
+});
 
 module.exports = router;

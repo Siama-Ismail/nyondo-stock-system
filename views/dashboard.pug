@@ -24,39 +24,35 @@ html
         padding: 0.8rem 0;
       }
       .navbar-brand span { color: var(--teal); }
+      
+      /* FIXED PATH: Matches your exact filename 'nyodostock.png' inside '/images/' */
       .hero-section {
-        background-color: #212529; /* Deep Charcoal space for the hero banner */
+        background: linear-gradient(rgba(33, 37, 41, 0.7), rgba(33, 37, 41, 0.7)), url('/images/nyodostock.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         color: #ffffff;
         height: 100vh;
         display: flex;
         align-items: center;
         text-align: center;
       }
+      
       .text-teal { color: var(--teal) !important; }
       .btn-primary {
         background-color: var(--teal);
         border-color: var(--teal);
-        color: #ffffff; /* White text for crisp contrast on teal background */
+        color: #ffffff;
         font-weight: 700;
         padding: 0.8rem 2rem;
         transition: 0.3s ease;
       }
       .btn-primary:hover {
-        background-color: #0f766e; /* Deep teal variant transition focus state */
+        background-color: #0f766e;
         border-color: #0f766e;
         color: #ffffff;
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(13, 148, 136, 0.2);
-      }
-      .feature-icon { font-size: 2.5rem; color: var(--teal); }
-      .contact-form-card {
-        border-left: 5px solid var(--teal) !important;
-        background: white;
-        border: 1px solid #dee2e6;
-      }
-      .card {
-        border: 1px solid #dee2e6 !important;
-        background-color: #ffffff;
       }
       footer {
         background-color: var(--charcoal) !important;
@@ -67,21 +63,13 @@ html
     nav.navbar.navbar-expand-lg.navbar-dark.fixed-top
       .container
         a.navbar-brand.fw-bold.fs-3(href='#')
-          | NYONDO
-          span STOCK
+          | NYONDO STOCK 
+          span GENERAL HARDWARE
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav')
           span.navbar-toggler-icon
         #navbarNav.collapse.navbar-collapse
           ul.navbar-nav.ms-auto.align-items-center
             li.nav-item
-              a.nav-link(href='#') Home
-            li.nav-item
-              a.nav-link(href='#products') Products
-            li.nav-item
-              a.nav-link(href='#services') Services
-            li.nav-item
-              a.nav-link(href='#about') About
-            li.nav-item.ms-lg-3
               a.btn.btn-primary.px-4.shadow-sm(href='/login') Login
 
     // Hero Section
@@ -94,106 +82,7 @@ html
               span.text-teal Hardware
             p.lead.mb-5.opacity-75 Supplying Uganda's construction industry with premium materials since 2005.
             .d-flex.justify-content-center.gap-3
-              a.btn.btn-primary.btn-lg.shadow(href='#products')
-                i.bi.bi-box-seam.me-2
-                | View Products
-              a.btn.btn-outline-light.btn-lg(href='#contact') Contact Us
-
-    // Products Section
-    section#products.py-5
-      .container.py-5
-        .text-center.mb-5
-          h2.fw-bold.text-dark Our Product Range
-          .mx-auto.mb-3(style='width: 50px; height: 4px; background-color: var(--teal);')
-        .row.g-4
-          .col-md-4
-            .card.h-100.shadow-sm.border-0
-              img.card-img-top(src='/images/materials.jpg' alt='Materials')
-              .card-body
-                h5.fw-bold.text-dark Construction Materials
-                p.text-muted.small Cement, iron bars, bricks, and sand.
-          .col-md-4
-            .card.h-100.shadow-sm.border-0
-              img.card-img-top(src='/images/tools.jpg' alt='Tools')
-              .card-body
-                h5.fw-bold.text-dark Tools & Equipment
-                p.text-muted.small Professional hand and power tools.
-          .col-md-4
-            .card.h-100.shadow-sm.border-0
-              img.card-img-top(src='/images/plumbing.jpg' alt='Plumbing')
-              .card-body
-                h5.fw-bold.text-dark Plumbing & Electrical
-                p.text-muted.small Pipes, fittings, and heavy-duty wiring.
-
-    // Services Section
-    section#services.py-5(style='background-color: #e9ecef;')
-      .container.py-5
-        .row.g-4.text-center
-          .col-md-4
-            .feature-icon.mb-3
-              i.bi.bi-truck
-            h4.fw-bold.text-dark Fast Delivery
-            p.text-muted Direct site delivery anywhere in the region.
-          .col-md-4
-            .feature-icon.mb-3
-              i.bi.bi-credit-card
-            h4.fw-bold.text-dark Credit Scheme
-            p.text-muted Flexible options for trusted contractors.
-          .col-md-4
-            .feature-icon.mb-3
-              i.bi.bi-shield-check
-            h4.fw-bold.text-dark Quality Guarantee
-            p.text-muted Certified products for building safety.
-
-    // About Section
-    section#about.py-5
-      .container.py-5
-        .row.align-items-center
-          .col-lg-6
-            h2.fw-bold.mb-4.text-dark
-              | Partnering to 
-              span.text-teal Build the Future
-            p.text-secondary.mb-4 Since 2005, NYONDO General Hardware has served as a cornerstone for construction in Uganda.
-            .row.g-3
-              .col-4
-                h3.fw-bold.text-teal.mb-0 18+
-                p.small.text-muted Years
-              .col-4
-                h3.fw-bold.text-teal.mb-0 500+
-                p.small.text-muted Products
-              .col-4
-                h3.fw-bold.text-teal.mb-0 1k+
-                p.small.text-muted Clients
-          .col-lg-6.mt-4.mt-lg-0.text-center
-            img.img-fluid.rounded-4.shadow-lg(src='/images/nyondohardware.png' alt='About Us')
-
-    // Contact Section
-    section#contact.py-5(style='background-color: #e9ecef;')
-      .container.py-5
-        .row.g-5
-          .col-lg-5
-            h2.fw-bold.mb-4.text-dark Get In Touch
-            p.text-muted.mb-4 Visit our Kampala branch for a consultation or order materials directly.
-            .d-flex.mb-3
-              i.bi.bi-geo-alt.text-teal.fs-4.me-3
-              p.mb-0.text-secondary Plot 42, Main Street, Kampala, Uganda
-            .d-flex.mb-3
-              i.bi.bi-telephone.text-teal.fs-4.me-3
-              p.mb-0.text-secondary +256 712 345 678
-          .col-lg-7
-            .card.shadow-lg.p-4.contact-form-card.border-0
-              h4.fw-bold.mb-4.text-dark Send a Message
-              form
-                .row.g-3
-                  .col-md-6
-                    input.form-control.bg-light(type='text' placeholder='Name')
-                  .col-md-6
-                    input.form-control.bg-light(type='email' placeholder='Email')
-                  .col-12
-                    textarea.form-control.bg-light(rows='4' placeholder='Message')
-                  .col-12
-                    button.btn.btn-primary.w-100(type='submit') Send Message
-
+              
     // Footer
     footer.text-white.py-5
       .container.text-center

@@ -1,0 +1,77 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Edit Stock - NYONDO STOCK General Hardware
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+    style.
+      :root {
+        --brand-navy: #212529;
+        --brand-orange: #0d9488;
+        --light-bg: #f1f3f5;
+        --charcoal: #343a40;
+      }
+      body { background-color: var(--light-bg); color: var(--charcoal); font-family: 'Inter', sans-serif; }
+      .main-content { max-width: 900px; margin: 40px auto; padding: 20px; }
+      .st-card-style { background: #ffffff; border-radius: 12px; border: 1px solid #dee2e6; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+      .st-accent-text { color: var(--brand-navy); font-weight: 700; border-bottom: 3px solid var(--brand-orange); padding-bottom: 10px; margin-bottom: 20px; display: inline-block; }
+      .st-btn-dark { background-color: var(--brand-orange); color: #ffffff; border: none; font-weight: 700; padding: 12px; border-radius: 8px; transition: 0.3s; text-decoration: none; }
+      .st-btn-dark:hover { background-color: #0b7a70; color: #ffffff; }
+
+  body
+    .main-content
+      .d-flex.justify-content-between.align-items-center.mb-4
+        h2.fw-bold Inventory Management
+        a.btn.btn-outline-secondary(href='/stock') 
+          i.bi.bi-arrow-left.me-2
+          | Back to Stock
+
+      .card.st-card-style.p-4
+        h5.st-accent-text Modify Stock Item
+
+        //- The form posts to the unique ID of this item
+        form(action='/edit-stock/' + stock._id method='POST')
+          .row.g-3
+            .col-md-6
+              label.form-label Product Name
+              select.form-select(name='productname' required)
+                each prod in ['Cement iiN', 'Cement iiiN', 'Iron Bars 10mm', 'Iron Bars 12mm', 'Iron Bars 16mm', 'Nails 1 Inch', 'Nails 2 Inch', 'Nails 3 Inch', 'Nails 4 Inch', 'Nails 5 Inch', 'Wheelbarrows', 'Wire Mesh', 'Barbed Wire', 'Iron Sheets']
+                  option(value=prod selected=(stock.productname === prod))= prod
+
+            .col-md-6
+              label.form-label Quantity
+              input.form-control(type='number' name='quantity' value=stock.quantity required)
+
+            .col-md-6
+              label.form-label Unit Cost (UGX)
+              input.form-control(type='number' name='unitcost' value=stock.unitcost required)
+
+            .col-md-6
+              label.form-label Selling Price (UGX)
+              input.form-control(type='number' name='sellingPrice' value=stock.sellingPrice required)
+
+            .col-md-6
+              label.form-label Supplier Name
+              input.form-control(type='text' name='suppliername' value=stock.suppliername required)
+
+            .col-md-6
+              label.form-label Supplier Phone
+              input.form-control(type='text' name='supplierphone' value=stock.supplierphone required)
+
+            .col-md-6
+              label.form-label Factory Name
+              input.form-control(type='text' name='factoryname' value=stock.factoryname required)
+
+            .col-md-6
+              label.form-label Payment Status
+              select.form-select(name='paymentstatus' required)
+                option(value='Cash At Hand' selected=(stock.paymentstatus === 'Cash At Hand')) Cash At Hand
+                option(value='Mobile Money' selected=(stock.paymentstatus === 'Mobile Money')) Mobile Money
+                option(value='Bank' selected=(stock.paymentstatus === 'Bank')) Bank
+
+            .col-12.mt-4
+              button.st-btn-dark.w-100(type='submit')
+                i.bi.bi-check-circle.me-2
+                | Save Changes
