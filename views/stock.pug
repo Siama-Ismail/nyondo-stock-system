@@ -271,8 +271,19 @@ html
                   input.form-control(type='text' name='suppliername' required)
 
                 .col-md-3
-                  label.form-label Supplier Phone
-                  input.form-control(type='text' name='supplierphone' required)
+                  label.form-label Supplier Phone               
+                   input.form-control(
+                    type="tel" 
+                    name="supplierphone" 
+                    id="customerPhoneInput" 
+                    value=(oldData && oldData.supplierphone? oldData.supplierphone : "+256") 
+                    maxlength="13" 
+                    pattern="^\\+256[0-9]{9}$" 
+                    title="Phone number must start with +256 followed by exactly 9 digits"
+                    class=(errors && errors.supplierphone? 'is-invalid' : '')
+                    required
+                  )
+
 
                 .col-md-3
                   label.form-label Factory Name

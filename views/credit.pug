@@ -35,7 +35,6 @@ html
         background: white;
       }
 
-      /* Unified Action Components */
       .btn-nyondo {
         background: var(--color-teal) !important;
         color: white !important;
@@ -49,7 +48,6 @@ html
         color: white !important;
       }
 
-      /* Primary Theme Matching Accent Color */
       .btn-nyondo-secondary {
         background: var(--color-teal) !important;
         color: white !important;
@@ -75,7 +73,6 @@ html
         color: white !important;
       }
 
-      /* Safe Premium Red Exception styling for Delete Actions */
       .btn-danger-custom {
         background-color: #dc2626 !important;
         border-color: #dc2626 !important;
@@ -122,20 +119,14 @@ html
           i.bi.bi-arrow-left.me-2
           | Back to Dashboard
 
-   
       // REGISTER CUSTOMER
-   
       .card.p-4.mb-5
-
         h5.fw-bold.mb-4 Register Credit Customer
-
         form(
           action='/add-credit-customer'
           method='POST'
         )
-
           .row
-
             .col-md-6.mb-3
               label.form-label Full Name
               input.form-control(
@@ -220,13 +211,9 @@ html
 
       // CUSTOMER LIST
       .card.p-4.mb-5
-
         h5.fw-bold.mb-4 Customer Accounts
-
         .table-responsive
-
           table.table.table-bordered.table-hover.align-middle
-
             thead
               tr
                 th Customer
@@ -235,28 +222,21 @@ html
                 th Balance
                 th Status
                 th Actions
-
             tbody
               if !customers || customers.length === 0
                 tr
-                  td.text-center(colspan='6')
-                    | No customers found
+                  td.text-center(colspan='6') No customers found
               else
                 each customer in customers
                   tr
-                    td.fw-semibold
-                      = customer.fullName
-                    td
-                      = customer.phone
-                    td
-                      = customer.address
+                    td.fw-semibold #{customer.fullName}
+                    td #{customer.phone}
+                    td #{customer.address}
                     td
                       if customer.balance > 0
-                        span.text-dark.fw-bold
-                          | UGX #{customer.balance.toLocaleString()}
+                        span.text-dark.fw-bold UGX #{customer.balance.toLocaleString()}
                       else
-                        span.text-teal-gain.fw-bold
-                          | UGX 0
+                        span.text-teal-gain.fw-bold UGX 0
                     td
                       if customer.balance > 0
                         span.badge.badge-pending PENDING
@@ -273,13 +253,9 @@ html
 
       // RECENT TRANSACTIONS
       .card.p-4
-
         h5.fw-bold.mb-4 Recent Deposit Transactions
-
         .table-responsive
-
           table.table.table-bordered.table-hover.align-middle
-
             thead
               tr
                 th Receipt
@@ -290,37 +266,28 @@ html
                 th Status
                 th Date
                 th Actions
-
             tbody
               if !deposits || deposits.length === 0
                 tr
-                  td.text-center(colspan='8')
-                    | No transactions found
+                  td.text-center(colspan='8') No transactions found
               else
                 each deposit in deposits
                   tr
-                    td
-                      = deposit.receiptNumber
-                    td
-                      = deposit.customer ? deposit.customer.fullName : 'Deleted Customer'
-                    td
-                      = deposit.item
-                    td.text-teal-gain.fw-bold
-                      | UGX #{deposit.amount.toLocaleString()}
+                    td #{deposit.receiptNumber}
+                    td #{deposit.customer ? deposit.customer.fullName : 'Deleted Customer'}
+                    td #{deposit.item}
+                    td.text-teal-gain.fw-bold UGX #{deposit.amount.toLocaleString()}
                     td
                       if deposit.balance > 0
-                        span.text-dark.fw-bold
-                          | UGX #{deposit.balance.toLocaleString()}
+                        span.text-dark.fw-bold UGX #{deposit.balance.toLocaleString()}
                       else
-                        span.text-teal-gain.fw-bold
-                          | UGX 0
+                        span.text-teal-gain.fw-bold UGX 0
                     td
                       if deposit.status === 'CLEAR'
                         span.badge.badge-clear CLEAR
                       else
                         span.badge.badge-pending PENDING
-                    td
-                      = new Date(deposit.createdAt).toLocaleDateString()
+                    td #{new Date(deposit.createdAt).toLocaleDateString()}
                     td
                       .d-flex.flex-wrap.gap-2
                         a.btn.btn-sm.btn-nyondo-secondary(

@@ -13,10 +13,7 @@ const Stock = require('../models/Stock');
 // UGANDAN PHONE VALIDATION
 // =========================
 function isValidUgandanNumber(number) {
-
-  const regex =
-    /^(?:\+256|0)7[0-9]{8}$/;
-
+  const regex = /^(?:\+256|0)7[0-9]{8}$/;
   return regex.test(number);
 }
 
@@ -25,31 +22,21 @@ function isValidUgandanNumber(number) {
 // GET SALES PAGE
 // =========================
 router.get('/sales', async (req, res) => {
-
   try {
-
-    const sales =
-      await Sales.find()
-      .sort({ createdAt: -1 });
-
-    const stocks =
-      await Stock.find();
+    const sales = await Sales.find().sort({ createdAt: -1 });
+    const stocks = await Stock.find();
 
     res.render('sales', {
       sales,
       stocks
     });
-
   } catch (err) {
-
     res.render('sales', {
       sales: [],
       stocks: [],
       error: err.message
     });
-
   }
-
 });
 
 
@@ -57,9 +44,7 @@ router.get('/sales', async (req, res) => {
 // ADD SALE
 // =========================
 router.post('/add-sales', async (req, res) => {
-
   try {
-
     let {
       customerName,
       customerContact,
@@ -69,35 +54,37 @@ router.post('/add-sales', async (req, res) => {
       quantity
     } = req.body;
 
+    // Helper to safely re-render UI with an error message banner
+    const renderWithError = async (errorMessage) => {
+      const sales = await Sales.find().sort({ createdAt: -1 });
+      const stocks = await Stock.find();
+      return res.render('sales', {
+        sales,
+        stocks,
+        error: errorMessage
+      });
+    };
+
     // =========================
     // VALIDATE PHONE NUMBER
     // =========================
     if (!isValidUgandanNumber(customerContact)) {
-
-      return res.status(400).send(
-        'Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX'
-      );
-
+      return renderWithError('Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX');
     }
 
     // =========================
     // NORMALIZE PHONE NUMBER
     // =========================
     if (customerContact.startsWith('0')) {
-
-      customerContact =
-        '+256' + customerContact.substring(1);
-
+      customerContact = '+256' + customerContact.substring(1);
     }
 
     // =========================
     // ENSURE ARRAYS
     // =========================
     if (!Array.isArray(product)) {
-
       product = [product];
       quantity = [quantity];
-
     }
 
     let items = [];
@@ -107,66 +94,40 @@ router.post('/add-sales', async (req, res) => {
     // PROCESS ITEMS
     // =========================
     for (let i = 0; i < product.length; i++) {
-
-      const stock =
-        await Stock.findOne({
-          productname: product[i]
-        });
+      const stock = await Stock.findOne({
+        productname: product[i]
+      });
 
       if (!stock) {
-
-        return res.send(
-          `Product not found: ${product[i]}`
-        );
-
+        return renderWithError(`Product not found: ${product[i]}`);
       }
 
-      const qty =
-        Number(quantity[i]);
+      const qty = Number(quantity[i]);
 
       if (qty <= 0) {
-
-        return res.send(
-          'Quantity must be greater than zero'
-        );
-
+        return renderWithError('Quantity must be greater than zero');
       }
 
       if (stock.quantity < qty) {
-
-        return res.send(
-          `Not enough stock for ${product[i]}`
-        );
-
+        return renderWithError(`Not enough stock for ${product[i]}`);
       }
 
-      const price =
-        stock.sellingPrice;
-
-      const total =
-        qty * price;
-
+      const price = stock.sellingPrice;
+      const total = qty * price;
       subtotal += total;
 
       items.push({
-
         product: product[i],
-
         quantity: qty,
-
         sellingPrice: price,
-
         itemTotal: total
-
       });
 
       // =========================
       // REDUCE STOCK
       // =========================
       stock.quantity -= qty;
-
       await stock.save();
-
     }
 
     // =========================
@@ -174,48 +135,40 @@ router.post('/add-sales', async (req, res) => {
     // =========================
     let transportFee = 30000;
 
-    if (
-      Number(deliveryDistance) <= 10 &&
-      subtotal >= 500000
-    ) {
-
+    if (Number(deliveryDistance) <= 10 && subtotal >= 500000) {
       transportFee = 0;
-
     }
 
     // =========================
     // CREATE SALE
     // =========================
     const sale = new Sales({
-
       customerName,
-
       customerContact,
-
       paymentMethod,
-
-      deliveryDistance:
-        Number(deliveryDistance),
-
+      deliveryDistance: Number(deliveryDistance),
       items,
-
       transportFee,
-
-      total:
-        subtotal + transportFee
-
+      total: subtotal + transportFee
     });
 
     await sale.save();
-
     res.redirect('/sales');
 
   } catch (err) {
-
-    res.status(500).send(err.message);
-
+    console.error(err);
+    try {
+      const sales = await Sales.find().sort({ createdAt: -1 });
+      const stocks = await Stock.find();
+      res.render('sales', {
+        sales,
+        stocks,
+        error: "A critical database error occurred while recording the sale."
+      });
+    } catch (fatalErr) {
+      res.status(500).send(err.message);
+    }
   }
-
 });
 
 
@@ -223,32 +176,21 @@ router.post('/add-sales', async (req, res) => {
 // EDIT SALES PAGE
 // =========================
 router.get('/edit-sales/:id', async (req, res) => {
-
   try {
-
-    const sale =
-      await Sales.findById(req.params.id);
-
-    const stocks =
-      await Stock.find();
+    const sale = await Sales.findById(req.params.id);
+    const stocks = await Stock.find();
 
     if (!sale) {
-
-      return res.send('Sale not found');
-
+      return res.status(404).send('Sale not found');
     }
 
     res.render('edit-sales', {
       sale,
       stocks
     });
-
   } catch (err) {
-
     res.status(500).send(err.message);
-
   }
-
 });
 
 
@@ -256,9 +198,7 @@ router.get('/edit-sales/:id', async (req, res) => {
 // UPDATE SALE
 // =========================
 router.post('/update-sales/:id', async (req, res) => {
-
   try {
-
     let {
       customerName,
       customerContact,
@@ -268,123 +208,89 @@ router.post('/update-sales/:id', async (req, res) => {
       quantity
     } = req.body;
 
+    const sale = await Sales.findById(req.params.id);
+    const stocks = await Stock.find();
+
+    if (!sale) {
+      return res.status(404).send('Sale not found');
+    }
+
+    // Helper to safely re-render Edit UI with errors
+    const renderEditWithError = (errorMessage) => {
+      return res.render('edit-sales', {
+        sale,
+        stocks,
+        error: errorMessage
+      });
+    };
+
     // =========================
     // VALIDATE PHONE NUMBER
     // =========================
     if (!isValidUgandanNumber(customerContact)) {
-
-      return res.status(400).send(
-        'Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX'
-      );
-
+      return renderEditWithError('Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX');
     }
 
     // =========================
     // NORMALIZE PHONE NUMBER
     // =========================
     if (customerContact.startsWith('0')) {
-
-      customerContact =
-        '+256' + customerContact.substring(1);
-
+      customerContact = '+256' + customerContact.substring(1);
     }
 
-    const sale =
-      await Sales.findById(req.params.id);
-
-    if (!sale) {
-
-      return res.send('Sale not found');
-
-    }
-
-    const stock =
-      await Stock.findOne({
-        productname: product
-      });
+    const stock = await Stock.findOne({
+      productname: product
+    });
 
     if (!stock) {
-
-      return res.send('Product not found');
-
+      return renderEditWithError('Product not found');
     }
 
-    const qty =
-      Number(quantity);
+    const qty = Number(quantity);
 
     if (qty <= 0) {
-
-      return res.send(
-        'Quantity must be greater than zero'
-      );
-
+      return renderEditWithError('Quantity must be greater than zero');
     }
 
-    const price =
-      stock.sellingPrice;
+    // Note: If you need to validate stock limits during updates, account for 
+    // the difference between sale.items[0].quantity and the new qty here.
 
-    const itemTotal =
-      qty * price;
+    const price = stock.sellingPrice;
+    const itemTotal = qty * price;
 
     // =========================
     // TRANSPORT LOGIC
     // =========================
     let transportFee = 30000;
 
-    if (
-      Number(deliveryDistance) <= 10 &&
-      itemTotal >= 500000
-    ) {
-
+    if (Number(deliveryDistance) <= 10 && itemTotal >= 500000) {
       transportFee = 0;
-
     }
 
     // =========================
     // UPDATE SALE
     // =========================
-    sale.customerName =
-      customerName;
-
-    sale.customerContact =
-      customerContact;
-
-    sale.paymentMethod =
-      paymentMethod;
-
-    sale.deliveryDistance =
-      Number(deliveryDistance);
-
+    sale.customerName = customerName;
+    sale.customerContact = customerContact;
+    sale.paymentMethod = paymentMethod;
+    sale.deliveryDistance = Number(deliveryDistance);
     sale.items = [
-
       {
         product,
-
         quantity: qty,
-
         sellingPrice: price,
-
         itemTotal
       }
-
     ];
-
-    sale.transportFee =
-      transportFee;
-
-    sale.total =
-      itemTotal + transportFee;
+    sale.transportFee = transportFee;
+    sale.total = itemTotal + transportFee;
 
     await sale.save();
-
     res.redirect('/sales');
 
   } catch (err) {
-
     res.status(500).send(err.message);
-
   }
-
 });
 
 
@@ -392,21 +298,12 @@ router.post('/update-sales/:id', async (req, res) => {
 // DELETE SALE
 // =========================
 router.get('/delete-sales/:id', async (req, res) => {
-
   try {
-
-    await Sales.findByIdAndDelete(
-      req.params.id
-    );
-
+    await Sales.findByIdAndDelete(req.params.id);
     res.redirect('/sales');
-
   } catch (err) {
-
     res.status(500).send(err.message);
-
   }
-
 });
 
 
@@ -414,31 +311,19 @@ router.get('/delete-sales/:id', async (req, res) => {
 // RECEIPT PAGE
 // =========================
 router.get('/receipt/:id', async (req, res) => {
-
   try {
-
-    const sale =
-      await Sales.findById(req.params.id);
+    const sale = await Sales.findById(req.params.id);
 
     if (!sale) {
-
-      return res.status(404).send(
-        'Sale not found'
-      );
-
+      return res.status(404).send('Sale not found');
     }
 
     res.render('receipt', {
       sale
     });
-
   } catch (err) {
-
     res.status(500).send(err.message);
-
   }
-
 });
-
 
 module.exports = router;

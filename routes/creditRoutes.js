@@ -7,23 +7,38 @@ const Stock = require('../models/Stock');
 const SupplierCredit = require('../models/SupplierCredit');
 
 
+// GLOBALLY DEFINED ALLOWED CREDIT ITEMS
+const ALLOWED_CREDIT_ITEMS = [
+  'Cement iiN',
+  'Cement iiiN',
+  'Iron Bars 10mm',
+  'Iron Bars 12mm',
+  'Iron Bars 16mm',
+  'Iron Sheets'
+];
+
+
 // =========================
 // CREDIT DASHBOARD
 // =========================
 router.get('/credit', async (req, res) => {
+  try {
+    const customers = await Credit.find();
+    const deposits = await Deposit.find().populate('customer');
+    const credits = await SupplierCredit.find();
 
-  const customers = await Credit.find();
-  const deposits = await Deposit.find().populate('customer');
-  const credits = await SupplierCredit.find();
+    const totalDebt = credits.reduce((a, b) => a + (b.balance || 0), 0);
 
-  const totalDebt = credits.reduce((a, b) => a + (b.balance || 0), 0);
-
-  res.render('credit', {
-    customers,
-    deposits,
-    credits,
-    totalDebt
-  });
+    res.render('credit', {
+      customers,
+      deposits,
+      credits,
+      totalDebt
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading credit dashboard');
+  }
 });
 
 
@@ -31,15 +46,12 @@ router.get('/credit', async (req, res) => {
 // ADD CUSTOMER
 // =========================
 router.post('/add-credit-customer', async (req, res) => {
-
   try {
     await Credit.create({
       ...req.body,
       balance: 0
     });
-
     res.redirect('/credit');
-
   } catch (err) {
     console.log(err);
     res.send('Error creating customer');
@@ -51,21 +63,28 @@ router.post('/add-credit-customer', async (req, res) => {
 // OPEN DEPOSIT PAGE
 // =========================
 router.get('/deposit/:id', async (req, res) => {
+  try {
+    const customer = await Credit.findById(req.params.id);
+    
+    // FILTER: Only fetch stocks that match our allowed building materials list
+    const stocks = await Stock.find({
+      productname: { $in: ALLOWED_CREDIT_ITEMS }
+    });
 
-  const customer = await Credit.findById(req.params.id);
-  const stocks = await Stock.find();
+    const pendingDeposits = await Deposit.find({
+      customer: customer._id,
+      balance: { $gt: 0 }
+    });
 
-  const pendingDeposits = await Deposit.find({
-    customer: customer._id,
-    balance: { $gt: 0 }
-  });
-
-  res.render('deposit', {
-    customer,
-    stocks,
-    pendingDeposits
-  });
-
+    res.render('deposit', {
+      customer,
+      stocks,         // Now contains ONLY the 6 allowed credit items
+      pendingDeposits
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading deposit page');
+  }
 });
 
 
@@ -73,16 +92,11 @@ router.get('/deposit/:id', async (req, res) => {
 // ADD CREDIT SALE / PAYMENT
 // =========================
 router.post('/add-deposit/:id', async (req, res) => {
-
   const customer = await Credit.findById(req.params.id);
 
-  // -------------------------
   // PAY EXISTING DEBT
-  // -------------------------
   if (req.body.depositId) {
-
     const oldDeposit = await Deposit.findById(req.body.depositId);
-
     const payAmount = Number(req.body.amount);
 
     oldDeposit.amount += payAmount;
@@ -94,21 +108,23 @@ router.post('/add-deposit/:id', async (req, res) => {
     }
 
     await oldDeposit.save();
-
     customer.balance -= payAmount;
-
     if (customer.balance < 0) customer.balance = 0;
-
     await customer.save();
 
     return res.redirect('/credit-receipt/' + oldDeposit._id);
   }
 
-  // -------------------------
   // NEW CREDIT SALE
-  // -------------------------
+  const selectedItem = req.body.item;
+
+  // EXTRA PROTECTION: Verify the submitted item is from the allowed list
+  if (!ALLOWED_CREDIT_ITEMS.includes(selectedItem)) {
+    return res.status(400).send('Error: Selected item is not allowed for credit sales.');
+  }
+
   const stock = await Stock.findOne({
-    productname: req.body.item
+    productname: selectedItem
   });
 
   if (!stock) {
@@ -123,14 +139,11 @@ router.post('/add-deposit/:id', async (req, res) => {
   }
 
   const transportFee = Number(req.body.transportFee || 0);
-
   const totalPrice = (quantity * unitPrice) + transportFee;
-
   const amount = Number(req.body.amount || 0);
-
   const balance = totalPrice - amount;
 
-  // reduce stock
+  // Reduce stock inventory count
   stock.quantity -= quantity;
   await stock.save();
 
@@ -161,17 +174,16 @@ router.post('/add-deposit/:id', async (req, res) => {
 // CREDIT RECEIPT
 // =========================
 router.get('/credit-receipt/:id', async (req, res) => {
-
-  const deposit = await Deposit.findById(req.params.id)
-    .populate('customer');
-
-  if (!deposit) {
-    return res.send('Receipt not found');
+  try {
+    const deposit = await Deposit.findById(req.params.id).populate('customer');
+    if (!deposit) {
+      return res.send('Receipt not found');
+    }
+    res.render('credit-receipt', { deposit });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading receipt');
   }
-
-  res.render('credit-receipt', {
-    deposit
-  });
 });
 
 
@@ -179,28 +191,29 @@ router.get('/credit-receipt/:id', async (req, res) => {
 // CUSTOMER HISTORY
 // =========================
 router.get('/customer-history/:id', async (req, res) => {
+  try {
+    const customer = await Credit.findById(req.params.id);
+    const deposits = await Deposit.find({ customer: customer._id }).sort({ createdAt: -1 });
 
-  const customer = await Credit.findById(req.params.id);
+    const groupedItems = deposits.map(dep => ({
+      id: dep._id,
+      item: dep.item,
+      quantity: dep.quantity,
+      totalPrice: dep.totalPrice,
+      totalPaid: dep.amount,
+      remainingBalance: dep.balance,
+      status: dep.status,
+      createdAt: dep.createdAt
+    }));
 
-  const deposits = await Deposit.find({
-    customer: customer._id
-  }).sort({ createdAt: -1 });
-
-  const groupedItems = deposits.map(dep => ({
-    id: dep._id,
-    item: dep.item,
-    quantity: dep.quantity,
-    totalPrice: dep.totalPrice,
-    totalPaid: dep.amount,
-    remainingBalance: dep.balance,
-    status: dep.status,
-    createdAt: dep.createdAt
-  }));
-
-  res.render('customer-history', {
-    customer,
-    groupedItems
-  });
+    res.render('customer-history', {
+      customer,
+      groupedItems
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading customer history');
+  }
 });
 
 
@@ -208,16 +221,24 @@ router.get('/customer-history/:id', async (req, res) => {
 // EDIT CREDIT PAGE
 // =========================
 router.get('/edit-credit/:id', async (req, res) => {
+  try {
+    const deposit = await Deposit.findById(req.params.id);
+    
+    // FILTER: Ensure the edit dropdown only shows credit items too
+    const stocks = await Stock.find({
+      productname: { $in: ALLOWED_CREDIT_ITEMS }
+    });
 
-  const deposit = await Deposit.findById(req.params.id);
-  const stocks = await Stock.find();
+    if (!deposit) return res.send('Not found');
 
-  if (!deposit) return res.send('Not found');
-
-  res.render('edit-credit', {
-    deposit,
-    stocks
-  });
+    res.render('edit-credit', {
+      deposit,
+      stocks 
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading edit page');
+  }
 });
 
 
@@ -225,32 +246,28 @@ router.get('/edit-credit/:id', async (req, res) => {
 // UPDATE CREDIT
 // =========================
 router.post('/edit-credit/:id', async (req, res) => {
+  const selectedItem = req.body.item;
+
+  if (!ALLOWED_CREDIT_ITEMS.includes(selectedItem)) {
+    return res.status(400).send('Error: This item cannot be placed on credit.');
+  }
 
   const deposit = await Deposit.findById(req.params.id);
-
   const customer = await Credit.findById(deposit.customer);
-
-  const stock = await Stock.findOne({
-    productname: req.body.item
-  });
+  const stock = await Stock.findOne({ productname: selectedItem });
 
   const quantity = Number(req.body.quantity);
   const unitPrice = stock.sellingPrice;
-
   const totalPrice = quantity * unitPrice;
   const amount = Number(req.body.amount);
-
   const newBalance = totalPrice - amount;
 
-  // adjust customer balance (remove old, add new)
   customer.balance -= deposit.balance;
   customer.balance += newBalance;
-
   if (customer.balance < 0) customer.balance = 0;
-
   await customer.save();
 
-  deposit.item = req.body.item;
+  deposit.item = selectedItem;
   deposit.quantity = quantity;
   deposit.unitPrice = unitPrice;
   deposit.totalPrice = totalPrice;
@@ -269,22 +286,23 @@ router.post('/edit-credit/:id', async (req, res) => {
 // DELETE CREDIT
 // =========================
 router.post('/delete-credit/:id', async (req, res) => {
+  try {
+    const deposit = await Deposit.findById(req.params.id);
+    if (!deposit) return res.redirect('/credit');
 
-  const deposit = await Deposit.findById(req.params.id);
+    const customer = await Credit.findById(deposit.customer);
+    if (customer) {
+      customer.balance -= deposit.balance;
+      if (customer.balance < 0) customer.balance = 0;
+      await customer.save();
+    }
 
-  if (!deposit) return res.redirect('/credit');
-
-  const customer = await Credit.findById(deposit.customer);
-
-  if (customer) {
-    customer.balance -= deposit.balance;
-    if (customer.balance < 0) customer.balance = 0;
-    await customer.save();
+    await Deposit.findByIdAndDelete(req.params.id);
+    res.redirect('/credit');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error deleting credit entry');
   }
-
-  await Deposit.findByIdAndDelete(req.params.id);
-
-  res.redirect('/credit');
 });
 
 
@@ -292,7 +310,6 @@ router.post('/delete-credit/:id', async (req, res) => {
 // SUPPLIER CREDIT
 // =========================
 router.post('/add-supplier-credit', async (req, res) => {
-
   const qty = Number(req.body.quantity);
   const price = Number(req.body.unitPrice);
 
@@ -317,9 +334,7 @@ router.post('/add-supplier-credit', async (req, res) => {
 // PAY SUPPLIER
 // =========================
 router.post('/pay-supplier/:id', async (req, res) => {
-
   const credit = await SupplierCredit.findById(req.params.id);
-
   const pay = Number(req.body.paid);
 
   credit.paid += pay;
@@ -331,7 +346,6 @@ router.post('/pay-supplier/:id', async (req, res) => {
   }
 
   await credit.save();
-
   res.redirect('/credit');
 });
 
@@ -340,9 +354,7 @@ router.post('/pay-supplier/:id', async (req, res) => {
 // DELETE SUPPLIER CREDIT
 // =========================
 router.get('/delete-supplier-credit/:id', async (req, res) => {
-
   await SupplierCredit.findByIdAndDelete(req.params.id);
-
   res.redirect('/credit');
 });
 

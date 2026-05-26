@@ -31,7 +31,6 @@ html
         background: white;
       }
 
-      /* Unified Action Components */
       .btn-nyondo {
         background: var(--color-teal);
         color: white;
@@ -59,26 +58,21 @@ html
         )
 
           .mb-3
-
             label.form-label Item
-
             select.form-select(
               name='item'
               required
             )
-
+              // This loop now cleanly iterates through ONLY your 6 filtered stock items
               each stock in stocks
-
+                - const itemName = stock.productname || stock.productName
                 option(
-                  value=stock.productname || stock.productName
-                  selected=(deposit.item === (stock.productname || stock.productName))
-                )
-                  | #{stock.productname || stock.productName}
+                  value=itemName
+                  selected=(deposit.item === itemName)
+                ) #{itemName}
 
           .mb-3
-
             label.form-label Quantity
-
             input.form-control(
               type='number'
               name='quantity'
@@ -87,9 +81,7 @@ html
             )
 
           .mb-3
-
             label.form-label Amount Paid
-
             input.form-control(
               type='number'
               name='amount'
@@ -98,14 +90,11 @@ html
             )
 
           .mb-3
-
             label.form-label Payment Method
-
             select.form-select(
               name='paymentMethod'
               required
             )
-
               option(
                 value='Cash'
                 selected=deposit.paymentMethod === 'Cash'
