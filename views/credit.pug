@@ -140,6 +140,13 @@ html
               input.form-control(
                 type='text'
                 name='nin'
+                id='customerNINInput'
+                placeholder='e.g., CM92012345XYZW'
+                minlength='14'
+                maxlength='14'
+                pattern='^[A-Za-z0-9]{14}$'
+                title='NIN must be exactly 14 characters long and contain only letters and numbers'
+                style='text-transform: uppercase;'
                 required
               )
 
@@ -149,14 +156,14 @@ html
                 type="tel" 
                 name="phone" 
                 id="customerPhoneInput" 
-                value=(oldData && oldData.customerContact ? oldData.phone : "+256") 
+                placeholder="+256700000000"
+                value="+256"
+                minlength="13"
                 maxlength="13" 
                 pattern="^\\+256[0-9]{9}$" 
-                title="Phone number must start with +256 followed by exactly 9 digits"
-                class=(errors && errors.phone? 'is-invalid' : '')
+                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
                 required
               )
-
             .col-md-6.mb-3
               label.form-label Email
               input.form-control(
@@ -250,6 +257,15 @@ html
                         a.btn.btn-sm.btn-nyondo-secondary(
                           href='/customer-history/' + customer._id
                         ) History
+                        form(
+                          action='/delete-customer/' + customer._id
+                          method='POST'
+                          onsubmit="return confirm('Are you sure you want to delete this customer account? This cannot be undone.')"
+                          style='display: inline;'
+                        )
+                          button.btn.btn-sm.btn-danger-custom(
+                            type='submit'
+                          ) Delete
 
       // RECENT TRANSACTIONS
       .card.p-4

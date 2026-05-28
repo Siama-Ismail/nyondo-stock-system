@@ -14,9 +14,9 @@ router.get('/reports', async (req, res) => {
 
   try {
 
-    // ======================================
+
     // DATABASE RECORDS
-    // ======================================
+
     const sales = await Sales.find().sort({ createdAt: -1 });
 
     const stocks = await Stock.find();
@@ -27,18 +27,18 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // TODAY DATE
-    // ======================================
+
     const today = new Date();
 
     today.setHours(0,0,0,0);
 
 
 
-    // ======================================
+
     // MONTH START
-    // ======================================
+
     const startOfMonth = new Date();
 
     startOfMonth.setDate(1);
@@ -47,9 +47,9 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // TODAY SALES
-    // ======================================
+
     const todaySales = sales.filter(sale =>
       new Date(sale.createdAt) >= today
     );
@@ -59,9 +59,9 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // MONTHLY SALES
-    // ======================================
+
     const monthlySalesData = sales.filter(sale =>
       new Date(sale.createdAt) >= startOfMonth
     );
@@ -71,17 +71,17 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // TOTAL SALES
-    // ======================================
+
     const totalSales = sales.reduce((sum, sale) =>
       sum + (Number(sale.total) || 0), 0);
 
 
 
-    // ======================================
+
     // REAL PROFIT
-    // ======================================
+
     let profit = 0;
 
     let monthlyProfit = 0;
@@ -129,9 +129,9 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // STOCK VALUE
-    // ======================================
+
     const stockValue = stocks.reduce((sum, item) => {
 
       return sum + (
@@ -143,9 +143,9 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // POTENTIAL REVENUE
-    // ======================================
+
     const potentialRevenue = stocks.reduce((sum, item) => {
 
       return sum + (
@@ -157,9 +157,9 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // EXPECTED PROFIT
-    // ======================================
+
     const expectedProfit = stocks.reduce((sum, item) => {
 
       const unitProfit =
@@ -175,25 +175,25 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // CUSTOMER DEBT
-    // ======================================
+
     const totalCustomerDebt = customers.reduce((sum, customer) =>
       sum + (Number(customer.balance) || 0), 0);
 
 
 
-    // ======================================
+
     // SUPPLIER DEBT
-    // ======================================
+
     const totalSupplierDebt = suppliers.reduce((sum, supplier) =>
       sum + (Number(supplier.balance) || 0), 0);
 
 
 
-    // ======================================
+
     // TOP DEBTORS
-    // ======================================
+
     const topDebtors = customers
       .filter(c => c.balance > 0)
       .sort((a, b) => b.balance - a.balance)
@@ -201,32 +201,32 @@ router.get('/reports', async (req, res) => {
 
 
 
-    // ======================================
+
     // LOW STOCK
-    // ======================================
+
     const lowStock = stocks.filter(item =>
       Number(item.quantity) < 20
     );
 
 
 
-    // ======================================
+
     // TOTAL PRODUCTS
-    // ======================================
+
     const totalProducts = stocks.length;
 
 
 
-    // ======================================
+
     // TOTAL CUSTOMERS
-    // ======================================
+
     const totalCustomers = customers.length;
 
 
 
-    // ======================================
+
     // RENDER PAGE
-    // ======================================
+
     res.render('reports', {
 
       todayTotal,

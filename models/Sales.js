@@ -15,7 +15,13 @@ const salesSchema = new mongoose.Schema({
   },
   deliveryDistance: {
     type: Number,
-    required: true
+    required: false,
+    default: 0
+  },
+  // Tracks if the customer opted out of your delivery pipeline
+  ownTransport: {
+    type: Boolean,
+    default: false
   },
   items: [{
     product: { type: String, required: true },

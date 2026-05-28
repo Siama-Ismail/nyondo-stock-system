@@ -50,7 +50,6 @@ html
         color: var(--brand-navy);
       }
 
-      /* Custom Badge Styling to fit corporate theme */
       .badge-role {
         background-color: var(--brand-navy) !important;
         color: #ffffff !important;
@@ -60,7 +59,6 @@ html
         padding: 0.4em 0.8em;
       }
 
-      /* Safe Premium Red Exception styling for Delete Actions */
       .btn-danger-custom {
         background-color: #dc2626 !important;
         border-color: #dc2626 !important;
@@ -83,10 +81,16 @@ html
 
       .card
 
-        .header
+        //- UPDATED HEADER: Added flex spacing to position the back button beautifully
+        .header.d-flex.justify-content-between.align-items-center
           h3.mb-0
             i.bi.bi-people.me-2
             | Staff Management
+          
+          //- NEW BACK BUTTON
+          a.btn.btn-outline-light.btn-sm.fw-semibold.px-3(href='/admin')
+            i.bi.bi-arrow-left.me-2
+            | Dashboard
 
         .card-body
 
@@ -120,12 +124,14 @@ html
                         span.badge.badge-role= staff.role
 
                       td
-
-                        a.btn.btn-danger-custom.btn-sm(
-                          href='/delete-staff/' + staff._id
-                          onclick='return confirm("Are you sure you want to delete this staff?")'
+                        form(
+                          action='/delete-staff/' + staff._id
+                          method='POST'
+                          onsubmit='return confirm("Are you sure you want to delete this staff?")'
+                          style='display: inline;'
                         )
-                          i.bi.bi-trash
+                          button.btn.btn-danger-custom.btn-sm(type='submit')
+                            i.bi.bi-trash
 
           else
 

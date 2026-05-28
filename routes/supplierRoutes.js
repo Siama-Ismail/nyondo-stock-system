@@ -5,10 +5,8 @@ const Supplier = require('../models/Supplier');
 const Stock = require('../models/Stock');
 const SupplierCredit = require('../models/SupplierCredit');
 
-
-// ===================================================
 // SUPPLIERS DASHBOARD
-// ===================================================
+
 router.get('/suppliers', async (req, res) => {
 
   try {
@@ -28,9 +26,9 @@ router.get('/suppliers', async (req, res) => {
         item.quantity <= 5
       );
 
-      // =====================
+  
       // AUTO STATUS
-      // =====================
+  
 
       let autoStatus = 'inactive';
 
@@ -65,10 +63,8 @@ router.get('/suppliers', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // ADD SUPPLIER
-// ===================================================
+
 router.post('/add-supplier', async (req, res) => {
 
   try {
@@ -112,10 +108,8 @@ router.post('/add-supplier', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // EDIT SUPPLIER PAGE
-// ===================================================
+
 router.get('/edit-supplier/:id', async (req, res) => {
 
   try {
@@ -138,10 +132,8 @@ router.get('/edit-supplier/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // UPDATE SUPPLIER
-// ===================================================
+
 router.post('/update-supplier/:id', async (req, res) => {
 
   try {
@@ -186,10 +178,8 @@ router.post('/update-supplier/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // DELETE SUPPLIER
-// ===================================================
+
 router.get('/delete-supplier/:id', async (req, res) => {
 
   try {
@@ -206,10 +196,8 @@ router.get('/delete-supplier/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // SUPPLIER CREDIT DASHBOARD
-// ===================================================
+
 router.get('/supplier-credit', async (req, res) => {
 
   try {
@@ -234,10 +222,8 @@ router.get('/supplier-credit', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // ADD SUPPLIER CREDIT
-// ===================================================
+
 router.post('/add-supplier-credit', async (req, res) => {
 
   try {
@@ -290,10 +276,8 @@ router.post('/add-supplier-credit', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // PAY SUPPLIER
-// ===================================================
+
 router.post('/pay-supplier/:id', async (req, res) => {
 
   try {
@@ -333,10 +317,8 @@ router.post('/pay-supplier/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // EDIT SUPPLIER CREDIT PAGE
-// ===================================================
+
 router.get('/edit-supplier-credit/:id', async (req, res) => {
 
   try {
@@ -359,10 +341,8 @@ router.get('/edit-supplier-credit/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // UPDATE SUPPLIER CREDIT
-// ===================================================
+
 router.post('/update-supplier-credit/:id', async (req, res) => {
 
   try {
@@ -417,10 +397,8 @@ router.post('/update-supplier-credit/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // DELETE SUPPLIER CREDIT
-// ===================================================
+
 router.get('/delete-supplier-credit/:id', async (req, res) => {
 
   try {
@@ -437,10 +415,8 @@ router.get('/delete-supplier-credit/:id', async (req, res) => {
   }
 });
 
-
-// ===================================================
 // SUPPLIER CREDIT RECEIPT
-// ===================================================
+
 router.get('/supplier-credit-receipt/:id', async (req, res) => {
 
   try {

@@ -18,9 +18,9 @@ const ALLOWED_CREDIT_ITEMS = [
 ];
 
 
-// =========================
+
 // CREDIT DASHBOARD
-// =========================
+
 router.get('/credit', async (req, res) => {
   try {
     const customers = await Credit.find();
@@ -42,9 +42,9 @@ router.get('/credit', async (req, res) => {
 });
 
 
-// =========================
+
 // ADD CUSTOMER
-// =========================
+
 router.post('/add-credit-customer', async (req, res) => {
   try {
     await Credit.create({
@@ -59,9 +59,9 @@ router.post('/add-credit-customer', async (req, res) => {
 });
 
 
-// =========================
+
 // OPEN DEPOSIT PAGE
-// =========================
+
 router.get('/deposit/:id', async (req, res) => {
   try {
     const customer = await Credit.findById(req.params.id);
@@ -88,9 +88,9 @@ router.get('/deposit/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // ADD CREDIT SALE / PAYMENT
-// =========================
+
 router.post('/add-deposit/:id', async (req, res) => {
   const customer = await Credit.findById(req.params.id);
 
@@ -170,9 +170,9 @@ router.post('/add-deposit/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // CREDIT RECEIPT
-// =========================
+
 router.get('/credit-receipt/:id', async (req, res) => {
   try {
     const deposit = await Deposit.findById(req.params.id).populate('customer');
@@ -187,9 +187,9 @@ router.get('/credit-receipt/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // CUSTOMER HISTORY
-// =========================
+
 router.get('/customer-history/:id', async (req, res) => {
   try {
     const customer = await Credit.findById(req.params.id);
@@ -217,9 +217,9 @@ router.get('/customer-history/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // EDIT CREDIT PAGE
-// =========================
+
 router.get('/edit-credit/:id', async (req, res) => {
   try {
     const deposit = await Deposit.findById(req.params.id);
@@ -242,9 +242,9 @@ router.get('/edit-credit/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // UPDATE CREDIT
-// =========================
+
 router.post('/edit-credit/:id', async (req, res) => {
   const selectedItem = req.body.item;
 
@@ -282,9 +282,9 @@ router.post('/edit-credit/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // DELETE CREDIT
-// =========================
+
 router.post('/delete-credit/:id', async (req, res) => {
   try {
     const deposit = await Deposit.findById(req.params.id);
@@ -306,9 +306,9 @@ router.post('/delete-credit/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // SUPPLIER CREDIT
-// =========================
+
 router.post('/add-supplier-credit', async (req, res) => {
   const qty = Number(req.body.quantity);
   const price = Number(req.body.unitPrice);
@@ -330,9 +330,9 @@ router.post('/add-supplier-credit', async (req, res) => {
 });
 
 
-// =========================
+
 // PAY SUPPLIER
-// =========================
+
 router.post('/pay-supplier/:id', async (req, res) => {
   const credit = await SupplierCredit.findById(req.params.id);
   const pay = Number(req.body.paid);
@@ -350,13 +350,31 @@ router.post('/pay-supplier/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // DELETE SUPPLIER CREDIT
-// =========================
+
 router.get('/delete-supplier-credit/:id', async (req, res) => {
   await SupplierCredit.findByIdAndDelete(req.params.id);
   res.redirect('/credit');
 });
 
+
+
+// DELETE CUSTOMER ACCOUNT
+
+router.post('/delete-customer/:id', async (req, res) => {
+  try {
+    // 1. Delete the customer account profile
+    await Credit.findByIdAndDelete(req.params.id);
+    
+    // 2. Clean up associated deposits so they don't break dashboard loops
+    await Deposit.deleteMany({ customer: req.params.id });
+
+    res.redirect('/credit');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error removing customer profile');
+  }
+});
 
 module.exports = router;

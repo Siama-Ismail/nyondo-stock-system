@@ -7,9 +7,9 @@ const Credit = require('../models/Credit');
 const Registration = require('../models/Registration');
 
 
-// =====================
+
 // ADMIN DASHBOARD
-// =====================
+
 router.get('/admin', async (req, res) => {
 
   try {
@@ -19,9 +19,9 @@ router.get('/admin', async (req, res) => {
     const credits = await Credit.find();
     const staffs = await Registration.find().sort({ createdAt: -1 });
 
-    // =====================
+    
     // STOCK METRICS
-    // =====================
+    
     const totalStockItems = stocks.reduce((sum, item) =>
       sum + (Number(item.quantity) || 0), 0);
 
@@ -40,9 +40,9 @@ router.get('/admin', async (req, res) => {
   ), 0);
     const expectedProfit = inventoryValue - costValue;
 
-    // =====================
+    
     // SALES METRICS
-    // =====================
+    
     const totalSales = sales.reduce((sum, sale) =>
       sum + (Number(sale.total) || 0), 0);
 
@@ -63,18 +63,18 @@ router.get('/admin', async (req, res) => {
       })
       .reduce((sum, sale) => sum + Number(sale.total || 0), 0);
 
-    // =====================
+    
     // OTHER METRICS
-    // =====================
+    
     const lowStock = stocks.filter(item =>
       Number(item.quantity || 0) < 20
     );
 
     const recentSales = sales.slice(0, 5);
 
-    // =====================
+    
     // RENDER
-    // =====================
+    
     res.render('admin', {
 
       totalStockItems,
@@ -103,9 +103,9 @@ router.get('/admin', async (req, res) => {
 });
 
 
-// =====================
+
 // DELETE STAFF
-// =====================
+
 router.get('/delete-admin/:id', async (req, res) => {
 
   try {
@@ -119,9 +119,9 @@ router.get('/delete-admin/:id', async (req, res) => {
 });
 
 
-// =====================
+
 // STAFF PAGE
-// =====================
+
 router.get('/staffs', async (req, res) => {
 
   try {

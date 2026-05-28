@@ -1,26 +1,16 @@
-// =========================
-// routes/salesRoutes.js
-// =========================
-
 const express = require('express');
 const router = express.Router();
 
 const Sales = require('../models/Sales');
 const Stock = require('../models/Stock');
 
-
-// =========================
 // UGANDAN PHONE VALIDATION
-// =========================
 function isValidUgandanNumber(number) {
   const regex = /^(?:\+256|0)7[0-9]{8}$/;
   return regex.test(number);
 }
 
-
-// =========================
 // GET SALES PAGE
-// =========================
 router.get('/sales', async (req, res) => {
   try {
     const sales = await Sales.find().sort({ createdAt: -1 });
@@ -39,10 +29,7 @@ router.get('/sales', async (req, res) => {
   }
 });
 
-
-// =========================
 // ADD SALE
-// =========================
 router.post('/add-sales', async (req, res) => {
   try {
     let {
@@ -54,7 +41,8 @@ router.post('/add-sales', async (req, res) => {
       quantity
     } = req.body;
 
-    // Helper to safely re-render UI with an error message banner
+    const ownTransport = req.body.ownTransport === 'on';
+
     const renderWithError = async (errorMessage) => {
       const sales = await Sales.find().sort({ createdAt: -1 });
       const stocks = await Stock.find();
@@ -65,38 +53,30 @@ router.post('/add-sales', async (req, res) => {
       });
     };
 
-    // =========================
     // VALIDATE PHONE NUMBER
-    // =========================
     if (!isValidUgandanNumber(customerContact)) {
       return renderWithError('Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX');
     }
 
-    // =========================
     // NORMALIZE PHONE NUMBER
-    // =========================
     if (customerContact.startsWith('0')) {
       customerContact = '+256' + customerContact.substring(1);
     }
 
-    // =========================
     // ENSURE ARRAYS
-    // =========================
     if (!Array.isArray(product)) {
       product = [product];
       quantity = [quantity];
     }
 
     let items = [];
-    let subtotal = 0;
+    let computedSubtotal = 0;
 
-    // =========================
     // PROCESS ITEMS
-    // =========================
     for (let i = 0; i < product.length; i++) {
-      const stock = await Stock.findOne({
-        productname: product[i]
-      });
+      if (!product[i]) continue;
+
+      const stock = await Stock.findOne({ productname: product[i] });
 
       if (!stock) {
         return renderWithError(`Product not found: ${product[i]}`);
@@ -114,7 +94,7 @@ router.post('/add-sales', async (req, res) => {
 
       const price = stock.sellingPrice;
       const total = qty * price;
-      subtotal += total;
+      computedSubtotal += total;
 
       items.push({
         product: product[i],
@@ -123,33 +103,31 @@ router.post('/add-sales', async (req, res) => {
         itemTotal: total
       });
 
-      // =========================
       // REDUCE STOCK
-      // =========================
       stock.quantity -= qty;
       await stock.save();
     }
 
-    // =========================
-    // TRANSPORT LOGIC
-    // =========================
+    // UNIFIED TRANSPORT FEES RULES ENGINE
     let transportFee = 30000;
 
-    if (Number(deliveryDistance) <= 10 && subtotal >= 500000) {
+    if (ownTransport) {
+      transportFee = 0;
+    } else if (Number(deliveryDistance) <= 10 && computedSubtotal >= 500000) {
       transportFee = 0;
     }
 
-    // =========================
     // CREATE SALE
-    // =========================
     const sale = new Sales({
       customerName,
       customerContact,
       paymentMethod,
-      deliveryDistance: Number(deliveryDistance),
+      deliveryDistance: ownTransport ? 0 : Number(deliveryDistance),
+      ownTransport,
       items,
+      subTotal: computedSubtotal,
       transportFee,
-      total: subtotal + transportFee
+      total: computedSubtotal + transportFee
     });
 
     await sale.save();
@@ -171,10 +149,7 @@ router.post('/add-sales', async (req, res) => {
   }
 });
 
-
-// =========================
 // EDIT SALES PAGE
-// =========================
 router.get('/edit-sales/:id', async (req, res) => {
   try {
     const sale = await Sales.findById(req.params.id);
@@ -193,10 +168,7 @@ router.get('/edit-sales/:id', async (req, res) => {
   }
 });
 
-
-// =========================
 // UPDATE SALE
-// =========================
 router.post('/update-sales/:id', async (req, res) => {
   try {
     let {
@@ -208,6 +180,8 @@ router.post('/update-sales/:id', async (req, res) => {
       quantity
     } = req.body;
 
+    const ownTransport = req.body.ownTransport === 'on';
+
     const sale = await Sales.findById(req.params.id);
     const stocks = await Stock.find();
 
@@ -215,7 +189,6 @@ router.post('/update-sales/:id', async (req, res) => {
       return res.status(404).send('Sale not found');
     }
 
-    // Helper to safely re-render Edit UI with errors
     const renderEditWithError = (errorMessage) => {
       return res.render('edit-sales', {
         sale,
@@ -224,23 +197,15 @@ router.post('/update-sales/:id', async (req, res) => {
       });
     };
 
-    // =========================
-    // VALIDATE PHONE NUMBER
-    // =========================
     if (!isValidUgandanNumber(customerContact)) {
       return renderEditWithError('Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX');
     }
 
-    // =========================
-    // NORMALIZE PHONE NUMBER
-    // =========================
     if (customerContact.startsWith('0')) {
       customerContact = '+256' + customerContact.substring(1);
     }
 
-    const stock = await Stock.findOne({
-      productname: product
-    });
+    const stock = await Stock.findOne({ productname: product });
 
     if (!stock) {
       return renderEditWithError('Product not found');
@@ -252,36 +217,30 @@ router.post('/update-sales/:id', async (req, res) => {
       return renderEditWithError('Quantity must be greater than zero');
     }
 
-    // Note: If you need to validate stock limits during updates, account for 
-    // the difference between sale.items[0].quantity and the new qty here.
-
     const price = stock.sellingPrice;
     const itemTotal = qty * price;
 
-    // =========================
-    // TRANSPORT LOGIC
-    // =========================
     let transportFee = 30000;
 
-    if (Number(deliveryDistance) <= 10 && itemTotal >= 500000) {
+    if (ownTransport) {
+      transportFee = 0;
+    } else if (Number(deliveryDistance) <= 10 && itemTotal >= 500000) {
       transportFee = 0;
     }
 
-    // =========================
-    // UPDATE SALE
-    // =========================
+    // SAVING CONSTRAINTS
     sale.customerName = customerName;
     sale.customerContact = customerContact;
     sale.paymentMethod = paymentMethod;
-    sale.deliveryDistance = Number(deliveryDistance);
-    sale.items = [
-      {
-        product,
-        quantity: qty,
-        sellingPrice: price,
-        itemTotal
-      }
-    ];
+    sale.deliveryDistance = ownTransport ? 0 : Number(deliveryDistance);
+    sale.ownTransport = ownTransport;
+    sale.items = [{
+      product,
+      quantity: qty,
+      sellingPrice: price,
+      itemTotal
+    }];
+    sale.subTotal = itemTotal;
     sale.transportFee = transportFee;
     sale.total = itemTotal + transportFee;
 
@@ -293,10 +252,7 @@ router.post('/update-sales/:id', async (req, res) => {
   }
 });
 
-
-// =========================
 // DELETE SALE
-// =========================
 router.get('/delete-sales/:id', async (req, res) => {
   try {
     await Sales.findByIdAndDelete(req.params.id);
@@ -306,10 +262,7 @@ router.get('/delete-sales/:id', async (req, res) => {
   }
 });
 
-
-// =========================
 // RECEIPT PAGE
-// =========================
 router.get('/receipt/:id', async (req, res) => {
   try {
     const sale = await Sales.findById(req.params.id);
@@ -318,9 +271,7 @@ router.get('/receipt/:id', async (req, res) => {
       return res.status(404).send('Sale not found');
     }
 
-    res.render('receipt', {
-      sale
-    });
+    res.render('receipt', { sale });
   } catch (err) {
     res.status(500).send(err.message);
   }

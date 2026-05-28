@@ -273,16 +273,17 @@ html
                 .col-md-3
                   label.form-label Supplier Phone               
                    input.form-control(
-                    type="tel" 
-                    name="supplierphone" 
-                    id="customerPhoneInput" 
-                    value=(oldData && oldData.supplierphone? oldData.supplierphone : "+256") 
-                    maxlength="13" 
-                    pattern="^\\+256[0-9]{9}$" 
-                    title="Phone number must start with +256 followed by exactly 9 digits"
-                    class=(errors && errors.supplierphone? 'is-invalid' : '')
-                    required
-                  )
+                type="tel" 
+                name="supplierphone" 
+                id="customerPhoneInput" 
+                placeholder="+256700000000"
+                value="+256"
+                minlength="13"
+                maxlength="13" 
+                pattern="^\\+256[0-9]{9}$" 
+                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
+                required
+              )
 
 
                 .col-md-3

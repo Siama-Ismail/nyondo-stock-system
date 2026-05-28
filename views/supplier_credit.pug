@@ -159,17 +159,17 @@ html
                 .col-md-3
                   label.form-label Phone Number
                   input.form-control(
-                    type="tel" 
-                    name="supplierPhone" 
-                    id="customerPhoneInput" 
-                    value=(oldData && oldData.supplierPhone ? oldData.supplierPhone : "+256") 
-                    maxlength="13" 
-                    pattern="^\\+256[0-9]{9}$" 
-                    title="Phone number must start with +256 followed by exactly 9 digits"
-                    class=(errors && errors.supplierPhone? 'is-invalid' : '')
-                    required
-                  )
-
+                type="tel" 
+                name="phoneNumber" 
+                id="customerPhoneInput" 
+                placeholder="+256700000000"
+                value="+256"
+                minlength="13"
+                maxlength="13" 
+                pattern="^\\+256[0-9]{9}$" 
+                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
+                required
+              )
                 .col-md-2
                   label.form-label Item
                   input.form-control(type='text' name='item' required)

@@ -4,9 +4,9 @@ const router = express.Router();
 const Stock = require('../models/Stock');
 
 
-// =========================
+
 // UGANDAN PHONE VALIDATION
-// =========================
+
 function isValidUgandanNumber(number) {
   if (!number) return false;
 
@@ -28,9 +28,9 @@ function normalizeUgandanNumber(number) {
 
 
 
-// =========================
+
 // STOCK PAGE
-// =========================
+
 router.get('/stock', async (req, res) => {
 
   try {
@@ -62,9 +62,9 @@ router.get('/stock', async (req, res) => {
 });
 
 
-// =========================
+
 // ADD STOCK (WITH VALIDATION)
-// =========================
+
 router.post('/add-stock', async (req, res) => {
 
   try {
@@ -80,9 +80,9 @@ router.post('/add-stock', async (req, res) => {
       paymentstatus
     } = req.body;
 
-    // =========================
+    
     // PHONE VALIDATION (SUPPLIER)
-    // =========================
+    
     if (!isValidUgandanNumber(supplierphone)) {
       return res.status(400).send(
         "Invalid supplier phone number. Use +2567XXXXXXXX or 07XXXXXXXX"
@@ -116,9 +116,9 @@ router.post('/add-stock', async (req, res) => {
 });
 
 
-// =========================
+
 // DELETE STOCK
-// =========================
+
 router.get('/delete-stock/:id', async (req, res) => {
   try {
     await Stock.findByIdAndDelete(req.params.id);

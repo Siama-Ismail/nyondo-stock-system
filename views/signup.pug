@@ -149,11 +149,17 @@ html
                 label.form-label NIN
 
                 input.form-control(
-                  type='text'
-                  name='nin'
-                  placeholder='CM1234567890ABC'
-                  required
-                )
+                type='text'
+                name='nin'
+                id='customerNINInput'
+                placeholder='e.g., CM92012345XYZW'
+                minlength='14'
+                maxlength='14'
+                pattern='^[A-Za-z0-9]{14}$'
+                title='NIN must be exactly 14 characters long and contain only letters and numbers'
+                style='text-transform: uppercase;'
+                required
+              )
 
               // ROLE
               .col-md-6

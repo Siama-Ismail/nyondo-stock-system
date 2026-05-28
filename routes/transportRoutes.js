@@ -4,9 +4,9 @@ const router = express.Router();
 const Transport = require('../models/Transport');
 
 
-// =========================
+
 // TRANSPORT DASHBOARD
-// =========================
+
 router.get('/transport', async (req, res) => {
   try {
 
@@ -33,9 +33,9 @@ router.get('/transport', async (req, res) => {
 });
 
 
-// =========================
+
 // CREATE DELIVERY
-// =========================
+
 router.post('/transport/add', async (req, res) => {
   try {
 
@@ -61,9 +61,9 @@ router.post('/transport/add', async (req, res) => {
 });
 
 
-// =========================
+
 // UPDATE STATUS
-// =========================
+
 router.post('/transport/status/:id', async (req, res) => {
   try {
 
@@ -80,9 +80,9 @@ router.post('/transport/status/:id', async (req, res) => {
 });
 
 
-// =========================
+
 // DELETE DELIVERY
-// =========================
+
 router.post('/transport/delete/:id', async (req, res) => {
   try {
 

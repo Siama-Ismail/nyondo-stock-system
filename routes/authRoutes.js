@@ -4,7 +4,6 @@ const Registration = require('../models/Registration');
 const passport = require('passport');
 
 
-// dashboard routes
 // Dashboard routes
 router.get('/dashboard',(req,res)=>{
     res.render('dashboard')
@@ -35,9 +34,8 @@ router.post('/signup', async (req, res) => {
     } = req.body;
 
 
-    // =========================
+
     // UGANDA PHONE VALIDATION
-    // =========================
     function isValidUgandanNumber(number) {
       if (!number) return false;
       number = number.toString().replace(/[\s-]/g, '');
@@ -52,9 +50,9 @@ router.post('/signup', async (req, res) => {
     }
 
 
-    // =========================
+
     // UGANDA NIN VALIDATION
-    // =========================
+
     function isValidUgandaNIN(ninValue) {
       if (!ninValue) return false;
       ninValue = ninValue.toString().replace(/\s+/g, '').toUpperCase();
@@ -66,9 +64,9 @@ router.post('/signup', async (req, res) => {
     }
 
 
-    // =========================
+  
     // VALIDATE PHONE
-    // =========================
+  
     if (!isValidUgandanNumber(phonenumber)) {
       return res.render('signup', {
         error: 'Enter a valid Ugandan phone number (+2567XXXXXXXX or 07XXXXXXXX)'
@@ -78,9 +76,9 @@ router.post('/signup', async (req, res) => {
     const cleanPhone = normalizeUgandanNumber(phonenumber);
 
 
-    // =========================
+  
     // VALIDATE NIN
-    // =========================
+  
     if (!isValidUgandaNIN(nin)) {
       return res.render('signup', {
         error: 'Enter a valid NIN (Example: CMXXXXXXXXXXXXXX)'
@@ -90,9 +88,9 @@ router.post('/signup', async (req, res) => {
     const cleanNIN = normalizeNIN(nin);
 
 
-    // =========================
+  
     // CHECK IF USER EXISTS
-    // =========================
+  
     const existingUser = await Registration.findOne({
       email: email.toLowerCase()
     });
@@ -104,9 +102,9 @@ router.post('/signup', async (req, res) => {
     }
 
 
-    // =========================
+  
     // CREATE USER
-    // =========================
+  
     const newUser = new Registration({
 
       fullname,
@@ -172,31 +170,31 @@ router.post('/login', (req, res, next) => {
 
     // ROLE BASED REDIRECTS
 
-const role = user.role.toLowerCase();
+    const role = user.role.toLowerCase();
 
-if (role === 'admin') {
+    if (role === 'admin') {
 
-  return res.redirect('/admin');
+      return res.redirect('/admin');
 
-}
+    }
 
-else if (role === 'store_manager') {
+    else if (role === 'store_manager') {
 
-  return res.redirect('/stock');
+      return res.redirect('/stock');
 
-}
+    }
 
-else if (role === 'sales_attendant') {
+    else if (role === 'sales_attendant') {
 
-  return res.redirect('/sales');
+      return res.redirect('/sales');
 
-}
+    }
 
-else {
+    else {
 
-  return res.redirect('/dashboard');
+      return res.redirect('/dashboard');
 
-}
+    }
 
   })(req, res, next);
 
@@ -255,6 +253,20 @@ router.get('/logout', (req, res) => {
 
 });
 
+
+
+// NEW: SAFE REMOVE STAFF ACCOUNT ROUTE
+
+router.post('/delete-staff/:id', async (req, res) => {
+  try {
+    // Uses your active model declaration setup (Registration)
+    await Registration.findByIdAndDelete(req.params.id);
+    res.redirect('/admin'); 
+  } catch (error) {
+    console.error("Staff removal failure:", error);
+    res.status(500).send("Unable to remove staff profile record.");
+  }
+});
 
 
 module.exports = router;
