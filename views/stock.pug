@@ -199,6 +199,10 @@ html
           i.bi.bi-box-seam.me-2
           span Inventory
 
+        a.nav-link.active(href='/manage-stock')
+          i.bi.bi-box-seam.me-2
+          span Lifetime Stock Ledger
+
         a.nav-link(href='/logout')
           i.bi.bi-box-arrow-right.me-2.text-danger
           span Logout
@@ -348,8 +352,9 @@ html
                           else
                             span.badge.bg-secondary= stock.paymentstatus
                         td
-                          - const date = stock.dateReceived ? new Date(stock.dateReceived) : null
-                          = date ? date.toLocaleDateString() : 'No Date'
+                          small First: #{stock.dateReceived.toDateString()}
+                          br
+                          small.text-muted Last: #{stock.lastRestocked.toDateString()}
                         td
                           if Number(stock.quantity) < 20
                             span.st-low-alert Low Stock

@@ -55,8 +55,13 @@ const stockSchema = new mongoose.Schema({
   dateReceived: {
     type: Date,
     default: Date.now
+  },
+
+  lastRestocked: {
+    type: Date,
+    default: Date.now
   }
 
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Stock', stockSchema);

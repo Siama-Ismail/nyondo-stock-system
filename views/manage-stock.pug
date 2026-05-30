@@ -1,0 +1,264 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+    title Lifetime Stock Ledger - NYONDO STOCK
+
+    // Bootstrap
+    link(
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+    )
+
+    // Bootstrap Icons
+    link(
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css'
+    )
+
+    style.
+      :root {
+        --primary-teal: #0d9488;
+        --dark-card: #1f293d;
+        --bg-light: #f3f4f6;
+        --text-muted: #9ca3af;
+        --alert-red: #ef4444;
+      }
+
+      body {
+        background: var(--bg-light);
+        font-family: 'Segoe UI', sans-serif;
+        color: #111827;
+      }
+
+      .ledger-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: none;
+      }
+
+      .page-title {
+        font-weight: 800;
+        border-left: 6px solid var(--primary-teal);
+        padding-left: 14px;
+      }
+
+      .summary-card {
+        background: var(--dark-card);
+        color: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: 0.3s;
+      }
+
+      .summary-card:hover {
+        transform: translateY(-4px);
+      }
+
+      .summary-card h6 {
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+      }
+
+      .summary-card h2 {
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+
+      /* Accent variations based on UI colors */
+      .summary-card.value-card h6 {
+        color: #10b981; /* Soft green indicator from your image text */
+      }
+      
+      .summary-card.alert-card h6 {
+        color: var(--alert-red);
+      }
+
+      .summary-icon {
+        font-size: 36px;
+        color: var(--primary-teal);
+      }
+
+      .table thead {
+        background: var(--dark-card);
+        color: white;
+      }
+
+      .table-hover tbody tr:hover {
+        background: rgba(13, 148, 136, 0.05);
+      }
+
+      .badge-restock {
+        background: rgba(13, 148, 136, 0.1);
+        color: var(--primary-teal);
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .badge-stock {
+        background: #e2e8f0;
+        color: var(--dark-card);
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .note-box {
+        background: white;
+        border-left: 5px solid var(--primary-teal);
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      }
+
+      .btn-return {
+        background: var(--primary-teal);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-weight: 600;
+      }
+
+      .btn-return:hover {
+        background: #0f766e;
+        color: white;
+      }
+
+  body
+
+    .container.py-5
+
+      // PAGE HEADER
+      .d-flex.justify-content-between.align-items-center.mb-4
+
+        div
+          h2.page-title Lifetime Stock Ledger
+          p.text-muted.mb-0 Permanent historical inventory register
+
+        a.btn-return(href='/stock')
+          i.bi.bi-arrow-left.me-2
+          | Back 
+
+
+      // IMPORTANT NOTICE
+      .note-box.mb-4
+
+        h6.fw-bold.mb-2(style='color: var(--primary-teal);')
+          i.bi.bi-info-circle.me-2
+          | Ledger Protection Rule
+
+        p.mb-0.text-muted
+          | This page stores permanent inventory history.
+          | Stock figures here NEVER reduce when sales are made.
+          | Values only increase whenever fresh bulk stock is added into the system.
+
+
+      // SUMMARY SECTION
+      .row.g-4.mb-4
+
+        .col-md-4
+          .summary-card
+            .d-flex.justify-content-between.align-items-center
+              div
+                h6 Total Lifetime Items
+                h2= totalLifetimeItems
+              i.bi.bi-box-seam.summary-icon
+
+
+        .col-md-4
+          .summary-card.value-card
+            .d-flex.justify-content-between.align-items-center
+              div
+                h6 Lifetime Inventory Value
+                h2
+                  | UGX #{Number(totalLifetimeValue).toLocaleString()}
+              i.bi.bi-cash-stack.summary-icon
+
+
+        .col-md-4
+          .summary-card
+            .d-flex.justify-content-between.align-items-center
+              div
+                h6 Total Product Types
+                h2= ledgerStocks.length
+              i.bi.bi-grid.summary-icon
+
+
+      // MAIN LEDGER TABLE
+      .ledger-card
+
+        .d-flex.justify-content-between.align-items-center.mb-4
+          h4.fw-bold.mb-0
+            i.bi.bi-journal-text.me-2(style='color: var(--primary-teal);')
+            | Historical Stock Ledger
+          span.badge-stock
+            | Permanent Inventory Tracking
+
+
+        .table-responsive
+          table.table.table-hover.align-middle
+            thead
+              tr
+                th #
+                th Product
+                th Lifetime Quantity
+                th Unit Cost
+                th Selling Price
+                th Lifetime Value
+                th Supplier
+                th Factory
+                th Last Restock Date
+                th Status
+
+            tbody
+              if ledgerStocks.length > 0
+                each item, index in ledgerStocks
+                  tr
+                    td.fw-bold= index + 1
+                    td.fw-semibold= item.productname
+                    td
+                      span.fw-bold(style='color: var(--primary-teal);')
+                        = Number(item.lifetimeQuantity || item.quantity).toLocaleString()
+                    td
+                      | UGX #{Number(item.unitcost || 0).toLocaleString()}
+                    td
+                      | UGX #{Number(item.sellingPrice || 0).toLocaleString()}
+                    td.fw-bold
+                      | UGX #{Number((item.lifetimeQuantity || item.quantity) * (item.sellingPrice || 0)).toLocaleString()}
+                    td= item.suppliername
+                    td= item.factoryname
+                    td
+                      = new Date(item.updatedAt).toLocaleDateString()
+                    td
+                      span.badge-restock
+                        i.bi.bi-arrow-repeat.me-1
+                        | Restocked
+              else
+                tr
+                  td.text-center.text-muted.py-5(colspan='10')
+                    i.bi.bi-inbox.display-6.d-block.mb-3(style='color: var(--text-muted);')
+                    | No stock history available
+
+
+      // FOOTER NOTE
+      .mt-4.text-center.text-muted
+        small
+          i.bi.bi-shield-lock.me-1
+          | Lifetime Stock Ledger is protected from sales deductions.
+
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
