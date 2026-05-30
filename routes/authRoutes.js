@@ -3,6 +3,68 @@ const router = express.Router();
 const Registration = require('../models/Registration');
 const passport = require('passport');
 
+// Helper validators for signup
+function isValidUgandanNumber(number) {
+  if (!number) return false;
+  number = number.toString().replace(/[\s-]/g, '');
+  return /^(?:\+2567|07)\d{8}$/.test(number);
+}
+
+function normalizeUgandanNumber(number) {
+  number = number.toString().replace(/[\s-]/g, '');
+  if (number.startsWith('0')) {
+    return '+256' + number.substring(1);
+  }
+  return number;
+}
+
+function isValidUgandaNIN(ninValue) {
+  if (!ninValue) return false;
+  ninValue = ninValue.toString().replace(/\s+/g, '').toUpperCase();
+  return /^[A-Z0-9]{14}$/.test(ninValue);
+}
+
+function normalizeNIN(ninValue) {
+  return ninValue.toString().replace(/\s+/g, '').toUpperCase();
+}
+
+function validateSignupInput(fields) {
+  const { fullname, email, phonenumber, nin, role, password } = fields;
+  const errors = {};
+
+  if (!fullname || fullname.trim().length < 3) {
+    errors.fullname = 'Enter a valid full name (min 3 characters).';
+  }
+
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    errors.email = 'Enter a valid email address.';
+  }
+
+  if (!phonenumber || !isValidUgandanNumber(phonenumber)) {
+    errors.phonenumber = 'Enter a valid Ugandan phone number (+2567XXXXXXXX or 07XXXXXXXX).';
+  }
+
+  if (!nin || !isValidUgandaNIN(nin)) {
+    errors.nin = 'Enter a valid NIN (Example: CMXXXXXXXXXXXXXX).';
+  }
+
+  if (!role) {
+    errors.role = 'Select a user role.';
+  }
+
+  if (!password || password.length < 8) {
+    errors.password = 'Password must be at least 8 characters long.';
+  }
+
+  return Object.keys(errors).length > 0 ? errors : null;
+}
+
+const renderSignupForm = async (res, fieldErrors = {}, values = {}) => {
+  return res.render('signup', {
+    fieldErrors,
+    ...values
+  });
+};
 
 // Dashboard routes
 router.get('/dashboard',(req,res)=>{
@@ -10,135 +72,42 @@ router.get('/dashboard',(req,res)=>{
 })
 
 
-
 // GET signup form
 router.get('/signup', (req, res) => {
-
-  res.render('signup', {
-    error: null
-  });
-
+  return renderSignupForm(res);
 });
 
 router.post('/signup', async (req, res) => {
-
   try {
+    const { fullname, email, phonenumber, nin, role, password } = req.body;
 
-    const {
-      fullname,
-      email,
-      phonenumber,
-      nin,
-      role,
-      password
-    } = req.body;
-
-
-
-    // UGANDA PHONE VALIDATION
-    function isValidUgandanNumber(number) {
-      if (!number) return false;
-      number = number.toString().replace(/[\s-]/g, '');
-      return /^(?:\+256|0)7[0-9]{8}$/.test(number);
-    }
-
-    function normalizeUgandanNumber(number) {
-      number = number.toString().replace(/[\s-]/g, '');
-      return number.startsWith('0')
-        ? '+256' + number.substring(1)
-        : number;
-    }
-
-
-
-    // UGANDA NIN VALIDATION
-
-    function isValidUgandaNIN(ninValue) {
-      if (!ninValue) return false;
-      ninValue = ninValue.toString().replace(/\s+/g, '').toUpperCase();
-      return /^(CM|CF|RM|RF)[A-Z0-9]{10,14}$/.test(ninValue);
-    }
-
-    function normalizeNIN(ninValue) {
-      return ninValue.toString().replace(/\s+/g, '').toUpperCase();
-    }
-
-
-  
-    // VALIDATE PHONE
-  
-    if (!isValidUgandanNumber(phonenumber)) {
-      return res.render('signup', {
-        error: 'Enter a valid Ugandan phone number (+2567XXXXXXXX or 07XXXXXXXX)'
-      });
+    const validationErrors = validateSignupInput({ fullname, email, phonenumber, nin, role, password });
+    if (validationErrors) {
+      return renderSignupForm(res, validationErrors, { fullname, email, phonenumber, nin, role });
     }
 
     const cleanPhone = normalizeUgandanNumber(phonenumber);
-
-
-  
-    // VALIDATE NIN
-  
-    if (!isValidUgandaNIN(nin)) {
-      return res.render('signup', {
-        error: 'Enter a valid NIN (Example: CMXXXXXXXXXXXXXX)'
-      });
-    }
-
     const cleanNIN = normalizeNIN(nin);
 
-
-  
     // CHECK IF USER EXISTS
-  
-    const existingUser = await Registration.findOne({
-      email: email.toLowerCase()
-    });
-
+    const existingUser = await Registration.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      return res.render('signup', {
-        error: 'Email is already registered'
-      });
+      return renderSignupForm(res, { email: 'Email is already registered' }, { fullname, email, phonenumber, nin, role });
     }
 
-
-  
     // CREATE USER
-  
-    const newUser = new Registration({
-
-      fullname,
-
-      email: email.toLowerCase(),
-
-      phonenumber: cleanPhone,
-
-      nin: cleanNIN,
-
-      role: role || 'Staff'
-
-    });
-
+    const newUser = new Registration({ fullname, email: email.toLowerCase(), phonenumber: cleanPhone, nin: cleanNIN, role: role || 'Staff' });
 
     // REGISTER USER + HASH PASSWORD
     await Registration.register(newUser, password);
 
     console.log('✅ User registered successfully');
-
     res.redirect('/admin');
-
   }
-
   catch (error) {
-
     console.error(error);
-
-    res.render('signup', {
-      error: error.message
-    });
-
+    return renderSignupForm(res, { _general: 'Failed to register user. ' + (error.message || '') }, req.body);
   }
-
 });
 
 
@@ -236,18 +205,15 @@ router.get('/sales-dashboard', (req, res) => {
 });
 
 
-// logout routes
-// LOGOUT
 router.get('/logout', (req, res) => {
 
-  req.logout(function(err) {
+  req.session.destroy((err) => {
 
     if (err) {
-      console.log(err);
       return res.redirect('/dashboard');
     }
 
-    res.render('logout');
+    res.redirect('/dashboard');
 
   });
 

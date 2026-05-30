@@ -237,11 +237,23 @@ html
           .card.st-card-style.p-4
             h5.st-accent-text Record New Stock
 
-            form(action='/add-stock' method='POST')
+            if success
+              - const successMessage = Array.isArray(success) ? success[0] : success
+              .alert.alert-success.alert-dismissible.fade.show.shadow-sm.mb-4(role='alert')
+                .d-flex.align-items-center
+                  i.bi.bi-check-circle-fill.me-2.fs-5
+                  strong= successMessage
+                button.btn-close(type='button' data-bs-dismiss='alert' aria-label='Close')
+
+            form(action='/add-stock' method='POST' novalidate)
               .row.g-3
                 .col-md-3
                   label.form-label Product Name
-                  select.form-select(name='productname' required)
+                  select.form-select(
+                    name='productname' 
+                    required
+                    class=fieldErrors && fieldErrors.productname ? 'is-invalid' : ''
+                  )
                     option(value='') Select Product
                     option Cement iiN
                     option Cement iiiN
@@ -257,50 +269,117 @@ html
                     option Wire Mesh
                     option Barbed Wire
                     option Iron Sheets
+                  if fieldErrors && fieldErrors.productname
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.productname
 
                 .col-md-3
                   label.form-label Quantity
-                  input.form-control(type='number' name='quantity' required)
+                  input.form-control(
+                    type='number' 
+                    name='quantity' 
+                    required
+                    value=quantity || ''
+                    class=fieldErrors && fieldErrors.quantity ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.quantity
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.quantity
 
                 .col-md-3
                   label.form-label Unit Cost (UGX)
-                  input.form-control(type='number' name='unitcost' required)
+                  input.form-control(
+                    type='number' 
+                    name='unitcost' 
+                    required
+                    value=unitcost || ''
+                    class=fieldErrors && fieldErrors.unitcost ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.unitcost
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.unitcost
 
                 .col-md-3
                   label.form-label Selling Price
-                  input.form-control(type='number' name='sellingPrice' required)
+                  input.form-control(
+                    type='number' 
+                    name='sellingPrice' 
+                    required
+                    value=sellingPrice || ''
+                    class=fieldErrors && fieldErrors.sellingPrice ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.sellingPrice
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.sellingPrice
 
                 .col-md-3
                   label.form-label Supplier Name
-                  input.form-control(type='text' name='suppliername' required)
+                  input.form-control(
+                    type='text' 
+                    name='suppliername' 
+                    required
+                    value=suppliername || ''
+                    class=fieldErrors && fieldErrors.suppliername ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.suppliername
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.suppliername
 
                 .col-md-3
                   label.form-label Supplier Phone               
-                   input.form-control(
-                type="tel" 
-                name="supplierphone" 
-                id="customerPhoneInput" 
-                placeholder="+256700000000"
-                value="+256"
-                minlength="13"
-                maxlength="13" 
-                pattern="^\\+256[0-9]{9}$" 
-                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
-                required
-              )
+                  input.form-control(
+                    type="tel" 
+                    name="supplierphone" 
+                    id="customerPhoneInput" 
+                    placeholder="+256700000000"
+                    value=supplierphone || ''
+                    minlength="13"
+                    maxlength="13" 
+                    pattern="^\\+256[0-9]{9}$" 
+                    title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
+                    required
+                    class=fieldErrors && fieldErrors.supplierphone ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.supplierphone
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.supplierphone
 
 
                 .col-md-3
                   label.form-label Factory Name
-                  input.form-control(type='text' name='factoryname' required)
+                  input.form-control(
+                    type='text' 
+                    name='factoryname' 
+                    required
+                    value=factoryname || ''
+                    class=fieldErrors && fieldErrors.factoryname ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.factoryname
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.factoryname
 
                 .col-md-3
                   label.form-label Payment Status
-                  select.form-select(name='paymentstatus' required)
+                  select.form-select(
+                    name='paymentstatus' 
+                    required
+                    class=fieldErrors && fieldErrors.paymentstatus ? 'is-invalid' : ''
+                  )
                     option(value='') Select Status
                     option(value='Cash At Hand') Cash At Hand
                     option(value='Mobile Money') Mobile Money
                     option(value='Bank') Bank
+                  if fieldErrors && fieldErrors.paymentstatus
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.paymentstatus
 
                 .col-12.mt-4
                   button.st-btn-dark.w-100(type='submit')

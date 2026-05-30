@@ -156,20 +156,38 @@ html
           .section-card
             h4.section-title Record Sale
 
-            if error
-              .alert.alert-danger.alert-dismissible.fade.show.shadow-sm.mb-4(role='alert')
+            - const formCustomerName = customerName || ''
+            - const formCustomerContact = customerContact || ''
+            - const formPaymentMethod = paymentMethod || ''
+            - const formDeliveryDistance = ownTransport ? 0 : (deliveryDistance || '')
+            - const selectedProduct = Array.isArray(product) ? product[0] : product
+            - const selectedQuantity = Array.isArray(quantity) ? quantity[0] : quantity
+
+            if success
+              - const successMessage = Array.isArray(success) ? success[0] : success
+              .alert.alert-success.alert-dismissible.fade.show.shadow-sm.mb-4(role='alert')
                 .d-flex.align-items-center
-                  i.bi.bi-exclamation-triangle-fill.me-2.fs-5
-                  strong= error
+                  i.bi.bi-check-circle-fill.me-2.fs-5
+                  strong= successMessage
                 button.btn-close(type='button' data-bs-dismiss='alert' aria-label='Close')
 
-            form(action='/add-sales' method='POST')
+            form(action='/add-sales' method='POST' novalidate)
               h5.text-muted.mb-3.fs-6 Customer Information
 
               .row.g-3.mb-3
                 .col-md-4
                   label.form-label Customer Name
-                  input.form-control(type='text' name='customerName' required)
+                  input.form-control(
+                    type='text' 
+                    name='customerName' 
+                    required 
+                    value=formCustomerName
+                    class=fieldErrors && fieldErrors.customerName ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.customerName
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.customerName
 
                 .col-md-4
                   label.form-label Customer Contact
@@ -178,31 +196,57 @@ html
                     name="customerContact" 
                     id="customerPhoneInput" 
                     placeholder="+256700000000"
-                    value="+256"
+                    value=formCustomerContact
                     minlength="13"
                     maxlength="13" 
                     pattern="^\\+256[0-9]{9}$" 
                     title="Phone number must start with +256 followed by exactly 9 digits"
                     required
+                    class=fieldErrors && fieldErrors.customerContact ? 'is-invalid' : ''
                   )
+                  if fieldErrors && fieldErrors.customerContact
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.customerContact
 
                 .col-md-4
                   label.form-label Payment Method
-                  select.form-select(name='paymentMethod' required)
-                    option(value='Cash') Cash At Hand
-                    option(value='Mobile Money') Mobile Money
-                    option(value='Bank') Bank
+                  select.form-select(
+                    name='paymentMethod' 
+                    required
+                    class=fieldErrors && fieldErrors.paymentMethod ? 'is-invalid' : ''
+                  )
+                    option(value='') Select payment method
+                    option(value='Cash' selected=formPaymentMethod==='Cash') Cash At Hand
+                    option(value='Mobile Money' selected=formPaymentMethod==='Mobile Money') Mobile Money
+                    option(value='Bank' selected=formPaymentMethod==='Bank') Bank
+                  if fieldErrors && fieldErrors.paymentMethod
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.paymentMethod
                    
 
               // TRANSPORT CONFIGURATION SECTION
               .row.g-3.mb-4
                 .col-md-4
                   label.form-label Delivery Distance (KM)
-                  input#deliveryDistanceInput.form-control(type='number' name='deliveryDistance' min='0' required)
+                  input#deliveryDistanceInput.form-control(
+                    type='number' 
+                    name='deliveryDistance' 
+                    min='0' 
+                    required 
+                    value=formDeliveryDistance 
+                    disabled=ownTransport
+                    class=fieldErrors && fieldErrors.deliveryDistance ? 'is-invalid' : ''
+                  )
+                  if fieldErrors && fieldErrors.deliveryDistance
+                    .invalid-feedback.d-block
+                      i.bi.bi-exclamation-circle.me-1
+                      = fieldErrors.deliveryDistance
 
                 .col-md-4.d-flex.align-items-end
                   .form-check.mb-2
-                    input#ownTransportCheckbox.form-check-input(type='checkbox' name='ownTransport')
+                    input#ownTransportCheckbox.form-check-input(type='checkbox' name='ownTransport' checked=ownTransport)
                     label.form-check-label.fw-semibold.ms-1(for='ownTransportCheckbox' style='color: var(--brand-navy);')
                       | Customer providing own transport
 
@@ -224,18 +268,37 @@ html
                 .row.g-3.item-row.mb-3
                   .col-md-8
                     label.form-label Product Name
-                    select.form-select(name='product' required)
+                    select.form-select(
+                      name='product' 
+                      required
+                      class=fieldErrors && fieldErrors.product ? 'is-invalid' : ''
+                    )
                       option(value='') Select Product
                       if stocks && stocks.length
                         each stock in stocks
-                          option(value=stock.productname data-price=stock.sellingPrice)
+                          option(value=stock.productname data-price=stock.sellingPrice selected=(selectedProduct===stock.productname))
                             | #{stock.productname} - Qty Available: #{stock.quantity} [UGX #{stock.sellingPrice.toLocaleString()}]
                       else
                         option(value='') No stock available
+                    if fieldErrors && fieldErrors.product
+                      .invalid-feedback.d-block
+                        i.bi.bi-exclamation-circle.me-1
+                        = fieldErrors.product
 
                   .col-md-3
                     label.form-label Quantity
-                    input.form-control(type='number' name='quantity' min='1' required)
+                    input.form-control(
+                      type='number' 
+                      name='quantity' 
+                      min='1' 
+                      required 
+                      value=(selectedQuantity || '')
+                      class=fieldErrors && fieldErrors.quantity ? 'is-invalid' : ''
+                    )
+                    if fieldErrors && fieldErrors.quantity
+                      .invalid-feedback.d-block
+                        i.bi.bi-exclamation-circle.me-1
+                        = fieldErrors.quantity
 
                   .col-md-1.d-flex.align-items-end
                     button.btn.btn-outline-danger.w-100(type='button' onclick='removeRow(this)')
@@ -342,6 +405,7 @@ html
       document.getElementById('ownTransportCheckbox').addEventListener('change', runInvoiceEvaluation);
       document.getElementById('items-container').addEventListener('input', runInvoiceEvaluation);
       document.getElementById('items-container').addEventListener('change', runInvoiceEvaluation);
+      window.addEventListener('DOMContentLoaded', runInvoiceEvaluation);
 
       document.getElementById('add-item-btn').addEventListener('click', function() {
         const container = document.getElementById('items-container');
@@ -367,22 +431,29 @@ html
       }
 
       document.querySelector('form').addEventListener('submit', function(event) {
-        const customerName = document.querySelector('input[name="customerName"]').value.trim();
-        if (customerName.length < 3 || !/^[A-Za-z ]+$/.test(customerName)) {
-          alert('Enter a valid customer name (letters only, min 3 chars).');
-          event.preventDefault();
-          return;
-        }
+        // Disable client-side alert popups — rely on server-side validation
+        // Ensure delivery distance is enabled so server receives it
+        const distanceInput = document.getElementById('deliveryDistanceInput');
+        if (distanceInput) distanceInput.disabled = false;
 
-        const customerContact = document.querySelector('input[name="customerContact"]').value.trim();
-        if (!/^(?:\+256|0)7[0-9]{8}$/.test(customerContact)) {
-          alert('Enter valid Ugandan number (+2567XXXXXXXX or 07XXXXXXXX)');
-          event.preventDefault();
-          return;
-        }
-
-        document.getElementById('deliveryDistanceInput').disabled = false;
+        // Show a saving spinner and disable the submit button
         const submitButton = document.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving Sale...';
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving Sale...';
+        }
+        // Allow the form to submit normally and display server-side inline errors if any
+      });
+
+      // Autofocus first invalid field (server-side validation)
+      window.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        if (!form) return;
+        const firstInvalid = form.querySelector('.is-invalid');
+        if (firstInvalid) {
+          try { firstInvalid.focus(); } catch (e) {}
+          if (typeof firstInvalid.select === 'function') {
+            try { firstInvalid.select(); } catch (e) {}
+          }
+        }
       });

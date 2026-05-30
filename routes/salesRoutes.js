@@ -10,6 +10,77 @@ function isValidUgandanNumber(number) {
   return regex.test(number);
 }
 
+const allowedPaymentMethods = ['Cash', 'Mobile Money', 'Bank'];
+
+const fetchSalesAndStocks = async () => {
+  const sales = await Sales.find().sort({ createdAt: -1 });
+  const stocks = await Stock.find();
+  return { sales, stocks };
+};
+
+const renderSalesForm = async (res, fieldErrors = {}, values = {}) => {
+  const { sales, stocks } = await fetchSalesAndStocks();
+  return res.render('sales', {
+    sales,
+    stocks,
+    fieldErrors,
+    ...values
+  });
+};
+
+function normalizeUgandanNumber(number) {
+  let normalized = String(number).trim();
+  if (normalized.startsWith('0')) {
+    normalized = '+256' + normalized.substring(1);
+  }
+  return normalized;
+}
+
+function validateSaleInput(fields) {
+  const {
+    customerName,
+    customerContact,
+    paymentMethod,
+    deliveryDistance,
+    ownTransport,
+    products,
+    quantities
+  } = fields;
+
+  const errors = {};
+
+  if (!customerName || customerName.trim().length < 3 || !/^[A-Za-z ]+$/.test(customerName.trim())) {
+    errors.customerName = 'Enter a valid name (letters only, at least 3 characters).';
+  }
+
+  if (!customerContact || !isValidUgandanNumber(customerContact.trim())) {
+    errors.customerContact = 'Enter a valid Ugandan number (+2567XXXXXXXX or 07XXXXXXXX).';
+  }
+
+  if (!paymentMethod || !allowedPaymentMethods.includes(paymentMethod)) {
+    errors.paymentMethod = 'Select a valid payment method.';
+  }
+
+  if (!ownTransport) {
+    if (deliveryDistance === '' || deliveryDistance === undefined || isNaN(Number(deliveryDistance)) || Number(deliveryDistance) < 0) {
+      errors.deliveryDistance = 'Enter a valid delivery distance or select customer own transport.';
+    }
+  }
+
+  const productsArray = Array.isArray(products) ? products : [products];
+  const quantitiesArray = Array.isArray(quantities) ? quantities : [quantities];
+
+  if (!productsArray.length || productsArray.every(p => !p)) {
+    errors.product = 'Select at least one product.';
+  }
+
+  if (quantitiesArray.some(q => q === undefined || q === null || q === '' || isNaN(Number(q)) || Number(q) <= 0)) {
+    errors.quantity = 'Quantity must be greater than zero.';
+  }
+
+  return Object.keys(errors).length > 0 ? errors : null;
+}
+
 // GET SALES PAGE
 router.get('/sales', async (req, res) => {
   try {
@@ -43,53 +114,79 @@ router.post('/add-sales', async (req, res) => {
 
     const ownTransport = req.body.ownTransport === 'on';
 
-    const renderWithError = async (errorMessage) => {
-      const sales = await Sales.find().sort({ createdAt: -1 });
-      const stocks = await Stock.find();
-      return res.render('sales', {
-        sales,
-        stocks,
-        error: errorMessage
-      });
-    };
-
-    // VALIDATE PHONE NUMBER
-    if (!isValidUgandanNumber(customerContact)) {
-      return renderWithError('Invalid phone number. Use +2567XXXXXXXX or 07XXXXXXXX');
-    }
-
-    // NORMALIZE PHONE NUMBER
-    if (customerContact.startsWith('0')) {
-      customerContact = '+256' + customerContact.substring(1);
-    }
-
-    // ENSURE ARRAYS
     if (!Array.isArray(product)) {
       product = [product];
       quantity = [quantity];
     }
 
+    const validationError = validateSaleInput({
+      customerName,
+      customerContact,
+      paymentMethod,
+      deliveryDistance,
+      ownTransport,
+      products: product,
+      quantities: quantity
+    });
+
+    if (validationError) {
+      return renderSalesForm(res, validationError, {
+        customerName,
+        customerContact,
+        paymentMethod,
+        deliveryDistance,
+        ownTransport,
+        product,
+        quantity
+      });
+    }
+
+    customerContact = normalizeUgandanNumber(customerContact);
+
     let items = [];
     let computedSubtotal = 0;
 
-    // PROCESS ITEMS
     for (let i = 0; i < product.length; i++) {
       if (!product[i]) continue;
 
       const stock = await Stock.findOne({ productname: product[i] });
 
       if (!stock) {
-        return renderWithError(`Product not found: ${product[i]}`);
+        return renderSalesForm(res, `Product not found: ${product[i]}`, {
+          customerName,
+          customerContact,
+          paymentMethod,
+          deliveryDistance,
+          ownTransport,
+          product,
+          quantity
+        });
       }
 
       const qty = Number(quantity[i]);
 
       if (qty <= 0) {
-        return renderWithError('Quantity must be greater than zero');
+        return renderSalesForm(res, 'Quantity must be greater than zero', {
+          customerName,
+          customerContact,
+          paymentMethod,
+          deliveryDistance,
+          ownTransport,
+          product,
+          quantity
+        });
       }
 
       if (stock.quantity < qty) {
-        return renderWithError(`Not enough stock for ${product[i]}`);
+        return renderSalesForm(res, `Not enough stock for ${product[i]}`, {
+          customerName,
+          customerContact,
+          paymentMethod,
+          deliveryDistance,
+          ownTransport,
+          product,
+          quantity
+        });
       }
 
       const price = stock.sellingPrice;
@@ -108,7 +205,18 @@ router.post('/add-sales', async (req, res) => {
       await stock.save();
     }
 
-    // UNIFIED TRANSPORT FEES RULES ENGINE
+    if (!items.length) {
+      return renderSalesForm(res, 'Select at least one valid product with quantity.', {
+        customerName,
+        customerContact,
+        paymentMethod,
+        deliveryDistance,
+        ownTransport,
+        product,
+        quantity
+      });
+    }
+
     let transportFee = 30000;
 
     if (ownTransport) {
@@ -117,7 +225,6 @@ router.post('/add-sales', async (req, res) => {
       transportFee = 0;
     }
 
-    // CREATE SALE
     const sale = new Sales({
       customerName,
       customerContact,
@@ -131,13 +238,13 @@ router.post('/add-sales', async (req, res) => {
     });
 
     await sale.save();
+    req.flash('success', 'Sale recorded successfully.');
     res.redirect('/sales');
 
   } catch (err) {
     console.error(err);
     try {
-      const sales = await Sales.find().sort({ createdAt: -1 });
-      const stocks = await Stock.find();
+      const { sales, stocks } = await fetchSalesAndStocks();
       res.render('sales', {
         sales,
         stocks,

@@ -37,6 +37,85 @@ function normalizeUgandanNumber(number) {
 
 
 // ======================================
+// STOCK VALIDATION & HELPERS
+// ======================================
+
+const allowedPaymentStatuses = ['Cash At Hand', 'Mobile Money', 'Bank'];
+
+const fetchStocks = async () => {
+  const stocks = await Stock.find();
+  const totalItems = stocks.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+  const inventoryValue = stocks.reduce((sum, item) => sum + ((Number(item.quantity) || 0) * (Number(item.sellingPrice) || 0)), 0);
+  const costValue = stocks.reduce((sum, item) => sum + (Number(item.totalpaid) || 0), 0);
+  const lowStock = stocks.filter(item => (Number(item.quantity) || 0) < 20);
+  return { stocks, totalItems, inventoryValue, costValue, lowStock };
+};
+
+const renderStockForm = async (res, fieldErrors = {}, values = {}) => {
+  const { stocks, totalItems, inventoryValue, costValue, lowStock } = await fetchStocks();
+  return res.render('stock', {
+    stocks,
+    totalItems,
+    inventoryValue,
+    costValue,
+    expectedProfit: inventoryValue - costValue,
+    lowStock,
+    fieldErrors,
+    ...values
+  });
+};
+
+function validateStockInput(fields) {
+  const {
+    productname,
+    quantity,
+    unitcost,
+    sellingPrice,
+    suppliername,
+    supplierphone,
+    factoryname,
+    paymentstatus
+  } = fields;
+
+  const errors = {};
+
+  if (!productname || productname.trim() === '') {
+    errors.productname = 'Select a product.';
+  }
+
+  if (!quantity || quantity === '' || isNaN(Number(quantity)) || Number(quantity) <= 0) {
+    errors.quantity = 'Quantity must be a positive number.';
+  }
+
+  if (!unitcost || unitcost === '' || isNaN(Number(unitcost)) || Number(unitcost) <= 0) {
+    errors.unitcost = 'Unit cost must be a positive number.';
+  }
+
+  if (!sellingPrice || sellingPrice === '' || isNaN(Number(sellingPrice)) || Number(sellingPrice) <= 0) {
+    errors.sellingPrice = 'Selling price must be a positive number.';
+  }
+
+  if (!suppliername || suppliername.trim().length < 2) {
+    errors.suppliername = 'Enter a valid supplier name.';
+  }
+
+  if (!supplierphone || !isValidUgandanNumber(supplierphone.trim())) {
+    errors.supplierphone = 'Enter a valid Ugandan phone (+2567XXXXXXXX or 07XXXXXXXX).';
+  }
+
+  if (!factoryname || factoryname.trim().length < 2) {
+    errors.factoryname = 'Enter a valid factory name.';
+  }
+
+  if (!paymentstatus || !allowedPaymentStatuses.includes(paymentstatus)) {
+    errors.paymentstatus = 'Select a valid payment status.';
+  }
+
+  return Object.keys(errors).length > 0 ? errors : null;
+}
+
+
+// ======================================
 // STOCK PAGE
 // ======================================
 
@@ -114,14 +193,28 @@ router.post('/add-stock', async (req, res) => {
 
     } = req.body;
 
+    const validationError = validateStockInput({
+      productname,
+      quantity,
+      unitcost,
+      sellingPrice,
+      suppliername,
+      supplierphone,
+      factoryname,
+      paymentstatus
+    });
 
-    // PHONE VALIDATION
-    if (!isValidUgandanNumber(supplierphone)) {
-
-      return res.status(400).send(
-        'Invalid supplier phone number. Use +2567XXXXXXXX or 07XXXXXXXX'
-      );
-
+    if (validationError) {
+      return renderStockForm(res, validationError, {
+        productname,
+        quantity,
+        unitcost,
+        sellingPrice,
+        suppliername,
+        supplierphone,
+        factoryname,
+        paymentstatus
+      });
     }
 
     const cleanPhone = normalizeUgandanNumber(supplierphone);
@@ -225,6 +318,7 @@ router.post('/add-stock', async (req, res) => {
 
     }
 
+    req.flash('success', 'Stock item added successfully.');
     res.redirect('/stock');
 
   }
