@@ -84,6 +84,39 @@ const renderSuppliersPage = async (res, fieldErrors = {}, oldData = {}) => {
   });
 };
 
+const syncCreditToStock = async ({ item, quantity, unitPrice, supplierName, supplierPhone }) => {
+  const qty = Number(quantity);
+  const cost = Number(unitPrice);
+  const now = new Date();
+
+  const existingStock = await Stock.findOne({ productname: item });
+
+  if (existingStock) {
+    existingStock.quantity += qty;
+    existingStock.unitcost = cost;
+    existingStock.totalpaid += qty * cost;
+    existingStock.suppliername = supplierName;
+    existingStock.supplierphone = supplierPhone;
+    existingStock.lastRestocked = now;
+    await existingStock.save();
+    return;
+  }
+
+  await Stock.create({
+    productname: item,
+    quantity: qty,
+    unitcost: cost,
+    totalpaid: qty * cost,
+    sellingPrice: cost,
+    suppliername: supplierName,
+    supplierphone: supplierPhone,
+    factoryname: supplierName,
+    paymentstatus: 'Bank',
+    dateReceived: now,
+    lastRestocked: now
+  });
+};
+
 // SUPPLIERS DASHBOARD
 
 router.get('/suppliers', async (req, res) => {
@@ -318,24 +351,23 @@ router.post('/add-supplier-credit', async (req, res) => {
     const balance = Math.max(0, amount - pd);
 
     await SupplierCredit.create({
-
       supplierName,
       supplierPhone,
       item,
-
       quantity: qty,
-
       unitPrice: price,
-
       amount,
-
       paid: pd,
-
       balance,
+      status: balance <= 0 ? 'PAID' : 'UNPAID'
+    });
 
-      status: balance <= 0
-        ? 'PAID'
-        : 'UNPAID'
+    await syncCreditToStock({
+      item,
+      quantity: qty,
+      unitPrice: price,
+      supplierName,
+      supplierPhone
     });
 
     req.flash('success', 'Supplier credit record added successfully.');
