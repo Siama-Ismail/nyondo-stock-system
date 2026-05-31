@@ -54,6 +54,25 @@ router.post('/add-credit-customer', async (req, res) => {
     res.redirect('/credit');
   } catch (err) {
     console.log(err);
+    if (err.name === 'ValidationError') {
+      try {
+        const customers = await Credit.find();
+        const deposits = await Deposit.find().populate('customer');
+        const credits = await SupplierCredit.find();
+        const totalDebt = credits.reduce((a, b) => a + (b.balance || 0), 0);
+        const fieldErrors = {};
+        for (const key in err.errors) {
+          if (Object.prototype.hasOwnProperty.call(err.errors, key)) {
+            fieldErrors[key] = err.errors[key].message;
+          }
+        }
+        return res.render('credit', { customers, deposits, credits, totalDebt, fieldErrors, oldData: req.body });
+      } catch (innerErr) {
+        console.log('Error rendering credit with validation errors:', innerErr);
+        return res.status(500).send('Error creating customer');
+      }
+    }
+
     res.send('Error creating customer');
   }
 });

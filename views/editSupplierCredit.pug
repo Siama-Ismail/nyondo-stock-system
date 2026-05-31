@@ -40,6 +40,25 @@ html
         padding: 10px;
       }
 
+      .form-control:valid {
+        background-image: none !important;
+      }
+      .form-control:invalid {
+        border-color: #dc3545 !important;
+        box-shadow: none !important;
+      }
+      .form-control:invalid:focus {
+        box-shadow: none !important;
+      }
+      .was-validated .form-control:invalid {
+        border-color: #dc3545 !important;
+      }
+      .form-control:valid,
+      .form-control:valid:focus {
+        border-color: #ced4da !important;
+        box-shadow: none !important;
+      }
+
       .form-control:focus {
         border-color: var(--color-teal);
         box-shadow: none;
@@ -72,6 +91,7 @@ html
         form(
           action='/update-supplier-credit/' + credit._id
           method='post'
+          novalidate
         )
 
           .mb-3
@@ -79,9 +99,14 @@ html
             input.form-control(
               type='text'
               name='supplierName'
-              value=credit.supplierName
+              value=(oldData && oldData.supplierName ? oldData.supplierName : credit.supplierName)
               required
             )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.supplierName
+                = fieldErrors.supplierName
+              else
+                | Supplier name is required.
 
           .mb-3
             label.form-label Phone
@@ -89,48 +114,86 @@ html
               type="tel" 
               name="supplierPhone" 
               id="customerPhoneInput" 
-              value=(oldData && oldData.supplierPhone ? oldData.supplierPhone : "+256") 
+              value=(oldData && oldData.supplierPhone ? oldData.supplierPhone : (credit && credit.supplierPhone ? credit.supplierPhone : '+256')) 
               maxlength="13" 
               pattern="^\\+256[0-9]{9}$" 
               title="Phone number must start with +256 followed by exactly 9 digits"
-              lass=(errors && errors.supplierPhone? 'is-invalid' : '')
+              class=(fieldErrors && fieldErrors.supplierPhone? 'is-invalid' : '')
               required
               )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.supplierPhone
+                = fieldErrors.supplierPhone
+              else
+                | Enter a valid Ugandan phone number.
 
           .mb-3
             label.form-label Item
             input.form-control(
               type='text'
               name='item'
-              value=credit.item
+              value=(oldData && oldData.item ? oldData.item : credit.item)
               required
             )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.item
+                = fieldErrors.item
+              else
+                | Item description is required.
 
           .mb-3
             label.form-label Quantity
             input.form-control(
               type='number'
               name='quantity'
-              value=credit.quantity
+              value=(oldData && oldData.quantity ? oldData.quantity : credit.quantity)
               required
             )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.quantity
+                = fieldErrors.quantity
+              else
+                | Enter a valid quantity.
 
           .mb-3
             label.form-label Unit Price
             input.form-control(
               type='number'
               name='unitPrice'
-              value=credit.unitPrice
+              value=(oldData && oldData.unitPrice ? oldData.unitPrice : credit.unitPrice)
               required
             )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.unitPrice
+                = fieldErrors.unitPrice
+              else
+                | Enter a valid unit price.
 
           .mb-3
             label.form-label Paid
             input.form-control(
               type='number'
               name='paid'
-              value=credit.paid
+              value=(oldData && typeof oldData.paid !== 'undefined' ? oldData.paid : credit.paid)
               required
             )
+            .invalid-feedback
+              if fieldErrors && fieldErrors.paid
+                = fieldErrors.paid
+              else
+                | Enter a valid paid amount.
 
           button.btn.btn-nyondo.w-100.mt-4(type='submit') Save Changes
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+    script.
+      const editCreditForm = document.querySelector('form[action^="/update-supplier-credit/"]');
+      if (editCreditForm) {
+        editCreditForm.addEventListener('submit', function (event) {
+          if (!editCreditForm.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          editCreditForm.classList.add('was-validated');
+        }, false);
+      }

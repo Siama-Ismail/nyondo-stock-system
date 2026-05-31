@@ -57,6 +57,19 @@ html
         background: rgba(10, 147, 135, 0.1);
       }
 
+      .form-control:valid {
+        background-image: none !important;
+      }
+
+      .was-validated .form-control:valid {
+        border-color: #ced4da !important;
+        box-shadow: none !important;
+      }
+
+      .was-validated .form-control:valid:focus {
+        box-shadow: none !important;
+      }
+
       #content {
         margin-left: 260px;
         padding: 40px;
@@ -100,9 +113,7 @@ html
 
       ul.nav.flex-column.mt-2
         li.nav-item
-          a.nav-link(href='/admin')
-            i.bi.bi-speedometer2.me-2
-            span Dashboard
+         
         li.nav-item
           a.nav-link.active(href='/suppliers')
             i.bi.bi-boxes.me-2
@@ -186,33 +197,75 @@ html
             form(action='/add-supplier' method='POST' novalidate)
               .mb-3
                 label.form-label Supplier Name
-                input.form-control(name='supplierName' required)
+                input.form-control(
+                  type='text'
+                  name='supplierName'
+                  required
+                  value=(oldData && oldData.supplierName ? oldData.supplierName : '')
+                  class=(fieldErrors && fieldErrors.supplierName ? 'is-invalid' : '')
+                )
+                if fieldErrors && fieldErrors.supplierName
+                  .invalid-feedback.d-block= fieldErrors.supplierName
+
               .mb-3
                 label.form-label Contact Person
-                input.form-control(name='contactPerson' required)
+                input.form-control(
+                  type='text'
+                  name='contactPerson'
+                  required
+                  value=(oldData && oldData.contactPerson ? oldData.contactPerson : '')
+                  class=(fieldErrors && fieldErrors.contactPerson ? 'is-invalid' : '')
+                )
+                if fieldErrors && fieldErrors.contactPerson
+                  .invalid-feedback.d-block= fieldErrors.contactPerson
+
               .mb-3
                 label.form-label Phone Number
                 input.form-control(
-                type="tel" 
-                name="phoneNumber" 
-                id="customerPhoneInput" 
-                placeholder="+256700000000"
-                value="+256"
-                minlength="13"
-                maxlength="13" 
-                pattern="^\\+256[0-9]{9}$" 
-                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
-                required
-              )
+                  type='tel'
+                  name='phoneNumber'
+                  id='customerPhoneInput'
+                  placeholder='+256700000000'
+                  value=(oldData && oldData.phoneNumber ? oldData.phoneNumber : '+256')
+                  minlength='13'
+                  maxlength='13'
+                  pattern='^\\+256[0-9]{9}$'
+                  title='Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)'
+                  required
+                  class=(fieldErrors && fieldErrors.phoneNumber ? 'is-invalid' : '')
+                )
+                if fieldErrors && fieldErrors.phoneNumber
+                  .invalid-feedback.d-block= fieldErrors.phoneNumber
+
               .mb-3
                 label.form-label Email Address
-                input.form-control(type='email' name='emailAddress')
+                input.form-control(
+                  type='email'
+                  name='emailAddress'
+                  value=(oldData && oldData.emailAddress ? oldData.emailAddress : '')
+                  class=(fieldErrors && fieldErrors.emailAddress ? 'is-invalid' : '')
+                )
+                if fieldErrors && fieldErrors.emailAddress
+                  .invalid-feedback.d-block= fieldErrors.emailAddress
+
               .mb-3
                 label.form-label Address
-                input.form-control(name='supplierAddress')
+                input.form-control(
+                  type='text'
+                  name='supplierAddress'
+                  value=(oldData && oldData.supplierAddress ? oldData.supplierAddress : '')
+                  class=(fieldErrors && fieldErrors.supplierAddress ? 'is-invalid' : '')
+                )
+                if fieldErrors && fieldErrors.supplierAddress
+                  .invalid-feedback.d-block= fieldErrors.supplierAddress
+
               .mb-4
                 label.form-label Products (comma separated)
-                input.form-control(name='productsSupplied')
+                input.form-control(
+                  type='text'
+                  name='productsSupplied'
+                  value=(oldData && oldData.productsSupplied ? oldData.productsSupplied : '')
+                )
 
               button.btn.btn-teal.w-100.py-2.fw-bold(type='submit') Save Supplier
 

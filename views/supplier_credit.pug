@@ -105,9 +105,31 @@ html
         font-weight: 600; 
         color: #64748b; 
       }
+      .form-control:valid {
+        background-image: none !important;
+      }
+      .form-control:invalid {
+        border-color: #dc3545 !important;
+        box-shadow: none !important;
+      }
+      .form-control:invalid:focus {
+        box-shadow: none !important;
+      }
+      .was-validated .form-control:invalid {
+        border-color: #dc3545 !important;
+      }
+      .form-control:valid,
+      .form-control:valid:focus {
+        border-color: #ced4da !important;
+        box-shadow: none !important;
+      }
       .table { 
         font-size: 0.85rem; 
         vertical-align: middle; 
+      }
+
+      .alert {
+        border-radius: 12px;
       }
 
   body
@@ -121,10 +143,6 @@ html
           i.bi.bi-speedometer2.me-2
           span Dashboard
 
-        a.nav-link(href='/stock')
-          i.bi.bi-box-seam.me-2
-          span Inventory
-
         a.nav-link.active(href='/supplier-credit')
           i.bi.bi-tags.me-2
           span Supplier Credit
@@ -136,6 +154,11 @@ html
     // MAIN CONTENT
     .main-content
       h2.st-main-h Supplier Credit Management
+
+      if success && success.length
+        .alert.alert-success.mt-3.mb-3= success[0]
+      if error && error.length
+        .alert.alert-danger.mt-3.mb-3= error[0]
 
       // SUMMARY CARD (Matches top display card blocks)
       .row.mb-4
@@ -150,41 +173,71 @@ html
           .card.st-card-style.p-4
             h5.st-accent-text Add Supplier Credit
 
-            form(action='/add-supplier-credit' method='post')
+            form(action='/add-supplier-credit' method='post' novalidate class='needs-validation')
               .row.g-3
                 .col-md-3
                   label.form-label Supplier Name
-                  input.form-control(type='text' name='supplierName' required)
+                  input.form-control(type='text' name='supplierName' required value=(oldData && oldData.supplierName ? oldData.supplierName : ''))
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.supplierName
+                      = fieldErrors.supplierName
+                    else
+                      | Supplier name is required.
 
                 .col-md-3
                   label.form-label Phone Number
                   input.form-control(
                 type="tel" 
-                name="phoneNumber" 
+                name="supplierPhone" 
                 id="customerPhoneInput" 
                 placeholder="+256700000000"
-                value="+256"
+                value=(oldData && oldData.supplierPhone ? oldData.supplierPhone : '+256')
                 minlength="13"
                 maxlength="13" 
                 pattern="^\\+256[0-9]{9}$" 
                 title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
                 required
               )
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.supplierPhone
+                      = fieldErrors.supplierPhone
+                    else
+                      | Enter a valid Ugandan phone number.
                 .col-md-2
                   label.form-label Item
-                  input.form-control(type='text' name='item' required)
+                  input.form-control(type='text' name='item' required value=(oldData && oldData.item ? oldData.item : ''))
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.item
+                      = fieldErrors.item
+                    else
+                      | Item description is required.
 
                 .col-md-2
                   label.form-label Quantity
-                  input.form-control(type='number' name='quantity' required)
+                  input.form-control(type='number' name='quantity' min='1' required value=(oldData && oldData.quantity ? oldData.quantity : ''))
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.quantity
+                      = fieldErrors.quantity
+                    else
+                      | Enter a valid quantity (minimum 1).
 
                 .col-md-2
                   label.form-label Unit Price
-                  input.form-control(type='number' name='unitPrice' required)
+                  input.form-control(type='number' name='unitPrice' min='0' required value=(oldData && oldData.unitPrice ? oldData.unitPrice : ''))
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.unitPrice
+                      = fieldErrors.unitPrice
+                    else
+                      | Enter a valid unit price.
 
                 .col-md-2
                   label.form-label Paid
-                  input.form-control(type='number' name='paid' value='0')
+                  input.form-control(type='number' name='paid' value=(oldData && typeof oldData.paid !== 'undefined' ? oldData.paid : '') min='0' required placeholder='0')
+                  .invalid-feedback
+                    if fieldErrors && fieldErrors.paid
+                      = fieldErrors.paid
+                    else
+                      | Enter paid amount or 0 if none
 
               .col-12.mt-4
                 button.st-btn-accent.w-100(type='submit')
@@ -237,9 +290,11 @@ html
                               i.bi.bi-pencil.me-1
                               | Edit
 
-                            form(action='/pay-supplier/' + c._id method='post' class='m-0')
+                            form(action='/pay-supplier/' + c._id method='post' class='m-0 needs-validation' novalidate)
                               .input-group.input-group-sm
-                                input.form-control(type='number' name='paid' placeholder='Amount' required)
+                                input.form-control(type='number' name='paid' placeholder='Amount' min='1' required)
+                                .invalid-feedback
+                                  | Enter an amount to pay (minimum 1).
                                 button.btn.st-btn-accent(type='submit' style='padding: 0 12px; border-radius: 0 4px 4px 0;') Pay
 
                             a.btn.btn-sm.btn-danger(
@@ -253,3 +308,14 @@ html
                       td.text-center.text-muted(colspan='10') No supplier credit records found.
 
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+    script.
+      const forms = document.querySelectorAll('.needs-validation');
+      Array.from(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });

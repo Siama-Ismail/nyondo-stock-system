@@ -1,3 +1,7 @@
+const dns = require ('node:dns/promises');
+dns.setServers(['1.1.1.1', '8.8.8.8']);
+
+
 // 1. Dependencies
 const express = require('express');
 const expressSession = require('express-session');
@@ -17,9 +21,51 @@ const connectDb = require('./config/db');
 // 2. Instantiations
 const app = express();
 const port = 3000;
+const seedAdmin = async () => {
+  try {
+    // Check by email
+    const existingAdmin = await Registration.findOne({ 
+      $or: [
+        { userrole: 'admin' },
+        { username: 'admin@gmail.com' },
+        { email: 'admin@gmail.com' }
+      ]
+    });
+    
+    if (!existingAdmin) {
+      const adminData = { 
+        fullname: 'Siama Ismail',
+        email: 'admin@gmail.com',
+        phonenumber: '+256761181371',
+        nin: 'CM7867687687MN',
+        role: 'Admin',
+        userrole: 'admin'
+      };
+      
+      const newAdmin = new Registration(adminData);
+      await Registration.register(newAdmin, '12345678');
+      console.log('✅ Admin user seeded successfully');
+    } else {
+      console.log('ℹ️ Admin user already exists. Skipping seeding.');
+      // No error message here
+    }
+  } catch (error) {
+    // Specifically handle the UserExistsError
+    if (error.name === 'UserExistsError') {
+      console.log('ℹ️ Admin user already exists (caught in catch). Skipping.');
+    } else {
+      console.error('Error seeding admin user:', error.message);
+    }
+  }
+};
 
 // 3. Configurations
-connectDb();
+connectDb().then(() => {
+  seedAdmin();
+}).catch((err) => {
+  console.error('Database connection failed:', err);
+});
+
 
 // Set templating engine to pug
 app.set('view engine', 'pug');

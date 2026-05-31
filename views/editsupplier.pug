@@ -71,68 +71,84 @@ html
           h2.fw-bold Edit Supplier
           a.btn.btn-nyondo-secondary(href='/suppliers') Back
 
-        form(action='/update-supplier/' + supplier._id method='POST')
+        form(action='/update-supplier/' + supplier._id method='POST' novalidate)
           .mb-3
             label.form-label Supplier Name
             input.form-control(
               type='text'
               name='supplierName'
-              value=supplier.supplierName
               required
+              value=(oldData && oldData.supplierName ? oldData.supplierName : supplier.supplierName)
+              class=(fieldErrors && fieldErrors.supplierName ? 'is-invalid' : '')
             )
+            if fieldErrors && fieldErrors.supplierName
+              .invalid-feedback.d-block= fieldErrors.supplierName
 
           //- DYNAMIC STATUS DROPDOWN BLOCK
           .mb-3
             label.form-label Status
             select.form-select(name='status' required)
-              option(value='active' selected=(supplier.status === 'active')) Active
-              option(value='inactive' selected=(supplier.status === 'inactive')) Inactive
-              option(value='pending' selected=(supplier.status === 'pending')) Pending
+              option(value='active' selected=((oldData && oldData.status ? oldData.status : supplier.status) === 'active')) Active
+              option(value='inactive' selected=((oldData && oldData.status ? oldData.status : supplier.status) === 'inactive')) Inactive
+              option(value='pending' selected=((oldData && oldData.status ? oldData.status : supplier.status) === 'pending')) Pending
 
           .mb-3
             label.form-label Contact Person
             input.form-control(
               type='text'
               name='contactPerson'
-              value=supplier.contactPerson
               required
+              value=(oldData && oldData.contactPerson ? oldData.contactPerson : supplier.contactPerson)
+              class=(fieldErrors && fieldErrors.contactPerson ? 'is-invalid' : '')
             )
+            if fieldErrors && fieldErrors.contactPerson
+              .invalid-feedback.d-block= fieldErrors.contactPerson
 
           .mb-3
             label.form-label Phone Number
             input.form-control(
-                type="tel" 
-                name="phoneNumber" 
-                id="customerPhoneInput" 
-                placeholder="+256700000000"
-                value="+256"
-                minlength="13"
-                maxlength="13" 
-                pattern="^\\+256[0-9]{9}$" 
-                title="Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)"
+                type='tel'
+                name='phoneNumber'
+                id='customerPhoneInput'
+                placeholder='+256700000000'
+                value=(oldData && oldData.phoneNumber ? oldData.phoneNumber : supplier.phoneNumber)
+                minlength='13'
+                maxlength='13'
+                pattern='^\\+256[0-9]{9}$'
+                title='Phone number must start with +256 followed by exactly 9 digits (e.g. +256772123456)'
                 required
+                class=(fieldErrors && fieldErrors.phoneNumber ? 'is-invalid' : '')
               )
+            if fieldErrors && fieldErrors.phoneNumber
+              .invalid-feedback.d-block= fieldErrors.phoneNumber
+
           .mb-3
             label.form-label Email Address
             input.form-control(
-              type='type'
+              type='email'
               name='emailAddress'
-              value=supplier.emailAddress
+              value=(oldData && oldData.emailAddress ? oldData.emailAddress : supplier.emailAddress)
+              class=(fieldErrors && fieldErrors.emailAddress ? 'is-invalid' : '')
             )
+            if fieldErrors && fieldErrors.emailAddress
+              .invalid-feedback.d-block= fieldErrors.emailAddress
 
           .mb-3
             label.form-label Supplier Address
             textarea.form-control(
               name='supplierAddress'
               rows='2'
-            )= supplier.supplierAddress
+              class=(fieldErrors && fieldErrors.supplierAddress ? 'is-invalid' : '')
+            )= (oldData && typeof oldData.supplierAddress !== 'undefined' ? oldData.supplierAddress : supplier.supplierAddress)
+            if fieldErrors && fieldErrors.supplierAddress
+              .invalid-feedback.d-block= fieldErrors.supplierAddress
 
           .mb-3
             label.form-label Products Supplied
             input.form-control(
               type='text'
               name='productsSupplied'
-              value=(supplier.productsSupplied && supplier.productsSupplied.length ? supplier.productsSupplied.join(', ') : '')
+              value=(oldData && oldData.productsSupplied ? oldData.productsSupplied : (supplier.productsSupplied && supplier.productsSupplied.length ? supplier.productsSupplied.join(', ') : ''))
             )
 
           button.btn.btn-nyondo.w-100.py-2.mt-3(type='submit') Update Supplier
