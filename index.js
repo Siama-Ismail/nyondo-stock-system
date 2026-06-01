@@ -13,7 +13,6 @@ const Registration = require('./models/Registration');
 const Stock = require('./models/Stock');
 const Supplier = require('./models/Supplier');
 const SupplierCredit = require('./models/SupplierCredit');
-const Transport = require('./models/Transport');
 
 require('dotenv').config();
 const connectDb = require('./config/db');
@@ -108,7 +107,7 @@ app.use('/', require('./routes/adminRoutes'));
 app.use('/', require('./routes/supplierRoutes'));
 app.use('/', require('./routes/creditRoutes'));
 app.use('/', require('./routes/reportsRoutes'));
-app.use('/', require('./routes/transportRoutes'));
+
 
 // 404 Catch-all Route
 app.use((req, res) => {

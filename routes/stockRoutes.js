@@ -5,9 +5,9 @@ const Stock = require('../models/Stock');
 const StockLedger = require('../models/StockLedger');
 
 
-// ======================================
+
 // UGANDAN PHONE VALIDATION
-// ======================================
+
 
 function isValidUgandanNumber(number) {
 
@@ -36,9 +36,9 @@ function normalizeUgandanNumber(number) {
 }
 
 
-// ======================================
+
 // STOCK VALIDATION & HELPERS
-// ======================================
+
 
 const allowedPaymentStatuses = ['Cash At Hand', 'Mobile Money', 'Bank'];
 
@@ -115,9 +115,9 @@ function validateStockInput(fields) {
 }
 
 
-// ======================================
+
 // STOCK PAGE
-// ======================================
+
 
 router.get('/stock', async (req, res) => {
 
@@ -172,9 +172,9 @@ router.get('/stock', async (req, res) => {
 });
 
 
-// ======================================
+
 // ADD STOCK / RESTOCK (FIXED)
-// ======================================
+
 
 router.post('/add-stock', async (req, res) => {
 
@@ -224,9 +224,9 @@ router.post('/add-stock', async (req, res) => {
     const price = Number(sellingPrice);
 
 
-    // ======================================
+    
     // CURRENT STOCK
-    // ======================================
+    
 
     const existingStock = await Stock.findOne({ productname });
 
@@ -277,9 +277,9 @@ router.post('/add-stock', async (req, res) => {
     }
 
 
-    // ======================================
+    
     // LIFETIME STOCK LEDGER (UNCHANGED)
-    // ======================================
+    
 
     const existingLedger = await StockLedger.findOne({ productname });
 
@@ -333,9 +333,9 @@ router.post('/add-stock', async (req, res) => {
 });
 
 
-// ======================================
+
 // DELETE STOCK (UNCHANGED)
-// ======================================
+
 
 router.get('/delete-stock/:id', async (req, res) => {
 
@@ -356,9 +356,9 @@ router.get('/delete-stock/:id', async (req, res) => {
 });
 
 
-// ======================================
+
 // EDIT STOCK PAGE (UNCHANGED)
-// ======================================
+
 
 router.get('/edit-stock/:id', async (req, res) => {
 
@@ -384,9 +384,9 @@ router.get('/edit-stock/:id', async (req, res) => {
 });
 
 
-// ======================================
+
 // UPDATE STOCK (UNCHANGED)
-// ======================================
+
 
 router.post('/edit-stock/:id', async (req, res) => {
 
@@ -438,9 +438,9 @@ router.post('/edit-stock/:id', async (req, res) => {
 });
 
 
-// ======================================
+
 // LIFETIME STOCK LEDGER PAGE (UNCHANGED)
-// ======================================
+
 
 router.get('/manage-stock', async (req, res) => {
 
