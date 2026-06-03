@@ -3,7 +3,8 @@ const router = express.Router();
 const Registration = require('../models/Registration');
 const passport = require('passport');
 
-// Helper validators for signup
+
+// login validation
 function isValidUgandanNumber(number) {
   if (!number) return false;
   number = number.toString().replace(/[\s-]/g, '');
@@ -66,7 +67,7 @@ const renderSignupForm = async (res, fieldErrors = {}, values = {}) => {
   });
 };
 
-// Dashboard routes
+// Dashboard(home) routes
 router.get('/dashboard',(req,res)=>{
     res.render('dashboard')
 })
@@ -169,16 +170,18 @@ router.post('/login', (req, res, next) => {
 
 });
 
-// ADMIN DASHBOARD
-router.get('/admin-dashboard', (req, res) => {
 
-  if (!req.isAuthenticated()) {
-    return res.redirect('/login');
-  }
 
-  res.render('admindashboard');
+// // ADMIN DASHBOARD
+// router.get('/admin-dashboard', (req, res) => {
 
-});
+//   if (!req.isAuthenticated()) {
+//     return res.redirect('/login');
+//   }
+
+//   res.render('admindashboard');
+
+// });
 
 
 // STORE MANAGER DASHBOARD
@@ -225,7 +228,7 @@ router.get('/logout', (req, res) => {
 
 router.post('/delete-staff/:id', async (req, res) => {
   try {
-    // Uses your active model declaration setup (Registration)
+    
     await Registration.findByIdAndDelete(req.params.id);
     res.redirect('/admin'); 
   } catch (error) {

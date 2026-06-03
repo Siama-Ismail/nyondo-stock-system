@@ -19,7 +19,8 @@ const connectDb = require('./config/db');
 
 // 2. Instantiations
 const app = express();
-const port = 3000;
+// const port = 3000;
+const port = process.env.PORT || 3000; // ✅
 const seedAdmin = async () => {
   try {
     // Check by email
@@ -74,7 +75,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 
-// FIX: Cookie is now properly nested inside the session configuration object
+// Cookie is now properly nested inside the session configuration object
 app.use(expressSession({
   secret: "secret",
   resave: false,
