@@ -10,7 +10,8 @@
   /* Fixed sidebars become a horizontal top bar */
   .st-sidebar,
   .nyondo-sidebar,
-  .sidebar {
+  .sidebar,
+  #sidebar {
     position: relative !important;
     width: 100% !important;
     height: auto !important;
@@ -28,7 +29,8 @@
   .st-sidebar .navbar-brand,
   .nyondo-sidebar .brand,
   .sidebar h4,
-  .sidebar .brand-logo {
+  .sidebar .brand-logo,
+  #sidebar .sidebar-header {
     width: 100%;
     margin-bottom: 6px;
     padding: 0;
@@ -38,7 +40,8 @@
   .st-sidebar .nav-link,
   .nyondo-sidebar .nav-link,
   .sidebar a,
-  .sidebar .nav-link {
+  .sidebar .nav-link,
+  #sidebar .nav-link {
     margin-bottom: 0 !important;
     padding: 8px 12px;
     white-space: nowrap;
@@ -47,13 +50,15 @@
   /* Inline nav lists (reports/admin) turn horizontal */
   .nyondo-sidebar ul.nav.flex-column,
   .sidebar .nav.flex-column,
-  .st-sidebar .nav.flex-column {
+  .st-sidebar .nav.flex-column,
+  #sidebar ul.nav.flex-column {
     flex-direction: row;
     flex-wrap: wrap;
   }
 
   /* Main content goes full width with tighter padding */
-  .main-content {
+  .main-content,
+  #content {
     margin-left: 0 !important;
     width: 100% !important;
     padding: 20px 14px !important;

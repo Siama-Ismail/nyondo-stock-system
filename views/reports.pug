@@ -339,14 +339,20 @@ html
       .card-white
 
         h5.section-title
-          i.bi.bi-exclamation-triangle-fill.text-danger.me-2
-          | Low Stock Alerts
+          i.bi.bi-exclamation-triangle-fill(class=lowStock.length === 0 ? 'text-success' : 'text-danger').me-2
+          | Inventory Stock Levels
 
         if lowStock.length === 0
 
-          p.text-muted Inventory stock levels are healthy.
+          .d-flex.align-items-center.gap-2
+            span.badge.bg-success.px-3.py-2 Healthy
+            p.mb-0.text-success Inventory stock levels are healthy. All products are sufficiently stocked.
 
         else
+
+          .alert.alert-danger.d-flex.align-items-center.gap-2
+            i.bi.bi-exclamation-triangle-fill.fs-4
+            span Inventory stock levels are UNHEALTHY because #{(lowStock.length)} product(s) are low on stock.
 
           .table-responsive
 
@@ -370,7 +376,7 @@ html
 
                     td
                       span.badge-low
-                        | LOW STOCK
+                        | UNHEALTHY — LOW STOCK
 
     script(
       src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
