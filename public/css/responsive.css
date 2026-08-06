@@ -1,0 +1,120 @@
+/* =========================================================
+   NYONDO STOCK - RESPONSIVE FIXES
+   Fixed left sidebars collapse into a horizontal top bar on
+   tablets and phones so the content gets the full width.
+========================================================= */
+
+/* ---- Tablet & below ---- */
+@media (max-width: 991.98px) {
+
+  /* Fixed sidebars become a horizontal top bar */
+  .st-sidebar,
+  .nyondo-sidebar,
+  .sidebar {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 12px !important;
+    border-right: none;
+    border-bottom: 3px solid var(--brand-orange, #0d9488);
+  }
+
+  /* Brand sits on its own row at the top */
+  .st-sidebar .navbar-brand,
+  .nyondo-sidebar .brand,
+  .sidebar h4,
+  .sidebar .brand-logo {
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 0;
+  }
+
+  /* Links flow in a row and wrap */
+  .st-sidebar .nav-link,
+  .nyondo-sidebar .nav-link,
+  .sidebar a,
+  .sidebar .nav-link {
+    margin-bottom: 0 !important;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+
+  /* Inline nav lists (reports/admin) turn horizontal */
+  .nyondo-sidebar ul.nav.flex-column,
+  .sidebar .nav.flex-column,
+  .st-sidebar .nav.flex-column {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* Main content goes full width with tighter padding */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 20px 14px !important;
+  }
+
+  .st-main-h {
+    font-size: 1.5rem;
+  }
+
+  /* Let tables scroll instead of forcing the page wide */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ---- Phones ---- */
+@media (max-width: 575.98px) {
+  .main-content {
+    padding: 16px 10px !important;
+  }
+
+  .st-sidebar .nav-link,
+  .nyondo-sidebar .nav-link,
+  .sidebar a,
+  .sidebar .nav-link {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+
+  .st-sidebar .navbar-brand,
+  .nyondo-sidebar .brand {
+    font-size: 1.2rem;
+  }
+
+  /* Smaller stat/action text on small screens */
+  .stat-card-dark h4,
+  .metric h2 {
+    font-size: 1rem;
+  }
+}
+
+/* ---- Hero (landing page) on tablets & phones ---- */
+@media (max-width: 991.98px) {
+  .hero-section {
+    height: auto !important;
+    min-height: 70vh;
+    padding: 120px 0 80px;
+  }
+  .hero-section h1 {
+    font-size: 2.2rem !important;
+  }
+}
+
+/* ---- Login / Signup forms stay tidy on small screens ---- */
+@media (max-width: 575.98px) {
+  .card {
+    padding: 20px !important;
+  }
+  .btn-primary {
+    font-size: 0.9rem !important;
+    padding: 0.6rem 1rem !important;
+  }
+}
